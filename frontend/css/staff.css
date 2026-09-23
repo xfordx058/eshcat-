@@ -8,6 +8,26 @@
   background: var(--color-surface-soft);
 }
 
+.settings-tabs {
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.settings-tabs .tab-btn {
+  white-space: nowrap;
+}
+
+.settings-tabs .tab-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+#staffSearch,
+#numSearch {
+  min-width: 220px;
+  height: 40px;
+}
+
 /* ---------- Staff shell (sidebar + main) ---------- */
 
 .staff-shell {

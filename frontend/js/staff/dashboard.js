@@ -224,12 +224,10 @@
 
     let stats;
     let recent;
-    let me;
     try {
       [stats, recent, me] = await Promise.all([
         ESH.api.get("/staff/dashboard"),
         ESH.api.get("/staff/applications"),
-        ESH.api.get("/staff/me"),
       ]);
     } catch (err) {
       if (statsEl) ESH.showError(statsEl, err.message, () => init());
@@ -271,7 +269,6 @@
       }
     }
     loadActivity();
-    if (me.role === "Administrator") loadOfficeManagement();
   }
 
   document.addEventListener("DOMContentLoaded", () => {
