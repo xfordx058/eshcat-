@@ -5,123 +5,224 @@
 > **One Municipality. Connected Services. Easier Access.**
 
 **Team:** Walang Kanin Bossing  
-**Project:** eSHCAT  
-**Category:** Digital Government / Civic Technology  
-**Platform:** Web (Vanilla HTML / CSS / JavaScript)  
+**Project Type:** Digital Government / Civic Technology  
+**Target Municipality:** Catarman, Northern Samar  
+**Platform:** Responsive Web Application  
+**Frontend:** HTML5 + CSS3 + Vanilla JavaScript (ES6+) — no frameworks  
+**Backend:** Flask / Python  
+**Database:** SQLite  
+**Email:** Gmail SMTP  
 **Status:** Hackathon Prototype
 
 ---
 
-## 👥 Team
+## About
 
-# Walang Kanin Bossing
+eSHCAT centralizes municipal services into one accessible web application. **Citizens do not need an account** — they can browse services, view requirements, submit applications, get a reference number, and track status. **Municipal staff** log in to review applications, update statuses, forward requests between departments, and notify applicants by email.
 
-> *"Walang kanin, pero may solution."*
-
-We are a student development team building practical technology solutions for real-world community problems.
-
-For this hackathon, we developed **eSHCAT - Electronic Services Hub for Catarman**, a proposed unified digital platform for accessing and managing municipal services.
+Inspired by the design direction *Modern Minimalism + Soft Glassmorphism + Bento UI*, the interface is built entirely with standard browser technologies — **no React, Vue, Angular, Bootstrap, or Tailwind**.
 
 ---
 
-## ⚠️ The Problem
+## Features
 
-Local government services can still depend on disconnected systems and manual processes.
+### Citizen (no account)
 
-Departments may work separately, making it difficult to:
+- Browse a configurable municipal service directory
+- View requirements, process, and office information per service
+- Submit applications online (E-Death Certificate primary demo)
+- Receive a server-generated reference number
+- Track application status with a full timeline
+- Request office appointments
+- Report community concerns
+- View announcements and the office directory
 
-- Share information
-- Coordinate requests
-- Track applications
-- Communicate updates
-- Improve processing workflows
-- Respond quickly to community needs
+### Staff
 
-For citizens, this can mean:
+- Secure login (backend password hashing + sessions)
+- Dashboard with service statistics
+- Application list with status filters
+- Application details with applicant info and form data
+- Status updates with remarks and full history
+- Forward applications between departments
+- Email notifications to applicants (Gmail SMTP, queued retries)
+- Audit logging for key actions
+
+### Offline / PWA
+
+- Offline detection banner
+- Local drafts (LocalStorage) + IndexedDB submission queue
+- **Important:** a reference number is only shown after the server confirms submission
+- Service worker caching of public pages only (staff pages and API are never cached)
+- Installable PWA (manifest + service worker)
+
+---
+
+## Tech Stack
+
+| Layer      | Technology                                   |
+| ---------- | -------------------------------------------- |
+| Frontend   | HTML5, CSS3, Vanilla JS (ES6+), Fetch API    |
+| Storage    | LocalStorage, IndexedDB                      |
+| Backend    | Flask (Python 3)                             |
+| Database   | SQLite (`database/schema.sql`, `seed.sql`)   |
+| Email      | Gmail SMTP (`backend/services/email_service.py`) |
+
+## Project Structure
 
 ```text
-Find the correct office
-        ↓
-Ask for requirements
-        ↓
-Fill out forms
-        ↓
-Wait for processing
-        ↓
-Return to the office
-        ↓
-Check status manually
+eshcat/
+├── frontend/
+│   ├── index.html
+│   ├── manifest.json
+│   ├── service-worker.js
+│   ├── pages/            (services, service-details, apply, track,
+│   │   │                  appointments, reports, announcements, offices)
+│   │   └── staff/        (login, dashboard, applications, application-details)
+│   ├── css/              (style, components, responsive, staff)
+│   ├── js/               (vanilla JS modules + staff/)
+│   └── assets/           (logo, icons)
+├── backend/
+│   ├── app.py            (Flask app + CLI commands)
+│   ├── config.py, database.py
+│   ├── routes/           (services, applications, tracking, appointments,
+│   │                      reports, announcements, staff)
+│   ├── services/         (application, reference, email, notification)
+│   ├── models/
+│   ├── tests/            (smoke_test.py, static_test.py)
+│   ├── .env.example
+│   └── requirements.txt
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+├── docs/
+│   ├── PRD.md
+│   ├── API.md
+│   ├── DEMO.md
+│   └── UIUX.md
+└── README.md
 ```
 
-No single channel exists to start, track, or complete a transaction — every step is a separate trip.
-
 ---
 
-## 💡 The Solution
+## Getting Started
 
-**eSHCAT** brings municipal services online through a lightweight, mobile-friendly web app built with **vanilla HTML, CSS, and JavaScript** — no heavy frameworks, easy to deploy, and simple to hand over to the LGU.
+### 1. Backend
 
-### Key Features
-
-- 📋 **Service catalog** — browse available municipal services and their requirements
-- 🧾 **Online request submission** — start and submit applications digitally
-- 🔎 **Request tracking** — check the status of submissions anytime
-- 🏢 **Department directory** — find which office handles what
-- 📱 **Mobile-first design** — works on any device with a browser
-
-### Intended Services
-
-- Business permits & licenses
-- Barangay clearances
-- Civil registry (birth, marriage, death certificates)
-- Tax & assessment inquiries
-- General inquiries & complaints
-
----
-
-## 🛠️ Tech Stack
-
-- **HTML5** — structure
-- **CSS3** — styling & responsive layout
-- **Vanilla JavaScript** — interactivity & data handling
-- **LocalStorage** — prototype data persistence (no backend required)
-
----
-
-## 🚀 Getting Started
-
-This prototype needs no build tools or dependencies.
+Requires Python 3.10+.
 
 ```bash
-# Clone the repository
-git clone https://github.com/xfordx058/eshcat-.git
+# Create a virtual environment (optional but recommended)
+python -m venv .venv
 
-# Serve the folder locally
-# Option A: just open the index.html in a browser
-# Option B: run a simple static server
-python -m http.server 8080
+# Activate (Windows)
+.venv\Scripts\activate
+
+# Install dependencies
+pip install -r backend/requirements.txt
+
+# Initialize and seed the database
+flask --app backend.app init-db
+flask --app backend.app seed-db
 ```
 
-Then visit `http://localhost:8080`.
+### 2. Email (optional)
+
+Copy `backend/.env.example` to `backend/.env` and set:
+
+```text
+SMTP_USERNAME=your-dedicated@gmail.com
+SMTP_PASSWORD=your-16-char-app-password
+```
+
+Never commit real SMTP credentials. The app still works without email enabled.
+
+### 3. Run
+
+```bash
+python -m backend.app
+# or: flask --app backend.app run
+```
+
+Open `http://127.0.0.1:5000`.
+
+### Demo accounts
+
+| Role             | Email               | Password      |
+| ---------------- | ------------------- | ------------- |
+| Staff            | `staff@eshcat.local` | `change_me_123` |
+| Department Head  | `head@eshcat.local`  | `change_me_123` |
+| Administrator    | `admin@eshcat.local` | `change_me_123` |
+
+Change `STAFF_SEED_PASSWORD` in `.env` before seeding non-demo environments.
 
 ---
 
-## 🗺️ Roadmap
+## Testing
 
-- [ ] User accounts (citizen & LGU staff)
-- [ ] Backend API with a real database
-- [ ] Email / SMS status notifications
-- [ ] Online payment integration
-- [ ] Admin dashboard for departments
+```bash
+# API smoke test (services, applications, tracking, staff, notifications)
+python backend/tests/smoke_test.py
 
----
+# Static frontend serving test (all pages/assets return 200)
+python backend/tests/static_test.py
+```
 
-## 🙏 Acknowledgments
-
-Built for the hackathon by **Walang Kanin Bossing** with support and guidance from the organizers and mentors.
+Both tests use an isolated temp database.
 
 ---
 
-## 📄 License
+## REST API (quick reference)
 
-Prototype for educational and hackathon purposes. No official affiliation with the Municipality of Catarman.
+Full details in [`docs/API.md`](docs/API.md).
+
+```http
+Public
+GET  /api/services
+GET  /api/services/{id}
+POST /api/applications
+GET  /api/track/{reference}
+POST /api/appointments
+GET  /api/announcements
+POST /api/reports
+
+Staff (session-authenticated)
+POST /api/staff/login
+POST /api/staff/logout
+GET  /api/staff/me
+GET  /api/staff/dashboard
+GET  /api/staff/applications
+GET  /api/staff/applications/{id}
+PATCH /api/staff/applications/{id}/status
+POST /api/staff/applications/{id}/forward
+```
+
+---
+
+## E-Death Certificate Demo Flow
+
+1. Open the homepage → **Explore Services** → select **E-Death Certificate**.
+2. Review requirements → **Apply Online**.
+3. Complete the form → **Submit Application**.
+4. Note the reference number (e.g. `CAT-DC-7F3A91D2`).
+5. Staff → **Staff Login** → **Dashboard** shows the new application.
+6. Open it → change status to **Under Review** → save.
+7. Public **Track Request** now shows **Under Review**.
+
+Full script in [`docs/DEMO.md`](docs/DEMO.md).
+
+---
+
+## Disclaimer
+
+eSHCAT is a **hackathon prototype**. Requirements, processing times, fees, legal procedures, and workflows must be validated with the appropriate LGU offices before any production deployment. Only synthetic/demo data is used during development and judging.
+
+---
+
+## Team
+
+# WALANG KANIN BOSSING
+
+> **Walang kanin bossing. Pero may system.** 😎
+
+Building technology for a more connected Catarman.
