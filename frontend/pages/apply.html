@@ -16,10 +16,19 @@
     <div class="container">
       <section class="section">
         <p class="note"><a href="javascript:history.back()">← Back to service</a></p>
-        <div style="margin-top:8px">
+        <div class="progress-steps" aria-label="Application progress">
+          <div class="progress-step active" data-wizard-step="1"><span class="num">01</span><span class="lbl">Information</span></div>
+          <div class="progress-connector" data-wizard-connector="1"></div>
+          <div class="progress-step" data-wizard-step="2"><span class="num">02</span><span class="lbl">Requirements</span></div>
+          <div class="progress-connector" data-wizard-connector="2"></div>
+          <div class="progress-step" data-wizard-step="3"><span class="num">03</span><span class="lbl">Review</span></div>
+          <div class="progress-connector" data-wizard-connector="3"></div>
+          <div class="progress-step" data-wizard-step="4"><span class="num">04</span><span class="lbl">Submit</span></div>
+        </div>
+        <div style="margin-top:8px;margin-bottom:20px;text-align:center">
           <div class="dept" id="serviceDept">Loading...</div>
           <h1 id="serviceName" style="font-size:1.6rem">Application</h1>
-          <p class="note">Fill in the required information. You will receive a reference number after submission.</p>
+          <p class="note" id="serviceDesc">Fill in the required information. You will receive a reference number after submission.</p>
         </div>
         <div id="applyForm">
           <div class="loading"><span class="spinner"></span><span>Loading application form...</span></div>

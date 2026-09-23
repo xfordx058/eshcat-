@@ -18,70 +18,97 @@
   <main>
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-inner">
-        <span class="eyebrow">Municipal Digital Services</span>
-        <h1>Electronic Services Hub for Catarman</h1>
-        <p class="tagline">One Municipality. Connected Services. Easier Access.</p>
-        <p class="lead">Find municipal services, submit requests, and track your application online — without needing an account.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="pages/services.html">Explore Services →</a>
-          <a class="btn btn-outline-light" href="pages/track.html">Track Request</a>
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Municipal Digital Services</span>
+          <h1>Electronic Services Hub for Catarman</h1>
+          <p class="tagline">One Municipality. Connected Services. Easier Access.</p>
+          <p class="lead">Find municipal services, submit requests, and track your application online — without needing an account.</p>
+
+          <div class="hero-search">
+            <form id="homeSearchForm" class="search-strip" action="pages/services.html" method="get" role="search">
+              <input type="search" name="q" id="homeSearch" placeholder="e.g. death certificate, business permit..." aria-label="Search services" autocomplete="off" />
+              <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+            <div class="search-examples">
+              <span>Popular:</span>
+              <a href="pages/service-details.html?id=1">Death Certificate</a>
+              <a href="pages/service-details.html?id=2">Birth Certificate</a>
+              <a href="pages/service-details.html?id=6">Business Permit</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="visual-card" aria-hidden="true">
+            <div class="visual-head">
+              <div class="mark">eS</div>
+              <div>
+                <div class="visual-title">Catarman Municipal Hall</div>
+                <div class="visual-sub">Official municipal digital services platform</div>
+              </div>
+            </div>
+            <div class="visual-stats">
+              <div class="visual-stat"><div class="num" id="heroServiceCount">16+</div><div class="lbl">Municipal services</div></div>
+              <div class="visual-stat"><div class="num" id="heroOfficeCount">10+</div><div class="lbl">Offices online</div></div>
+              <div class="visual-stat"><div class="num">01</div><div class="lbl">Reference number per request</div></div>
+              <div class="visual-stat"><div class="num">24/7</div><div class="lbl">Track anytime, anywhere</div></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Quick actions -->
     <div class="container">
-      <!-- Bento: search + track -->
-      <section class="section">
+      <section class="quick-actions" aria-label="Quick actions">
         <div class="bento-grid">
-          <div class="glass-card bento-4">
-            <div class="icon-tile">🔎</div>
-            <h3>What service are you looking for?</h3>
-            <p class="note" style="margin-bottom:16px">Search our municipal service directory.</p>
-            <form id="homeSearchForm" class="search-strip" action="pages/services.html" method="get" role="search">
-              <input type="search" name="q" id="homeSearch" placeholder="e.g. death certificate, permit..." aria-label="Search services" />
-              <button class="btn btn-primary" type="submit">Search</button>
-            </form>
-          </div>
-          <div class="glass-card bento-2">
+          <a class="card quick-card bento-3" href="pages/services.html">
+            <div class="icon-tile">🗂️</div>
+            <h3>Browse Services</h3>
+            <p>Explore the full municipal service directory and requirements.</p>
+            <div class="foot"><span>Explore →</span></div>
+          </a>
+          <a class="card quick-card bento-3" href="pages/track.html">
             <div class="icon-tile">📍</div>
-            <h3>Track your request</h3>
-            <p class="note" style="margin-bottom:14px">Have a reference number? Check your status instantly.</p>
-            <a class="btn btn-secondary" style="width:100%" href="pages/track.html">Track Request →</a>
-          </div>
+            <h3>Track Request</h3>
+            <p>Follow the status of your application using your reference number.</p>
+            <div class="foot"><span>Track now →</span></div>
+          </a>
+          <a class="card quick-card bento-3" href="pages/appointments.html">
+            <div class="icon-tile">📅</div>
+            <h3>Book Appointment</h3>
+            <p>Schedule a visit with a municipal office — no account needed.</p>
+            <div class="foot"><span>Schedule →</span></div>
+          </a>
+          <a class="card quick-card bento-3" href="pages/reports.html">
+            <div class="icon-tile">🚩</div>
+            <h3>Report Concern</h3>
+            <p>Help keep Catarman clean, safe, and connected. Report an issue.</p>
+            <div class="foot"><span>Report →</span></div>
+          </a>
         </div>
       </section>
 
-      <!-- Popular services -->
-      <section class="section" style="padding-top:0">
+      <!-- Info strip -->
+      <section class="info-strip" aria-label="Why eSHCAT">
+        <div class="info-item"><span class="dot"></span><div><div class="t">Fast</div><div class="d">Fewer trips to the municipal hall</div></div></div>
+        <div class="info-item"><span class="dot"></span><div><div class="t">Transparent</div><div class="d">Real-time request status updates</div></div></div>
+        <div class="info-item"><span class="dot"></span><div><div class="t">Accessible</div><div class="d">Works on any device, even offline</div></div></div>
+        <div class="info-item"><span class="dot"></span><div><div class="t">For Catarman</div><div class="d">Built around our local services</div></div></div>
+      </section>
+
+      <!-- Popular municipal services -->
+      <section class="section">
         <div class="section-header">
-          <span class="kicker">Popular Services</span>
+          <span class="kicker">Popular Municipal Services</span>
           <h2>Start with these common requests</h2>
+          <p>Certificates, permits, and clearances — the requests residents make most.</p>
         </div>
-        <div class="bento-grid">
-          <a class="card bento-2" href="pages/service-details.html?id=1">
-            <div class="icon-tile">🕊️</div>
-            <div class="dept">Civil Registry</div>
-            <h3>Death Certificate</h3>
-            <p>Apply for a certified copy of a death certificate.</p>
-            <div class="foot"><span>Apply online</span><span>View →</span></div>
-          </a>
-          <a class="card bento-2" href="pages/service-details.html?id=2">
-            <div class="icon-tile">👶</div>
-            <div class="dept">Civil Registry</div>
-            <h3>Birth Certificate</h3>
-            <p>Request a certified copy of a birth certificate.</p>
-            <div class="foot"><span>Apply online</span><span>View →</span></div>
-          </a>
-          <a class="card bento-2" href="pages/service-details.html?id=6">
-            <div class="icon-tile">🏪</div>
-            <div class="dept">BPLO</div>
-            <h3>Business Permit</h3>
-            <p>Apply for a new or renewed business permit.</p>
-            <div class="foot"><span>Apply online</span><span>View →</span></div>
-          </a>
+        <div id="popularServices" class="services-grid">
+          <div class="loading"><span class="spinner"></span><span>Loading popular services...</span></div>
         </div>
-        <p style="margin-top:18px"><a href="pages/services.html">Browse all services →</a></p>
+        <p style="margin-top:20px"><a href="pages/services.html">Browse all services →</a></p>
       </section>
 
       <!-- How it works -->
@@ -89,19 +116,38 @@
         <div class="section-header">
           <span class="kicker">How It Works</span>
           <h2>From request to resolution</h2>
+          <p>Applying for a municipal service takes just four steps.</p>
         </div>
         <div class="steps">
-          <div class="step"><h3>Find a Service</h3><p>Browse the directory and view requirements.</p></div>
-          <div class="step"><h3>Submit Your Request</h3><p>Complete the application online.</p></div>
-          <div class="step"><h3>Get a Reference Number</h3><p>Use it to track your application.</p></div>
-          <div class="step"><h3>Track Your Request</h3><p>Follow status updates as the office processes it.</p></div>
+          <div class="step">
+            <span class="step-num">01</span>
+            <h3>Discover</h3>
+            <p>Browse the directory and view each service's requirements, process, and fees.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">02</span>
+            <h3>Apply</h3>
+            <p>Complete the application form online. No account needed.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">03</span>
+            <h3>Track</h3>
+            <p>Use your reference number to follow every status update in real time.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">04</span>
+            <h3>Get Updates</h3>
+            <p>Receive updates as the office processes your request.</p>
+          </div>
         </div>
       </section>
+    </div>
 
-      <!-- Announcements + contacts -->
+    <!-- Announcements + important info -->
+    <div class="container">
       <section class="section" style="padding-top:0">
         <div class="bento-grid">
-          <div class="bento-4">
+          <div class="bento-8">
             <div class="section-header">
               <span class="kicker">Announcements</span>
               <h2>Latest updates</h2>
@@ -111,19 +157,43 @@
             </div>
             <p style="margin-top:12px"><a href="pages/announcements.html">View all announcements →</a></p>
           </div>
-          <div class="bento-2">
+
+          <div class="bento-4">
             <div class="card">
-              <h3>🆘 Emergency &amp; Important Info</h3>
-              <ul class="note" style="margin-top:12px;padding-left:18px;list-style:none">
-                <li style="margin-bottom:8px"><strong>Police:</strong> (055) 555-0111</li>
-                <li style="margin-bottom:8px"><strong>Fire:</strong> (055) 555-0112</li>
-                <li style="margin-bottom:8px"><strong>Municipal Hall:</strong> (055) 555-0100</li>
-                <li style="margin-bottom:8px"><strong>Office Hours:</strong> Mon–Fri, 8:00 AM – 5:00 PM</li>
-              </ul>
-              <a class="btn btn-secondary" style="width:100%;margin-top:10px" href="pages/offices.html">View Offices</a>
+              <h3>Important Information</h3>
+              <div class="important-card">
+                <p>eSHCAT is a hackathon prototype. No real government records are used — all applications are demo data. Always verify official requirements with the municipal office.</p>
+                <a class="btn btn-sm btn-secondary" href="pages/about.html">Learn about eSHCAT</a>
+              </div>
+            </div>
+
+            <div class="emergency-card" style="margin-top:18px">
+              <h3>Emergency &amp; Important Numbers</h3>
+              <div class="contacts">
+                <div class="contact-item"><div class="k">MDRRMO</div><div class="v">0906-357-0985</div></div>
+                <div class="contact-item"><div class="k">Municipal Hall</div><div class="v">(055) 500-0712</div></div>
+                <div class="contact-item"><div class="k">Rural Health Unit</div><div class="v">(055) 500-9615</div></div>
+                <div class="contact-item"><div class="k">Emergency Hotline</div><div class="v">Dial 911 / 112</div></div>
+              </div>
+              <a class="btn btn-secondary" style="width:100%" href="pages/offices.html">View Office Directory</a>
             </div>
           </div>
         </div>
+      </section>
+    </div>
+
+    <!-- Offices preview -->
+    <div class="container">
+      <section class="section" style="padding-top:0">
+        <div class="section-header">
+          <span class="kicker">Municipal Offices</span>
+          <h2>Find the right office</h2>
+          <p>Contact details, office hours, and services for every department.</p>
+        </div>
+        <div id="officesHome" class="bento-grid">
+          <div class="loading"><span class="spinner"></span><span>Loading offices...</span></div>
+        </div>
+        <p style="margin-top:20px"><a href="pages/offices.html">View full office directory →</a></p>
       </section>
     </div>
   </main>
@@ -139,14 +209,18 @@
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
   <script src="js/announcements.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/offices.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var form = document.getElementById("homeSearchForm");
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var q = document.getElementById("homeSearch").value;
-        window.location.href = "pages/services.html" + (q ? "?q=" + encodeURIComponent(q) : "");
-      });
+      if (form) {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var q = document.getElementById("homeSearch").value;
+          window.location.href = "pages/services.html" + (q ? "?q=" + encodeURIComponent(q) : "");
+        });
+      }
     });
   </script>
 </body>

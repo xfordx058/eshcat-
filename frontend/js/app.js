@@ -1,6 +1,7 @@
 /* eSHCAT — app.js
    Shared chrome: header, footer, navigation, offline banner,
-   PWA install prompt.
+   connectivity indicator, PWA install prompt.
+   Design system: Modern Minimalism + Soft Glassmorphism + Bento UI
  */
 
 (function () {
@@ -24,15 +25,19 @@
   }
 
   function renderNavigation() {
-    return ESH.PUBLIC_NAV.map(
-      (item) => `<a href="${item.href}"${isActive(item.href) ? ' class="active"' : ""}>${item.label}</a>`
-    ).join("");
+    const staffMode = isStaffPage();
+    const items = staffMode
+      ? ESH.STAFF_NAV
+      : ESH.PUBLIC_NAV;
+    return items
+      .map((item) => `<a href="${item.href}"${isActive(item.href) ? ' class="active"' : ""}>${item.label}</a>`)
+      .join("");
   }
 
   function injectHeader() {
+    const staffMode = isStaffPage();
     const header = document.createElement("header");
     header.className = "site-header";
-    const staffMode = isStaffPage();
     if (staffMode) header.classList.add("staff-mode");
     header.innerHTML = `
       <div class="header-inner">
@@ -41,13 +46,13 @@
           <span>eSHCAT<small>Electronic Services Hub for Catarman</small></span>
         </a>
         <nav class="main-nav" aria-label="Primary navigation">
-          ${staffMode ? `
-            <a href="/pages/staff/dashboard.html">Dashboard</a>
-            <a href="/pages/staff/applications.html">Applications</a>
-          ` : renderNavigation()}
-          <a href="${staffMode ? "/pages/staff/login.html" : "/pages/staff/login.html"}" class="staff-link">${staffMode ? "Exit" : "Staff Login"}</a>
+          ${renderNavigation()}
+          <a href="/pages/staff/login.html" class="staff-link">${staffMode ? "Exit" : "Staff Login"}</a>
         </nav>
-        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        <div class="header-right">
+          <span class="conn-dot" id="connDot" title="Online" aria-label="Connection status"></span>
+          <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        </div>
       </div>
     `;
     document.body.prepend(header);
@@ -57,7 +62,26 @@
     toggle.addEventListener("click", () => {
       const open = nav.classList.toggle("open");
       toggle.setAttribute("aria-expanded", String(open));
+      nav.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          nav.classList.remove("open");
+          toggle.setAttribute("aria-expanded", "false");
+        });
+      });
     });
+
+    const dot = header.querySelector("#connDot");
+    const setConn = () => {
+      const online = typeof navigator !== "undefined" && navigator.onLine;
+      dot.classList.toggle("offline", !online);
+      dot.title = online ? "Online" : "Offline";
+    };
+    setConn();
+    window.addEventListener("online", setConn);
+    window.addEventListener("offline", setConn);
+    if (ESH.storage && ESH.storage.onNetworkChange) {
+      ESH.storage.onNetworkChange(() => setConn());
+    }
   }
 
   function injectFooter() {
@@ -65,31 +89,43 @@
     footer.className = "site-footer";
     footer.innerHTML = `
       <div class="footer-inner">
-        <div>
-          <h4>eSHCAT</h4>
-          <p class="note">Electronic Services Hub for Catarman</p>
-          <p class="note">One Municipality. Connected Services. Easier Access.</p>
+        <div class="footer-brand">
+          <a href="/" class="brand" aria-label="eSHCAT home">
+            <span class="brand-mark" aria-hidden="true">eS</span>
+            <span>eSHCAT<small>Electronic Services Hub for Catarman</small></span>
+          </a>
+          <p>One Municipality. Connected Services. Easier Access.
+             Built as a hackathon prototype to showcase citizen-focused digital services.</p>
         </div>
         <div>
-          <h4>Quick Links</h4>
+          <h4>Services</h4>
           <ul>
-            <li><a href="/pages/services.html">Municipal Services</a></li>
+            <li><a href="/pages/services.html">Browse Services</a></li>
             <li><a href="/pages/track.html">Track Request</a></li>
-            <li><a href="/pages/announcements.html">Announcements</a></li>
-            <li><a href="/pages/offices.html">Offices</a></li>
+            <li><a href="/pages/appointments.html">Book Appointment</a></li>
+            <li><a href="/pages/reports.html">Report a Concern</a></li>
           </ul>
         </div>
         <div>
-          <h4>Municipal Hall</h4>
+          <h4>Information</h4>
           <ul>
-            <li>Catarman, Northern Samar</li>
+            <li><a href="/pages/announcements.html">Announcements</a></li>
+            <li><a href="/pages/offices.html">Municipal Offices</a></li>
+            <li><a href="/pages/about.html">About eSHCAT</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li>Catarman Municipal Hall</li>
+            <li>Catarman, Northern Samar, Philippines</li>
             <li>Mon–Fri · 8:00 AM – 5:00 PM</li>
-            <li><a href="/pages/reports.html">Report a Concern</a></li>
+            <li><a href="/pages/offices.html">View Office Directory</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        Hackathon prototype by <strong>Walang Kanin Bossing</strong>. Not an official LGU service.
+        © 2026 eSHCAT · Hackathon Prototype · Catarman, Northern Samar
       </div>
     `;
     document.body.appendChild(footer);
@@ -163,13 +199,14 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    if (document.body) {
-      injectNetworkBanner();
-      injectApiBanner();
+    if (!document.body) return;
+    injectNetworkBanner();
+    injectApiBanner();
+    if (!isStaffPage()) {
       injectHeader();
       injectFooter();
-      setupPWAInstall();
-      registerServiceWorker();
     }
+    setupPWAInstall();
+    registerServiceWorker();
   });
 })();

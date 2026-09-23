@@ -12,24 +12,46 @@
   <link rel="stylesheet" href="../../css/responsive.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
-<body data-page="staff-applications" data-require-auth>
+<body data-page="staff-applications" data-require-auth class="staff-body">
   <main>
-    <div class="admin-shell">
-      <aside class="side-nav" aria-label="Staff navigation">
-        <a href="dashboard.html">📊 Overview</a>
-        <a class="active" href="applications.html">📄 Applications</a>
-        <a href="#" data-logout>🚪 Logout</a>
+    <div class="staff-shell">
+      <aside class="staff-sidebar" aria-label="Staff navigation">
+        <div class="side-brand">
+          <span class="mark">eS</span>
+          <span><strong>eSHCAT</strong><small>Staff Portal</small></span>
+        </div>
+        <nav class="side-nav">
+          <span class="nav-section">Main</span>
+          <a href="dashboard.html"><span class="ico">📊</span>Dashboard</a>
+          <a class="active" href="applications.html"><span class="ico">🗂️</span>Applications</a>
+          <span class="nav-section">More</span>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">📅</span>Appointments <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">🚩</span>Reports <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">💬</span>Messages <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">⚙️</span>Settings <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+        </nav>
+        <div class="side-user">
+          <span id="userChip"></span>
+          <button class="side-user-logout" data-logout title="Log out" aria-label="Log out">⏻</button>
+        </div>
       </aside>
-      <div class="admin-main">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px" id="userChip"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin:10px 0 20px">
-          <h1 style="margin:0">Applications</h1>
-          <button class="btn btn-secondary btn-sm" id="refreshBtn" type="button">↻ Refresh</button>
+
+      <div class="staff-main">
+        <div class="staff-top">
+          <div>
+            <h1>Applications</h1>
+            <div class="sub">Review, update, and forward citizen applications</div>
+          </div>
+          <div class="top-actions">
+            <button class="btn btn-secondary btn-sm" id="refreshBtn" type="button">↻ Refresh</button>
+          </div>
         </div>
 
         <div class="toolbar">
-          <label for="filterStatus" class="note" style="white-space:nowrap">Filter by status:</label>
-          <select id="filterStatus">
+          <div class="grow">
+            <input type="search" id="filterSearch" placeholder="Search reference, applicant, or service..." aria-label="Search applications" autocomplete="off" />
+          </div>
+          <select id="filterStatus" aria-label="Filter by status">
             <option value="">All statuses</option>
             <option>Submitted</option>
             <option>Received</option>
@@ -42,6 +64,9 @@
             <option>Ready for Release</option>
             <option>Completed</option>
             <option>Cancelled</option>
+          </select>
+          <select id="filterDept" aria-label="Filter by department">
+            <option value="">All departments</option>
           </select>
         </div>
 

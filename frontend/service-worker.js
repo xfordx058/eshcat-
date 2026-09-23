@@ -5,7 +5,7 @@
    Staff pages and API responses are NOT cached.
  */
 
-const CACHE_NAME = "eshcat-v2";
+const CACHE_NAME = "eshcat-v3";
 const ASSETS = [
   "/",
   "/index.html",
@@ -32,6 +32,7 @@ const ASSETS = [
   "/pages/reports.html",
   "/pages/announcements.html",
   "/pages/offices.html",
+  "/pages/about.html",
   "/assets/logo/favicon.svg",
 ];
 

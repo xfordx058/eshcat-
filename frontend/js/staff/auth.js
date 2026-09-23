@@ -66,11 +66,25 @@
         const initials = (user.name || "?").split(/\s+/).map((x) => x[0]).slice(0, 2).join("").toUpperCase();
         chip.innerHTML = `
           <span class="avatar" aria-hidden="true">${ESH.esc(initials)}</span>
-          <span class="user-chip-text">
-            <span class="name">${ESH.esc(user.name)}</span>
-            <span class="role">${ESH.esc(user.role)}</span>
+          <span class="user-chip-text" style="min-width:0">
+            <span class="u-name" style="display:block">${ESH.esc(user.name)}</span>
+            <span class="u-role" style="display:block">${ESH.esc(user.role)}</span>
           </span>
         `;
+        chip.style.display = "flex";
+        chip.style.alignItems = "center";
+        chip.style.gap = "10px";
+        chip.style.minWidth = "0";
+      }
+      const greet = document.getElementById("greetName");
+      if (greet) {
+        const hour = new Date().getHours();
+        const period = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+        greet.textContent = `${period}, ${user.name.split(" ")[0] || "there"}`;
+      }
+      const dateEl = document.getElementById("todayDate");
+      if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
       }
     });
   }

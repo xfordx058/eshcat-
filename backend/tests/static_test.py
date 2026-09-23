@@ -47,6 +47,7 @@ def main():
         "/pages/reports.html": 200,
         "/pages/announcements.html": 200,
         "/pages/offices.html": 200,
+        "/pages/about.html": 200,
         "/pages/staff/login.html": 200,
         "/pages/staff/dashboard.html": 200,
         "/pages/staff/applications.html": 200,

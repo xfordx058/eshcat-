@@ -15,43 +15,64 @@
   <main>
     <div class="container">
       <section class="section">
-        <p class="note"><a href="javascript:history.back()">← Back</a></p>
-        <div style="margin-top:8px;margin-bottom:22px">
-          <div class="kicker">Appointments</div>
-          <h1 style="font-size:1.6rem">Request an Office Appointment</h1>
-          <p class="note">Schedule a visit with a municipal office. No account required.</p>
+        <div class="section-header">
+          <span class="kicker">Appointments</span>
+          <h1 style="font-size:1.7rem">Book an Office Appointment</h1>
+          <p>Schedule a visit with a municipal office. No account required.</p>
         </div>
-        <form id="appointmentForm" class="glass-card" style="max-width:620px;margin:0 auto">
-          <div class="form-group full">
-            <label for="deptSelect">Office</label>
-            <select id="deptSelect" required>
-              <option value="">Select an office...</option>
-            </select>
+
+        <div class="split-narrow" style="grid-template-columns:1.2fr 0.8fr">
+          <form id="appointmentForm" class="card" style="padding:28px">
+            <div class="form-group" style="margin-bottom:16px">
+              <label for="deptSelect">Office</label>
+              <select id="deptSelect" required>
+                <option value="">Select an office...</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:16px">
+              <label for="apptService">Service (optional)</label>
+              <select id="apptService">
+                <option value="">Any service for this office...</option>
+              </select>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="apptDate">Preferred Date</label>
+                <input type="date" id="apptDate" required />
+              </div>
+              <div class="form-group">
+                <label for="apptTime">Preferred Time</label>
+                <input type="time" id="apptTime" required />
+              </div>
+              <div class="form-group">
+                <label for="apptName">Full Name</label>
+                <input type="text" id="apptName" required />
+              </div>
+              <div class="form-group">
+                <label for="apptEmail">Email</label>
+                <input type="email" id="apptEmail" required />
+              </div>
+              <div class="form-group">
+                <label for="apptMobile">Mobile Number</label>
+                <input type="tel" id="apptMobile" placeholder="Optional" />
+              </div>
+            </div>
+            <button class="btn btn-primary" id="apptBtn" type="submit" style="width:100%;margin-top:20px">Request Appointment →</button>
+          </form>
+
+          <div class="card sticky-form" style="position:static">
+            <div class="icon-tile">📅</div>
+            <h3>How it works</h3>
+            <ol class="timeline" style="margin-top:12px">
+              <li class="done"><span class="status-name">Request</span><div class="note">Pick an office, date, and time.</div></li>
+              <li class="done"><span class="status-name">Confirmation</span><div class="note">You'll get a CAT-APT reference number.</div></li>
+              <li class="done"><span class="status-name">Visit</span><div class="note">Bring your reference number to the municipal hall.</div></li>
+            </ol>
+            <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--color-border)">
+              <p class="note" style="font-size:0.86rem">Office hours are Mon–Fri, 8:00 AM – 5:00 PM. This is a demo — no real appointments are scheduled.</p>
+            </div>
           </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="apptDate">Date</label>
-              <input type="date" id="apptDate" required />
-            </div>
-            <div class="form-group">
-              <label for="apptTime">Time</label>
-              <input type="time" id="apptTime" required />
-            </div>
-            <div class="form-group">
-              <label for="apptName">Full Name</label>
-              <input type="text" id="apptName" required />
-            </div>
-            <div class="form-group">
-              <label for="apptEmail">Email</label>
-              <input type="email" id="apptEmail" required />
-            </div>
-            <div class="form-group">
-              <label for="apptMobile">Mobile Number</label>
-              <input type="tel" id="apptMobile" />
-            </div>
-          </div>
-          <button class="btn btn-primary" id="apptBtn" type="submit" style="width:100%;margin-top:16px">Request Appointment →</button>
-        </form>
+        </div>
       </section>
     </div>
   </main>
