@@ -1,0 +1,32 @@
+/* Dedicated styling for the COMELEC application detail page. */
+.comelec-application-page #comelecApplicationRoot { min-height:100vh; }
+.comelec-application-page .comelec-page-shell { display:flex; min-height:100vh; }
+.comelec-application-page .comelec-page-main { flex:1; min-width:0; padding:28px 32px 56px; max-width:1240px; }
+.comelec-application-page .comelec-detail-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:20px; }
+.comelec-application-page .comelec-detail-header h1 { margin:2px 0 4px; color:var(--color-primary-dark); font-size:1.5rem; }
+.comelec-application-page .comelec-detail-header p { margin:0; color:var(--color-text-muted); }
+.comelec-application-page .comelec-back { display:inline-flex; margin-bottom:10px; color:var(--color-primary); font-size:.82rem; font-weight:700; text-decoration:none; }
+.comelec-application-page .comelec-detail-layout { display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:18px; align-items:start; }
+.comelec-application-page .comelec-detail-card { margin-bottom:16px; }
+.comelec-application-page .comelec-detail-card h2 { margin:0 0 14px; color:var(--color-primary-dark); font-size:1.05rem; }
+.comelec-application-page .comelec-detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.comelec-application-page .comelec-detail-grid > div { min-width:0; padding:11px 12px; border:1px solid var(--color-border-light); border-radius:10px; background:var(--color-surface-soft); }
+.comelec-application-page .comelec-detail-grid span { display:block; color:var(--color-text-muted); font-size:.7rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+.comelec-application-page .comelec-detail-grid strong { display:block; margin-top:4px; overflow-wrap:anywhere; color:var(--color-text); }
+.comelec-application-page .comelec-action-card { position:sticky; top:20px; }
+.comelec-application-page .comelec-action-card label { display:block; margin-top:14px; color:var(--color-text-secondary); font-size:.8rem; font-weight:700; }
+.comelec-application-page .comelec-action-card .btn { width:100%; margin-top:10px; }
+.comelec-application-page .comelec-action-card .status-actions { display:flex; gap:8px; }
+.comelec-application-page .comelec-action-card .status-actions .btn { flex:1; }
+.comelec-application-page .comelec-history { display:grid; gap:0; margin:0; padding:0 0 0 18px; list-style:none; }
+.comelec-application-page .comelec-history li { position:relative; padding:0 0 18px 18px; border-left:2px solid var(--color-border); }
+.comelec-application-page .comelec-history li::before { position:absolute; top:2px; left:-7px; width:10px; height:10px; border:2px solid var(--color-surface); border-radius:50%; background:var(--color-border); box-shadow:0 0 0 1px var(--color-border); content:""; }
+.comelec-application-page .comelec-history li.current::before { background:var(--color-primary); box-shadow:0 0 0 1px var(--color-primary); }
+.comelec-application-page .comelec-history li:last-child { border-left-color:transparent; }
+.comelec-application-page .comelec-history strong,.comelec-application-page .comelec-history small,.comelec-application-page .comelec-history p { display:block; }
+.comelec-application-page .comelec-history small,.comelec-application-page .comelec-history p { margin:4px 0 0; color:var(--color-text-muted); font-size:.8rem; }
+.comelec-application-page .comelec-requirements { display:grid; gap:8px; }
+.comelec-application-page .comelec-requirements label { display:flex; align-items:flex-start; gap:8px; padding:10px; border:1px solid var(--color-border-light); border-radius:9px; font-weight:500; }
+.comelec-application-page .comelec-requirements input { width:auto; min-height:auto; margin-top:3px; }
+@media (max-width:900px) { .comelec-application-page .comelec-detail-layout { grid-template-columns:1fr; }.comelec-application-page .comelec-action-card { position:static; } }
+@media (max-width:600px) { .comelec-application-page .comelec-page-main { padding:20px 16px 40px; }.comelec-application-page .comelec-detail-header { flex-direction:column; }.comelec-application-page .comelec-detail-grid { grid-template-columns:1fr; } }

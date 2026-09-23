@@ -84,6 +84,36 @@ Important information is available in one public portal.
 
 ---
 
+# COMELEC Services
+
+eSHCAT now includes a dedicated Commission on Elections workspace for Catarman.
+
+Residents can request:
+
+- Voter’s Certification
+- Transfer of Voter Registration
+
+The forms collect the relevant voter information, precinct details, address information, valid government-issued ID, and transaction purpose.
+
+COMELEC requirements are shown before submission so residents know what to prepare.
+
+---
+
+# Election-day Queue
+
+When enabled by COMELEC:
+
+1. A resident requests a present number
+2. eSHCAT assigns the next number and COMELEC room
+3. The resident searches the present number online
+4. The page shows the current queue status and assigned room
+
+COMELEC staff can turn queue intake and present-number search on or off independently.
+
+<!-- Speaker notes: Demonstrate the public COMELEC page with a sample present number. Explain that search can remain available for already-issued numbers even when new intake is closed. -->
+
+---
+
 # Tracking That Builds Trust
 
 Every submission receives a server-generated reference number.
@@ -115,6 +145,23 @@ Staff can securely log in to:
 - View dashboards and operational statistics
 
 Role-based access supports general staff, department heads, and administrators.
+
+---
+
+# COMELEC Staff Workflow
+
+The COMELEC dashboard is department-scoped. Only COMELEC staff, COMELEC department heads, and administrators can view COMELEC transactions.
+
+The dedicated application view includes:
+
+- Applicant and transaction information
+- Voter certification or transfer details
+- Approve, reject, and update-status actions
+- Request Requirements workflow
+- Staff remarks and email notifications
+- Complete application history and timeline
+
+Administrators can also search the COMELEC staff list and add staff accounts assigned to COMELEC.
 
 ---
 
@@ -177,6 +224,8 @@ The system uses standard web technologies with no frontend framework dependency.
 7. Open the record, update its status, and add a remark
 8. Return to tracking and show the updated status
 9. Open Reports and show the daily summary/PDF option
+10. Open the COMELEC page and demonstrate present-number search and room assignment
+11. Open the COMELEC dashboard and review a voter transaction history
 
 <!-- Speaker notes: Use synthetic data only. Do not present real citizen information. -->
 
