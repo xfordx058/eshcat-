@@ -1,0 +1,19 @@
+{
+  "name": "eSHCAT — Electronic Services Hub for Catarman",
+  "short_name": "eSHCAT",
+  "description": "One Municipality. Connected Services. Easier Access.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F7FA",
+  "theme_color": "#2563EB",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/assets/logo/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

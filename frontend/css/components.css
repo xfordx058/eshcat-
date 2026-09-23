@@ -1,0 +1,361 @@
+/* ============================================================
+   eSHCAT — components.css
+   Reusable component styles: tables, auth cards, stat tiles,
+   steps, search results, detail pages
+   ============================================================ */
+
+/* ---------- Quick links on home ---------- */
+
+.quick-link {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.quick-link .icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 10px;
+  border-radius: 14px;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.quick-link:hover .icon {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* ---------- Steps ---------- */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+}
+
+.step::before {
+  counter-increment: step;
+  content: counter(step);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.step h3 {
+  font-size: 0.98rem;
+  margin-bottom: 4px;
+  color: var(--color-primary-dark);
+}
+
+.step p {
+  font-size: 0.87rem;
+  color: var(--color-text-secondary);
+}
+
+/* ---------- Stat tiles ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.stat {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+}
+
+.stat .num {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.1;
+}
+
+.stat .label {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+/* ---------- Tables ---------- */
+
+.table-wrap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+table.data th,
+table.data td {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+table.data th {
+  background: var(--color-bg);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary-dark);
+  font-weight: 700;
+}
+
+table.data tr:last-child td {
+  border-bottom: none;
+}
+
+table.data tbody tr:hover {
+  background: #fafcff;
+}
+
+/* ---------- Auth card ---------- */
+
+.auth-card {
+  max-width: 420px;
+  margin: 48px auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 32px;
+}
+
+.auth-card h1 {
+  font-size: 1.3rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 4px;
+}
+
+.auth-card .sub {
+  color: var(--color-text-secondary);
+  margin-bottom: 22px;
+}
+
+/* ---------- Stacked toolbar (filters) ---------- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.toolbar .grow {
+  flex: 1;
+  min-width: 200px;
+}
+
+.toolbar select {
+  width: auto;
+}
+
+/* ---------- Result / empty states ---------- */
+
+.empty {
+  text-align: center;
+  padding: 44px 20px;
+  color: var(--color-text-secondary);
+}
+
+.empty .big {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+/* ---------- Requirements checklist ---------- */
+
+.req-list {
+  list-style: none;
+  margin: 10px 0 18px;
+}
+
+.req-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--color-border);
+  font-size: 0.94rem;
+}
+
+.req-list li::before {
+  content: "✓";
+  color: var(--color-success);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ---------- Avatar / initials ---------- */
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* ---------- Admin layout ---------- */
+
+.admin-shell {
+  display: flex;
+  min-height: calc(100vh - 68px);
+}
+
+.admin-main {
+  flex: 1;
+  padding: 28px 20px;
+  max-width: 1140px;
+}
+
+.admin-main > h1 {
+  font-size: 1.5rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 18px;
+}
+
+/* ---------- Tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.tabs a {
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tabs a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.tabs a.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* ---------- Reference number box ---------- */
+
+.ref-box {
+  text-align: center;
+  padding: 28px 20px;
+  background: var(--color-bg);
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--radius-lg);
+  margin: 20px 0;
+}
+
+.ref-box .ref {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-primary-dark);
+  word-break: break-all;
+}
+
+.ref-box .hint {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  margin-top: 6px;
+}
+
+/* ---------- Detail page two-column ---------- */
+
+.split {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.split .sticky-form {
+  position: sticky;
+  top: 84px;
+}
+
+/* ---------- Announcement items ---------- */
+
+.announcement {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  margin-bottom: 16px;
+}
+
+.announcement.pinned {
+  border-left: 4px solid var(--color-warning);
+}
+
+.announcement h3 {
+  font-size: 1.02rem;
+  color: var(--color-primary-dark);
+}
+
+.announcement .meta {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin: 2px 0 8px;
+}
+
+/* ---------- Print-safe ---------- */
+
+@media print {
+  .site-header,
+  .site-footer,
+  .hero-actions,
+  .btn {
+    display: none !important;
+  }
+}

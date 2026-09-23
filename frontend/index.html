@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563EB" />
+  <meta name="description" content="eSHCAT — Electronic Services Hub for Catarman. One Municipality. Connected Services. Easier Access." />
+  <title>eSHCAT — Electronic Services Hub for Catarman</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563EB'/%3E%3Ctext x='32' y='42' font-family='Arial' font-size='30' font-weight='bold' fill='white' text-anchor='middle'%3EeS%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body data-page="home">
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Municipal Digital Services</span>
+        <h1>Electronic Services Hub for Catarman</h1>
+        <p class="tagline">One Municipality. Connected Services. Easier Access.</p>
+        <p class="lead">Find municipal services, submit requests, and track your application online — without needing an account.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="pages/services.html">Explore Services →</a>
+          <a class="btn btn-outline-light" href="pages/track.html">Track Request</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <!-- Bento: search + track -->
+      <section class="section">
+        <div class="bento-grid">
+          <div class="glass-card bento-4">
+            <div class="icon-tile">🔎</div>
+            <h3>What service are you looking for?</h3>
+            <p class="note" style="margin-bottom:16px">Search our municipal service directory.</p>
+            <form id="homeSearchForm" class="search-strip" action="pages/services.html" method="get" role="search">
+              <input type="search" name="q" id="homeSearch" placeholder="e.g. death certificate, permit..." aria-label="Search services" />
+              <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+          </div>
+          <div class="glass-card bento-2">
+            <div class="icon-tile">📍</div>
+            <h3>Track your request</h3>
+            <p class="note" style="margin-bottom:14px">Have a reference number? Check your status instantly.</p>
+            <a class="btn btn-secondary" style="width:100%" href="pages/track.html">Track Request →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Popular services -->
+      <section class="section" style="padding-top:0">
+        <div class="section-header">
+          <span class="kicker">Popular Services</span>
+          <h2>Start with these common requests</h2>
+        </div>
+        <div class="bento-grid">
+          <a class="card bento-2" href="pages/service-details.html?id=1">
+            <div class="icon-tile">🕊️</div>
+            <div class="dept">Civil Registry</div>
+            <h3>E-Death Certificate</h3>
+            <p>Request information and submit the prototype application online.</p>
+            <div class="foot"><span>Apply online</span><span>View →</span></div>
+          </a>
+          <a class="card bento-2" href="pages/service-details.html?id=2">
+            <div class="icon-tile">👶</div>
+            <div class="dept">Civil Registry</div>
+            <h3>Birth Certificate</h3>
+            <p>Request a certified copy of a birth certificate.</p>
+            <div class="foot"><span>Apply online</span><span>View →</span></div>
+          </a>
+          <a class="card bento-2" href="pages/service-details.html?id=4">
+            <div class="icon-tile">🏪</div>
+            <div class="dept">Business Permits</div>
+            <h3>Business Permit</h3>
+            <p>Apply for a new or renewed Mayor's Permit.</p>
+            <div class="foot"><span>Inquire at office</span><span>View →</span></div>
+          </a>
+        </div>
+        <p style="margin-top:18px"><a href="pages/services.html">Browse all services →</a></p>
+      </section>
+
+      <!-- How it works -->
+      <section class="section" style="padding-top:0">
+        <div class="section-header">
+          <span class="kicker">How It Works</span>
+          <h2>From request to resolution</h2>
+        </div>
+        <div class="steps">
+          <div class="step"><h3>Find a Service</h3><p>Browse the directory and view requirements.</p></div>
+          <div class="step"><h3>Submit Your Request</h3><p>Complete the application online.</p></div>
+          <div class="step"><h3>Get a Reference Number</h3><p>Use it to track your application.</p></div>
+          <div class="step"><h3>Track Your Request</h3><p>Follow status updates as the office processes it.</p></div>
+        </div>
+      </section>
+
+      <!-- Announcements + contacts -->
+      <section class="section" style="padding-top:0">
+        <div class="bento-grid">
+          <div class="bento-4">
+            <div class="section-header">
+              <span class="kicker">Announcements</span>
+              <h2>Latest updates</h2>
+            </div>
+            <div id="announcementsHome">
+              <div class="loading"><span class="spinner"></span><span>Loading announcements...</span></div>
+            </div>
+            <p style="margin-top:12px"><a href="pages/announcements.html">View all announcements →</a></p>
+          </div>
+          <div class="bento-2">
+            <div class="card">
+              <h3>🆘 Emergency &amp; Important Info</h3>
+              <ul class="note" style="margin-top:12px;padding-left:18px;list-style:none">
+                <li style="margin-bottom:8px"><strong>Police:</strong> (055) 555-0111</li>
+                <li style="margin-bottom:8px"><strong>Fire:</strong> (055) 555-0112</li>
+                <li style="margin-bottom:8px"><strong>Municipal Hall:</strong> (055) 555-0100</li>
+                <li style="margin-bottom:8px"><strong>Office Hours:</strong> Mon–Fri, 8:00 AM – 5:00 PM</li>
+              </ul>
+              <a class="btn btn-secondary" style="width:100%;margin-top:10px" href="pages/offices.html">View Offices</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="installBanner" class="install-banner">
+    <span>Install eSHCAT on your device for quick access.</span>
+    <button class="btn btn-accent btn-sm" data-install type="button">Install</button>
+    <button class="btn btn-secondary btn-sm" data-dismiss-install type="button">Later</button>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/announcements.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var form = document.getElementById("homeSearchForm");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var q = document.getElementById("homeSearch").value;
+        window.location.href = "pages/services.html" + (q ? "?q=" + encodeURIComponent(q) : "");
+      });
+    });
+  </script>
+</body>
+</html>

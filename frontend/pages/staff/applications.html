@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563EB" />
+  <title>Applications — eSHCAT Staff</title>
+  <link rel="icon" href="../../assets/logo/favicon.svg" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/components.css" />
+  <link rel="stylesheet" href="../../css/staff.css" />
+  <link rel="stylesheet" href="../../css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body data-page="staff-applications" data-require-auth>
+  <main>
+    <div class="admin-shell">
+      <aside class="side-nav" aria-label="Staff navigation">
+        <a href="dashboard.html">📊 Overview</a>
+        <a class="active" href="applications.html">📄 Applications</a>
+        <a href="#" data-logout>🚪 Logout</a>
+      </aside>
+      <div class="admin-main">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px" id="userChip"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin:10px 0 20px">
+          <h1 style="margin:0">Applications</h1>
+          <button class="btn btn-secondary btn-sm" id="refreshBtn" type="button">↻ Refresh</button>
+        </div>
+
+        <div class="toolbar">
+          <label for="filterStatus" class="note" style="white-space:nowrap">Filter by status:</label>
+          <select id="filterStatus">
+            <option value="">All statuses</option>
+            <option>Submitted</option>
+            <option>Received</option>
+            <option>Under Review</option>
+            <option>Additional Requirements</option>
+            <option>For Verification</option>
+            <option>Forwarded</option>
+            <option>Approved</option>
+            <option>Rejected</option>
+            <option>Ready for Release</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+          </select>
+        </div>
+
+        <div id="applicationsTable">
+          <div class="loading"><span class="spinner"></span><span>Loading applications...</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/storage.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/staff/auth.js"></script>
+  <script src="../../js/staff/applications.js"></script>
+</body>
+</html>

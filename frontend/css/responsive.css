@@ -1,0 +1,229 @@
+/* ============================================================
+   eSHCAT — responsive.css
+   Breakpoints: <640 mobile · 640–1023 tablet · 1024+ desktop ·
+   1280+ large desktop. Standard CSS media queries only.
+   ============================================================ */
+
+/* ---------- Desktop default ---------- */
+.bento-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-6 { grid-column: span 2; }
+  .bento-4 { grid-column: span 2; }
+  .bento-3 { grid-column: span 1; }
+  .bento-2 { grid-column: span 1; }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .bento-6 { grid-column: span 6; }
+  .bento-4 { grid-column: span 4; }
+  .bento-3 { grid-column: span 3; }
+  .bento-2 { grid-column: span 2; }
+
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (min-width: 1280px) {
+  .bento-grid {
+    gap: 20px;
+  }
+}
+
+/* ---------- Generic grids overrides (mobile first) ---------- */
+
+.grid,
+.grid-2,
+.grid-3,
+.grid-4 {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-2, .grid-3, .grid-4 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---------- Split detail layout ---------- */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (min-width: 860px) {
+  .split {
+    grid-template-columns: 1.4fr 1fr;
+  }
+
+  .split .sticky-form {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+.detail-list {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .detail-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Navigation (mobile drawer) ---------- */
+
+@media (max-width: 767px) {
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .main-nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+    display: none;
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .main-nav {
+    display: flex !important;
+  }
+}
+
+/* ---------- Hero actions ---------- */
+
+.hero-actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+@media (min-width: 480px) {
+  .hero-actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ---------- Steps ---------- */
+
+.steps {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---------- Stats ---------- */
+
+.stats {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 640px) {
+  .stats {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+/* ---------- Forms ---------- */
+
+.form-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Tables on mobile ---------- */
+
+@media (max-width: 639px) {
+  .table-wrap {
+    margin: 0;
+    border-radius: var(--radius-md);
+  }
+}
+
+/* ---------- Staff layout ---------- */
+
+@media (max-width: 900px) {
+  .admin-shell {
+    flex-direction: column;
+  }
+
+  .side-nav {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 12px;
+  }
+
+  .side-nav a {
+    padding: 8px 12px;
+  }
+}
+
+/* ---------- Misc spacing ---------- */
+
+@media (max-width: 480px) {
+  .section {
+    padding: 32px 0;
+  }
+
+  .ref-box .ref {
+    font-size: 1.2rem;
+  }
+}

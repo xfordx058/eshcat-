@@ -1,10 +1,8 @@
-import json
 import os
 import sqlite3
 
 from flask import Flask, jsonify
 from flask_cors import CORS
-from flask import send_from_directory
 
 from . import config, database
 from .routes.announcements import announcements_bp
@@ -29,7 +27,11 @@ def create_app() -> Flask:
 
     CORS(app, supports_credentials=True)
 
-    from werkzeug.exceptions import BadRequest, HTTPException
+    @app.route("/", endpoint="home")
+    def index():
+        return app.send_static_file("index.html")
+
+    from werkzeug.exceptions import HTTPException
 
     @app.errorhandler(HTTPException)
     def handle_http_exception(exc: HTTPException):
