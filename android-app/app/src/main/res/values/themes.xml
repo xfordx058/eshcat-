@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. eSHCAT is a Compose-only app; the Android XML context
+         only needs a minimal theme without an action bar. -->
+    <style name="Base.Theme.ESHCAT" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.ESHCAT" parent="Base.Theme.ESHCAT" />
+</resources>
