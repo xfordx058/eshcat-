@@ -29,7 +29,7 @@ Homepage shows the hero: *"Electronic Services Hub for Catarman."* Click **Explo
 
 ## Step 2 — Browse
 
-Filter or click **E-Death Certificate** (Civil Registry). The service page shows description, requirements, process, office info, and **Apply Online**.
+Filter or click **Death Certificate** (Civil Registry). The service page shows description, requirements, process, office info, and **Apply Online**.
 
 ## Step 3 — Apply
 
