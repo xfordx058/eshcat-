@@ -1,7 +1,7 @@
 # eSHCAT
 ## Electronic Services Hub for Catarman
 
-**One Municipality. Connected Services. Easier Access.**
+**One Municipality. Connected Services. Easier Mobile Access.**
 
 ### Team Walang Kanin Bossing
 Digital Government / Civic Technology  
@@ -29,9 +29,9 @@ Residents often need to:
 
 # Our Solution
 
-## One digital hub for Catarman services
+## Municipal services, made simple on mobile
 
-eSHCAT connects residents and municipal staff through one responsive web application.
+eSHCAT brings Catarman's services into one mobile-friendly app experience. Residents can install it from a compatible browser and open it like an app, with the same core services available through the website. The focus is simple: help residents find what they need, send a request, and check its progress from their phone.
 
 Residents can:
 
@@ -41,11 +41,13 @@ Residents can:
 - Report community concerns with optional photo evidence
 - Track updates using a reference number
 
+The app keeps the same services and request process as the web version, with layouts and quick actions designed for convenient use on a phone. No citizen account is required.
+
 <!-- Speaker notes: Emphasize that no account is required for the public-facing services. -->
 
 ---
 
-# Resident Journey
+# Mobile Resident Journey
 
 ```text
 Discover a service
@@ -59,13 +61,15 @@ Receive a reference number
 Track status and timeline online
 ```
 
-**Clear next steps. Fewer follow-ups. Better visibility.**
+**A simpler way to access the same municipal services from a phone.**
 
 <!-- Speaker notes: This is the main story of the product. Walk through it as a single connected experience. -->
 
 ---
 
 # Core Citizen Features
+
+The mobile app brings the public-facing eSHCAT functions together in one place. Residents can use the same service directory, applications, appointments, reports, announcements, and request tracking available on the web.
 
 ### Municipal service directory
 Configurable offices, services, requirements, fees, and estimated processing times.
@@ -204,10 +208,10 @@ This gives offices a clearer view of incoming concerns and completed work.
 | Backend | Flask / Python |
 | Database | SQLite |
 | Communication | Gmail SMTP email notifications |
-| Offline support | Local drafts, IndexedDB queue, service worker |
-| Design | Responsive Bento UI with accessible components |
+| Design | Mobile-friendly responsive interface with accessible components |
+| App experience | Installable Progressive Web App (PWA) |
 
-The system uses standard web technologies with no frontend framework dependency.
+The system uses standard web technologies with no frontend framework dependency. The mobile app connects to eSHCAT's online services and can be added to a compatible device's home screen for quick access. A reference number is shown after the server confirms a submission.
 
 ---
 
@@ -215,14 +219,14 @@ The system uses standard web technologies with no frontend framework dependency.
 
 ## Recommended live presentation sequence
 
-1. Open the public homepage
-2. Browse a municipal service and its requirements
-3. Submit a sample application or appointment
-4. Copy the generated reference number
-5. Open **Track Request** and show the initial timeline
-6. Log in to the Staff Portal
+1. Open eSHCAT on a phone and show the mobile home screen and quick actions
+2. If available, show how eSHCAT can be installed from the browser
+3. Browse a municipal service and its requirements
+4. Submit a sample application or appointment
+5. Copy the generated reference number and open **Track Request**
+6. Show the request timeline, then log in to the Staff Portal
 7. Open the record, update its status, and add a remark
-8. Return to tracking and show the updated status
+8. Return to mobile tracking and show the updated status
 9. Open Reports and show the daily summary/PDF option
 10. Open the COMELEC page and demonstrate present-number search and room assignment
 11. Open the COMELEC dashboard and review a voter transaction history
@@ -234,7 +238,7 @@ The system uses standard web technologies with no frontend framework dependency.
 # Value to the Municipality
 
 ### For residents
-Convenient access, clearer requirements, fewer manual follow-ups, and better visibility.
+The same municipal services in a simple, mobile-friendly app experience, with clearer requirements, fewer manual follow-ups, and better visibility.
 
 ### For staff
 Centralized records, faster review, structured status workflows, and searchable history.
@@ -252,7 +256,7 @@ Potential next steps for production readiness:
 - Add stronger identity verification and document security
 - Connect to official government records where appropriate
 - Add analytics for response time and service performance
-- Expand accessibility, localization, and mobile testing
+- Continue improving accessibility, localization, and the mobile experience
 - Deploy with production monitoring, backups, and security review
 
 **eSHCAT is a strong starting point—not a replacement for official validation and governance.**
@@ -261,9 +265,9 @@ Potential next steps for production readiness:
 
 # Closing
 
-## eSHCAT makes municipal services easier to discover, request, track, and manage.
+## eSHCAT makes municipal services easier to access on mobile, discover, request, track, and manage.
 
-**One Municipality. Connected Services. Easier Access.**
+**One Municipality. Connected Services. Easier Mobile Access.**
 
 ### Team Walang Kanin Bossing
 
