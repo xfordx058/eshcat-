@@ -56,6 +56,27 @@
     else stopSiren();
   }
 
+  function mapFrameForLocations(origin, destination) {
+    const project = (latitude, longitude) => {
+      const clampedLatitude = Math.max(-85.0511, Math.min(85.0511, latitude));
+      const sinLatitude = Math.sin(clampedLatitude * Math.PI / 180);
+      return {
+        x: (longitude + 180) / 360,
+        y: 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI),
+      };
+    };
+    const first = project(origin.latitude, origin.longitude);
+    const second = project(destination.latitude, destination.longitude);
+    const centerX = (first.x + second.x) / 2;
+    const centerY = (first.y + second.y) / 2;
+    const spanX = Math.max(Math.abs(first.x - second.x), 0.00001);
+    const spanY = Math.max(Math.abs(first.y - second.y), 0.00001);
+    const zoom = Math.max(4, Math.min(17, Math.floor(Math.log2(Math.min(640 / (256 * spanX), 320 / (256 * spanY)))) - 1));
+    const centerLatitude = Math.atan(Math.sinh(Math.PI * (1 - 2 * centerY))) * 180 / Math.PI;
+    const centerLongitude = centerX * 360 - 180;
+    return { zoom, center: `${centerLatitude},${centerLongitude}` };
+  }
+
   function mapLinks(incident) {
     const query = incident.latitude != null && incident.longitude != null
       ? `${incident.latitude},${incident.longitude}`
@@ -63,9 +84,13 @@
     const encoded = encodeURIComponent(query);
     const origin = staffLocation ? `${staffLocation.latitude},${staffLocation.longitude}` : "";
     const encodedOrigin = encodeURIComponent(origin);
+    const hasRescueCoordinates = incident.latitude != null && incident.longitude != null;
+    const framing = staffLocation && hasRescueCoordinates
+      ? mapFrameForLocations(staffLocation, { latitude: Number(incident.latitude), longitude: Number(incident.longitude) })
+      : null;
     return {
       embed: staffLocation
-        ? `https://maps.google.com/maps?saddr=${encodedOrigin}&daddr=${encoded}&output=embed`
+        ? `https://maps.google.com/maps?saddr=${encodedOrigin}&daddr=${encoded}&dirflg=d${framing ? `&ll=${encodeURIComponent(framing.center)}&z=${framing.zoom}` : ""}&output=embed`
         : `https://maps.google.com/maps?q=${encoded}&z=16&output=embed`,
       directions: `https://www.google.com/maps/dir/?api=1&${staffLocation ? `origin=${encodedOrigin}&` : ""}destination=${encoded}&travelmode=driving`,
     };

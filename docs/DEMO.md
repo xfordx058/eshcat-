@@ -91,7 +91,7 @@ From application details, select a destination department → **Forward**. Statu
 1. Tap the floating red **SOS** button on the public homepage. The Red-level SOS alert is sent immediately; allow location access if prompted. An optional dialog appears afterward for the accident type, landmark, and extra details. The MDRRMO map shows device GPS coordinates and the reported accuracy when the browser permits precise location access.
 2. Sign in as `staff.drrmo@eshcat.local` with the configured seed password. The login opens the MDRRMO portal.
 3. Tap **Share my location** and allow GPS access to set the responder route origin. The responder coordinates stay in that browser session and are not saved.
-4. The incident map shows the responder and rescue locations with a suggested driving route when Google Maps can resolve both points. **Route & ETA in Google Maps** opens directions with the estimated travel time.
+4. The incident map centers and zooms to include both GPS locations, with a suggested driving route. **Route & ETA in Google Maps** opens directions with the estimated travel time.
 5. Click **Enable alarm sound** once so the browser can play the alert. New incidents appear in the live queue and sound a rising-and-falling ambulance-style siren.
 6. Use the level selector to triage the incident to Yellow, Orange, or Red, then choose **Take response and silence alarm**. The responder's account is recorded. Mark the incident resolved when the response is complete.
 7. Optionally send a different incident to **Ignore for me** and show that it remains visible to other MDRRMO staff.
