@@ -25,10 +25,10 @@
     } catch (err) {
       // Fallback data so the page still works offline-ish
       offices = [
-        { name: "Civil Registry", services: ["Birth Certificate", "Marriage Certificate", "E-Death Certificate"] },
-        { name: "Business Permits", services: ["Business Permit"] },
-        { name: "Municipal Treasurer", services: ["Real Property Tax Inquiry"] },
-        { name: "Barangay Affairs", services: ["Barangay Clearance"] },
+        { name: "Civil Registry", services: ["Birth Certificate", "Marriage Certificate", "Death Certificate"] },
+        { name: "BPLO", services: ["New / Renew Business Permit"] },
+        { name: "Municipal Treasurer", services: ["Community Tax Certificate (Cedula)"] },
+        { name: "Municipal Assessor", services: ["Transfer of Ownership of Real Property"] },
       ];
     }
 

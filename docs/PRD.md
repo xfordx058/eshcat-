@@ -133,11 +133,11 @@ Main navigation: Home, Services, Track Request, Appointments, Report Concern, An
 
 Browse services without logging in. Categories include Civil Registry, Business Permits, Treasurer, Assessor, Engineering, Planning, Health, Social Welfare, Agriculture, Environment, DRRM, Employment, Tourism, General Services. Each service card shows name, department, short description, estimated processing info, requirements, availability, and a View action. The details page shows full info plus `[Apply Online]` when available.
 
-## 15–16. E-Death Certificate
+## 15–16. Online Service Application (Death Certificate)
 
 The primary hackathon demonstration. **Prototype workflow only** — actual legal requirements, fees, identity verification, and release procedures must be validated with the appropriate municipal office before deployment.
 
-Workflow: Citizen → Civil Registry → E-Death Certificate → Requirements → Application Form → Submit → Reference Number → Staff Review → Verification → Decision → Citizen Notification.
+Workflow: Citizen → Civil Registry → Death Certificate → Requirements → Application Form → Submit → Reference Number → Staff Review → Verification → Decision → Citizen Notification.
 
 ## 17–21. Application Form, Submission, Reference, Tracking, Timeline
 

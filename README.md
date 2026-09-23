@@ -30,7 +30,7 @@ Inspired by the design direction *Modern Minimalism + Soft Glassmorphism + Bento
 
 - Browse a configurable municipal service directory
 - View requirements, process, and office information per service
-- Submit applications online (E-Death Certificate primary demo)
+- Submit applications online (Death Certificate primary demo)
 - Receive a server-generated reference number
 - Track application status with a full timeline
 - Request office appointments
@@ -199,9 +199,9 @@ POST /api/staff/applications/{id}/forward
 
 ---
 
-## E-Death Certificate Demo Flow
+## Death Certificate Demo Flow
 
-1. Open the homepage → **Explore Services** → select **E-Death Certificate**.
+1. Open the homepage → **Explore Services** → select **Death Certificate**.
 2. Review requirements → **Apply Online**.
 3. Complete the form → **Submit Application**.
 4. Note the reference number (e.g. `CAT-DC-7F3A91D2`).

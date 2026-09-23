@@ -16,7 +16,7 @@ List all services with department, description, estimated processing, availabili
     "id": 1,
     "department_id": 1,
     "department": "Civil Registry",
-    "name": "E-Death Certificate",
+    "name": "Death Certificate",
     "short_description": "...",
     "description": "...",
     "estimated_processing": "5-7 working days",
@@ -33,7 +33,7 @@ Single service including `form_fields` (configurable form definition) and `offic
 ```json
 {
   "id": 1,
-  "name": "E-Death Certificate",
+  "name": "Death Certificate",
   "form_fields": [
     { "label": "Full Name", "field_name": "fullName", "field_type": "text", "required": true, "options": null }
   ],
@@ -69,7 +69,7 @@ Public tracking by reference number. Returns service, department, status, timest
 ```json
 {
   "reference_number": "CAT-DC-7F3A91D2",
-  "service": "E-Death Certificate",
+  "service": "Death Certificate",
   "department": "Civil Registry",
   "status": "Under Review",
   "created_at": "...",
