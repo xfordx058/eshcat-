@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Virtual Environment
+python3.14/
+bin/
+
+# Flask / Backend
+instance/
+.webassets-cache
+backend/uploads/*
+!backend/uploads/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# VS Code / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Node (if ever used for tooling)
+node_modules/
+npm-debug.log*
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
