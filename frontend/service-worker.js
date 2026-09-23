@@ -5,7 +5,7 @@
    Staff pages and API responses are NOT cached.
  */
 
-const CACHE_NAME = "eshcat-v1";
+const CACHE_NAME = "eshcat-v2";
 const ASSETS = [
   "/",
   "/index.html",

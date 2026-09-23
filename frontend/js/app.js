@@ -4,6 +4,7 @@
  */
 
 (function () {
+  window.ESH = window.ESH || {};
   const ESH = window.ESH;
 
   function currentPath() {
@@ -108,8 +109,25 @@
     }
 
     update();
-    ESH.storage.onNetworkChange(update);
+    if (ESH.storage && ESH.storage.onNetworkChange) {
+      ESH.storage.onNetworkChange(update);
+    }
     document.body.prepend(banner);
+  }
+
+  function injectApiBanner() {
+    const banner = document.createElement("div");
+    banner.className = "network-banner api-banner";
+    banner.id = "apiBanner";
+    banner.textContent = "Cannot reach the eSHCAT API. Run the app through Flask: python -m backend.app";
+
+    if (ESH.api && ESH.api.get) {
+      ESH.api
+        .get("/services")
+        .catch(() => {
+          document.body.prepend(banner);
+        });
+    }
   }
 
   function setupPWAInstall() {
@@ -147,6 +165,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     if (document.body) {
       injectNetworkBanner();
+      injectApiBanner();
       injectHeader();
       injectFooter();
       setupPWAInstall();

@@ -6,6 +6,8 @@
    backend confirms submission.
  */
 
+window.ESH = window.ESH || {};
+
 const DRAFTS_KEY = "eshcat.drafts";
 
 function isOnline() {
