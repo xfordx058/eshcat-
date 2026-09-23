@@ -1,0 +1,50 @@
+/* Shared portal design for every municipal department. */
+:root {
+  --dp-ink: #172554;
+  --dp-blue: #2563eb;
+  --dp-soft: #eff6ff;
+  --dp-border: #dbe4f0;
+}
+
+.dp-body { margin: 0; min-height: 100vh; background: #f5f7fb; color: #172033; font-family: Inter, Arial, sans-serif; }
+.dp-shell { min-height: 100vh; display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+.dp-sidebar { padding: 24px 16px; color: #dce8ff; background: linear-gradient(180deg, #172554, #1e40af); }
+.dp-brand { display: flex; align-items: center; gap: 10px; margin: 0 8px 30px; color: #fff; }
+.dp-brand .mark, .dp-auth-brand .mark { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 13px; background: #60a5fa; color: #172554; font-weight: 800; }
+.dp-brand strong, .dp-brand small { display: block; }
+.dp-brand small { margin-top: 2px; color: #bcd0f5; font-size: .72rem; }
+.dp-nav { display: grid; gap: 5px; }
+.dp-nav .nav-section { margin: 18px 10px 5px; color: #9fb8e9; font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.dp-nav a { padding: 11px 12px; border-radius: 10px; color: #dce8ff; font-size: .9rem; text-decoration: none; }
+.dp-nav a:hover, .dp-nav a.active { background: rgba(255,255,255,.14); color: #fff; }
+.dp-nav .count { float: right; min-width: 22px; padding: 2px 6px; border-radius: 999px; background: #60a5fa; color: #172554; text-align: center; font-size: .72rem; font-weight: 800; }
+.dp-user { margin-top: 30px; padding: 14px 10px; border-top: 1px solid rgba(255,255,255,.16); color: #fff; font-size: .86rem; }
+.dp-user small { display: block; margin-top: 3px; color: #bcd0f5; }
+.dp-main { padding: 32px clamp(18px, 4vw, 54px); }
+.dp-topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 22px; }
+.dp-topbar h1 { margin: 0; color: var(--dp-ink); font-size: clamp(1.55rem, 3vw, 2.2rem); }
+.dp-topbar p { margin: 6px 0 0; color: #64748b; }
+.dp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.dp-btn { min-height: 40px; padding: 0 14px; border: 1px solid var(--dp-border); border-radius: 9px; background: #fff; color: #334155; cursor: pointer; font: inherit; font-weight: 700; }
+.dp-btn.primary { border-color: var(--dp-blue); background: var(--dp-blue); color: #fff; }
+.dp-btn:hover { filter: brightness(.97); }
+.dp-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
+.dp-stat, .dp-card { border: 1px solid var(--dp-border); border-radius: 16px; background: #fff; box-shadow: 0 5px 20px rgba(15,23,42,.04); }
+.dp-stat { padding: 18px; }
+.dp-stat .num { color: var(--dp-blue); font-size: 1.8rem; font-weight: 800; }
+.dp-stat .label { color: #64748b; font-size: .82rem; font-weight: 700; }
+.dp-card { padding: 22px; }
+.dp-card h2 { margin: 0 0 5px; color: var(--dp-ink); font-size: 1.15rem; }
+.dp-card p { color: #64748b; }
+.dp-toolbar { display: flex; gap: 10px; margin: 18px 0; }
+.dp-toolbar input, .dp-toolbar select { min-height: 40px; padding: 8px 11px; border: 1px solid var(--dp-border); border-radius: 9px; background: #fff; color: #334155; font: inherit; }
+.dp-toolbar input { flex: 1; min-width: 180px; }
+.dp-table-wrap { overflow-x: auto; border: 1px solid var(--dp-border); border-radius: 12px; }
+.dp-table { width: 100%; min-width: 700px; border-collapse: collapse; }
+.dp-table th, .dp-table td { padding: 12px 14px; border-bottom: 1px solid #edf2f7; text-align: left; font-size: .86rem; }
+.dp-table th { background: #f8fafc; color: #64748b; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; }
+.dp-table tr:last-child td { border-bottom: 0; }
+.dp-badge { display: inline-flex; padding: 4px 9px; border-radius: 999px; background: var(--dp-soft); color: var(--dp-blue); font-size: .75rem; font-weight: 800; }
+.dp-empty, .dp-loading { padding: 36px 15px; color: #64748b; text-align: center; }
+@media (max-width: 900px) { .dp-shell { grid-template-columns: 1fr; } .dp-sidebar { padding: 16px; } .dp-nav { display: flex; overflow-x: auto; } .dp-nav .nav-section { display: none; } .dp-nav a { white-space: nowrap; } .dp-user { display: none; } .dp-stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .dp-topbar { flex-direction: column; } .dp-stats { grid-template-columns: 1fr 1fr; } .dp-toolbar { flex-direction: column; } .dp-toolbar input { width: auto; } }

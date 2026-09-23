@@ -11,6 +11,13 @@ DATABASE_PATH = os.getenv(
     os.path.join(os.path.dirname(BASE_DIR), "database", "eshcat.sqlite"),
 )
 
+DB_DRIVER = os.getenv("DB_DRIVER", "sqlite").lower()
+MYSQL_HOST = os.getenv("MYSQL_HOST", "127.0.0.1")
+MYSQL_PORT = int(os.getenv("MYSQL_PORT", "3306"))
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "eshcat")
+MYSQL_USER = os.getenv("MYSQL_USER", "root")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")
+
 SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
 
 STAFF_SEED_PASSWORD = os.getenv("STAFF_SEED_PASSWORD", "change_me_123")

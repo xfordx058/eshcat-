@@ -1,0 +1,65 @@
+/* eSHCAT — bento.css
+   Bento grid layout and responsive column spans.
+   Keep all bento-specific layout code in this file.
+ */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.bento-12, .bento-8, .bento-6, .bento-4, .bento-3, .bento-2 {
+  grid-column: auto / span 1;
+}
+
+/* Quick action cards are four equal cards on desktop. */
+.quick-actions .bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.quick-actions .quick-card {
+  grid-column: span 1;
+}
+
+@media (min-width: 560px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bento-12, .bento-8, .bento-6, .bento-4 { grid-column: auto / span 2; }
+  .bento-3, .bento-2 { grid-column: auto / span 1; }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bento-12, .bento-8, .bento-6, .bento-4 { grid-column: auto / span 2; }
+  .bento-3, .bento-2 { grid-column: auto / span 1; }
+}
+
+@media (max-width: 1023px) {
+  .quick-actions .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 559px) {
+  .quick-actions .bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1440px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bento-12, .bento-8, .bento-6, .bento-4 { grid-column: auto / span 2; }
+  .bento-3, .bento-2 { grid-column: auto / span 1; }
+}

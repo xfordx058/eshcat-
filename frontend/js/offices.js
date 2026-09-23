@@ -74,12 +74,10 @@
       */
     }
     container.innerHTML = "";
-    const grid = ESH.el("div", { class: "bento-grid" });
     const picked = offices.filter((o) => o.services && o.services.length).slice(0, 3);
     (picked.length ? picked : offices.slice(0, 3)).forEach((o) => {
-      grid.appendChild(ESH.el("div", { class: "bento-4" }, [officeCard(o)]));
+      container.appendChild(ESH.el("div", { class: "bento-4" }, [officeCard(o)]));
     });
-    container.appendChild(grid);
   }
 
   async function renderDirectory() {
@@ -148,11 +146,9 @@
 
   function officeFallback(container) {
     container.innerHTML = "";
-    const grid = ESH.el("div", { class: "bento-grid" });
     FALLBACK.forEach((o) => {
-      grid.appendChild(ESH.el("div", { class: "bento-4" }, [officeCard(o)]));
+      container.appendChild(ESH.el("div", { class: "bento-4" }, [officeCard(o)]));
     });
-    container.appendChild(grid);
     ESH.showToast("Showing offline directory.", "info", 3500);
   }
 

@@ -201,7 +201,21 @@ INSERT INTO service_form_fields (service_id, label, field_name, field_type, requ
 INSERT INTO staff_users (id, name, email, password_hash, role, department_id, is_active) VALUES
     (1, 'Maria Santos', 'admin@eshcat.local', 'SEED_ME', 'Administrator', 1, 1),
     (2, 'Juan Dela Cruz', 'staff@eshcat.local', 'SEED_ME', 'Staff', 1, 1),
-    (3, 'Ana Reyes', 'head@eshcat.local', 'SEED_ME', 'Department Head', 2, 1);
+    (3, 'Ana Reyes', 'head@eshcat.local', 'SEED_ME', 'Department Head', 2, 1),
+    (4, 'LCRO Service Staff', 'staff.lcro@eshcat.local', 'SEED_ME', 'Staff', 1, 1),
+    (5, 'BPLO Service Staff', 'staff.bplo@eshcat.local', 'SEED_ME', 'Staff', 2, 1),
+    (6, 'MTO Service Staff', 'staff.mto@eshcat.local', 'SEED_ME', 'Staff', 3, 1),
+    (7, 'OBO Service Staff', 'staff.obo@eshcat.local', 'SEED_ME', 'Staff', 4, 1),
+    (8, 'MASSO Service Staff', 'staff.masso@eshcat.local', 'SEED_ME', 'Staff', 5, 1),
+    (9, 'MPDO Service Staff', 'staff.mpdo@eshcat.local', 'SEED_ME', 'Staff', 6, 1),
+    (10, 'Mayor Office Staff', 'staff.mayor@eshcat.local', 'SEED_ME', 'Staff', 7, 1),
+    (11, 'MHO Service Staff', 'staff.mho@eshcat.local', 'SEED_ME', 'Staff', 8, 1),
+    (12, 'MSWDO Service Staff', 'staff.mswdo@eshcat.local', 'SEED_ME', 'Staff', 9, 1),
+    (13, 'MENRO Service Staff', 'staff.menro@eshcat.local', 'SEED_ME', 'Staff', 10, 1);
+
+-- Civil portal resident (password: change_me_123 -- hashed via werkzeug when seeded through the app)
+INSERT INTO civil_users (id, username, password_hash, full_name, email) VALUES
+    (1, 'resident', 'SEED_ME', 'Ramon Resident', 'resident@example.com');
 
 -- Announcements
 INSERT INTO announcements (id, title, date_text, department, description, is_pinned) VALUES

@@ -36,6 +36,7 @@ def main():
         "/js/appointments.js": 200,
         "/js/reports.js": 200,
         "/js/offices.js": 200,
+        "/js/emergency.js": 200,
         "/js/staff/auth.js": 200,
         "/js/staff/dashboard.js": 200,
         "/js/staff/applications.js": 200,
@@ -52,10 +53,17 @@ def main():
         "/pages/staff/dashboard.html": 200,
         "/pages/staff/applications.html": 200,
         "/pages/staff/application-details.html": 200,
+        "/pages/staff/civil_portal.html": 200,
+        "/css/civil_portal.css": 200,
+        "/css/fontawesome-fallback.css": 200,
         "/manifest.json": 200,
         "/service-worker.js": 200,
         "/assets/logo/favicon.svg": 200,
         "/assets/logo/icon-192.svg": 200,
+        "/assets/fontawesome/css/all.min.css": 200,
+        "/assets/fontawesome/webfonts/fa-solid-900.woff2": 200,
+        "/assets/fontawesome/webfonts/fa-regular-400.woff2": 200,
+        "/assets/fontawesome/webfonts/fa-brands-400.woff2": 200,
     }
     failed = 0
     for path, expected in checks.items():

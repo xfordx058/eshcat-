@@ -5,51 +5,6 @@
    Standard CSS media queries only.
    ============================================================ */
 
-/* ---------- Bento grid (12-col system) ---------- */
-
-.bento-grid {
-  grid-template-columns: repeat(1, 1fr);
-}
-
-.bento-12, .bento-8, .bento-6, .bento-4, .bento-3, .bento-2 {
-  grid-column: auto / span 1;
-}
-
-@media (min-width: 560px) {
-  .bento-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .bento-12, .bento-8, .bento-6, .bento-4 { grid-column: auto / span 2; }
-  .bento-3, .bento-2 { grid-column: auto / span 1; }
-}
-
-@media (min-width: 1024px) {
-  .bento-grid {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 20px;
-  }
-
-  .bento-12, .bento-8 { grid-column: auto / span 6; }
-  .bento-6 { grid-column: auto / span 6; }
-  .bento-4 { grid-column: auto / span 4; }
-  .bento-3 { grid-column: auto / span 3; }
-  .bento-2 { grid-column: auto / span 2; }
-}
-
-@media (min-width: 1440px) {
-  .bento-grid {
-    grid-template-columns: repeat(12, 1fr);
-  }
-
-  .bento-12 { grid-column: auto / span 12; }
-  .bento-8 { grid-column: auto / span 8; }
-  .bento-6 { grid-column: auto / span 6; }
-  .bento-4 { grid-column: auto / span 4; }
-  .bento-3 { grid-column: auto / span 3; }
-  .bento-2 { grid-column: auto / span 2; }
-}
-
 /* ---------- Generic grids (mobile first) ---------- */
 
 .grid,

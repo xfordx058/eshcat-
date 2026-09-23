@@ -13,8 +13,14 @@
     const link = document.createElement("link");
     link.id = "eshcat-fa-css";
     link.rel = "stylesheet";
-    link.href = "/assets/fontawesome/css/all.min.css";
+    link.href = "/assets/fontawesome/css/all.min.css?v=5";
     document.head.appendChild(link);
+
+    const fallback = document.createElement("link");
+    fallback.id = "eshcat-fa-fallback";
+    fallback.rel = "stylesheet";
+    fallback.href = "/css/fontawesome-fallback.css?v=5";
+    document.head.appendChild(fallback);
   }
   injectFontAwesome();
 

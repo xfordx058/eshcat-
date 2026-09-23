@@ -120,7 +120,7 @@ def update_status(application_id: int, staff_id: int, new_status: str, remarks: 
             return False
         old_status = row["status"]
         conn.execute(
-            "UPDATE applications SET status = ?, updated_at = datetime('now') WHERE id = ?",
+            "UPDATE applications SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
             (new_status, application_id),
         )
         conn.execute(

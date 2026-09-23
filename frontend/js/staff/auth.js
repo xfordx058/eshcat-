@@ -12,6 +12,27 @@
     }
   }
 
+  function destination(user) {
+    // The general staff account keeps the main dashboard. Department-specific
+    // accounts use the portal assigned to their department.
+    if (user.role === "Administrator" || (user.role === "Staff" && !String(user.email || "").startsWith("staff."))) {
+      return "/pages/staff/dashboard.html";
+    }
+    if (Number(user.department_id) === 1) return "/pages/staff/civil_portal.html";
+    const portals = {
+      2: "bplo_portal.html",
+      3: "treasurer_portal.html",
+      4: "building_portal.html",
+      5: "assessor_portal.html",
+      6: "planning_portal.html",
+      7: "mayor_portal.html",
+      8: "health_portal.html",
+      9: "social_welfare_portal.html",
+      10: "environment_portal.html",
+    };
+    return `/pages/staff/${portals[Number(user.department_id)] || "department_portal.html"}`;
+  }
+
   function initLogin() {
     const form = document.getElementById("loginForm");
     if (!form) return;
@@ -28,8 +49,8 @@
       }
       ESH.setLoading(btn, "Signing in...");
       try {
-        await ESH.api.post("/staff/login", payload);
-        window.location.href = "/pages/staff/dashboard.html";
+        const user = await ESH.api.post("/staff/login", payload);
+        window.location.href = destination(user);
       } catch (err) {
         ESH.unsetLoading(btn);
         ESH.showToast(err.message || "Login failed.", "error");

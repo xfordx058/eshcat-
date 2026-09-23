@@ -5,7 +5,7 @@
    Staff pages and API responses are NOT cached.
  */
 
-const CACHE_NAME = "eshcat-v4";
+const CACHE_NAME = "eshcat-v6";
 const ASSETS = [
   "/",
   "/index.html",
@@ -13,6 +13,7 @@ const ASSETS = [
   "/css/style.css",
   "/css/components.css",
   "/css/responsive.css",
+  "/css/fontawesome-fallback.css",
   "/js/utils.js",
   "/js/storage.js",
   "/js/api.js",
@@ -24,6 +25,7 @@ const ASSETS = [
   "/js/appointments.js",
   "/js/reports.js",
   "/js/offices.js",
+  "/js/emergency.js",
   "/pages/services.html",
   "/pages/service-details.html",
   "/pages/apply.html",
@@ -76,6 +78,23 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => caches.match(event.request).then((hit) => hit || caches.match("/index.html")))
+    );
+    return;
+  }
+
+  // Font Awesome webfonts: always try the network first so a stale/incomplete
+  // cached font can never silently break icons again.
+  if (url.pathname.includes("/assets/fontawesome/webfonts/")) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
     );
     return;
   }

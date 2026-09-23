@@ -486,10 +486,6 @@ p, li, td, label, input, select, textarea, button {
   z-index: 2;
 }
 
-.quick-actions .bento-grid {
-  align-items: stretch;
-}
-
 .quick-card {
   display: block;
   color: inherit;
@@ -583,20 +579,6 @@ p, li, td, label, input, select, textarea, button {
   color: var(--color-primary);
   margin-bottom: 6px;
 }
-
-/* ---------- Bento grid ---------- */
-/* 12-column bento; spans map to columns (desktop). */
-
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
-}
-
-.bento-6 { grid-column: span 6; }
-.bento-4 { grid-column: span 4; }
-.bento-3 { grid-column: span 3; }
-.bento-2 { grid-column: span 2; }
 
 /* ---------- Cards ---------- */
 

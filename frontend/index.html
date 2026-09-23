@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/bento.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -181,7 +182,7 @@
 
             <div class="emergency-card" style="margin-top:18px">
               <h3>Emergency &amp; Important Numbers</h3>
-              <div class="contacts">
+              <div class="contacts" id="emergencyContacts">
                 <div class="contact-item"><div class="k">MDRRMO</div><div class="v">0906-357-0985</div></div>
                 <div class="contact-item"><div class="k">Municipal Hall</div><div class="v">(055) 500-0712</div></div>
                 <div class="contact-item"><div class="k">Rural Health Unit</div><div class="v">(055) 500-9615</div></div>
@@ -223,6 +224,7 @@
   <script src="js/announcements.js"></script>
   <script src="js/services.js"></script>
   <script src="js/offices.js"></script>
+  <script src="js/emergency.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var form = document.getElementById("homeSearchForm");

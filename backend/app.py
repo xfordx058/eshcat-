@@ -8,6 +8,8 @@ from . import config, database
 from .routes.announcements import announcements_bp
 from .routes.applications import applications_bp
 from .routes.appointments import appointments_bp
+from .routes.civil import civil_bp
+from .routes.emergency import emergency_bp
 from .routes.reports import reports_bp
 from .routes.services import public_bp
 from .routes.staff import staff_bp
@@ -26,6 +28,7 @@ def create_app() -> Flask:
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
     CORS(app, supports_credentials=True)
+    database.ensure_runtime_schema()
 
     @app.route("/", endpoint="home")
     def index():
@@ -54,7 +57,9 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(tracking_bp)
     app.register_blueprint(appointments_bp)
     app.register_blueprint(reports_bp)
+    app.register_blueprint(civil_bp)
     app.register_blueprint(announcements_bp)
+    app.register_blueprint(emergency_bp)
     app.register_blueprint(staff_bp)
 
 

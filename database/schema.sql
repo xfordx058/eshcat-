@@ -53,6 +53,15 @@ CREATE TABLE IF NOT EXISTS staff_users (
     created_at    TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS civil_users (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    username      TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    full_name     TEXT NOT NULL,
+    email         TEXT,
+    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS applications (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     reference_number TEXT NOT NULL UNIQUE,
@@ -89,19 +98,26 @@ CREATE TABLE IF NOT EXISTS appointments (
     email            TEXT NOT NULL,
     mobile           TEXT,
     status           TEXT NOT NULL DEFAULT 'Pending',
-    created_at       TEXT NOT NULL DEFAULT (datetime('now'))
+    user_id          INTEGER REFERENCES civil_users(id),
+    remarks          TEXT,
+    created_at       TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at       TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS community_reports (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     reference_number TEXT NOT NULL UNIQUE,
+    department_id    INTEGER REFERENCES departments(id),
     category         TEXT NOT NULL,
     location         TEXT,
     description      TEXT NOT NULL,
     name             TEXT,
     email            TEXT,
     status           TEXT NOT NULL DEFAULT 'Open',
-    created_at       TEXT NOT NULL DEFAULT (datetime('now'))
+    user_id          INTEGER REFERENCES civil_users(id),
+    remarks          TEXT,
+    created_at       TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at       TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS announcements (
@@ -112,6 +128,15 @@ CREATE TABLE IF NOT EXISTS announcements (
     description TEXT,
     is_pinned   INTEGER NOT NULL DEFAULT 0,
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS emergency_numbers (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    label       TEXT NOT NULL,
+    value       TEXT NOT NULL,
+    sort_order  INTEGER NOT NULL DEFAULT 0,
+    updated_by  INTEGER REFERENCES staff_users(id),
+    updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS agency_directory (

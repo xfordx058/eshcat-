@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563EB" />
+  <title>Civil Service Portal — eSHCAT</title>
+  <link rel="icon" href="../../assets/logo/favicon.svg" />
+  <link rel="stylesheet" href="../../css/civil_portal.css?v=20260923-activity" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="cp-body cp-staff-only">
+  <div class="cp-shell">
+    <aside class="cp-sidebar" aria-label="Civil service navigation">
+      <div class="cp-brand">
+        <span class="mark">eS</span>
+        <span><strong>eSHCAT</strong><small>Civil Service Portal</small></span>
+      </div>
+      <nav class="cp-nav" id="sideNav" aria-label="Main"></nav>
+      <div class="cp-side-foot" id="sideFoot"></div>
+    </aside>
+
+    <main class="cp-main">
+      <!-- ================= AUTH ================= -->
+      <section class="cp-auth" id="authView">
+        <div class="cp-auth-card">
+          <div class="cp-auth-brand">
+            <span class="mark">eS</span>
+            <div><strong>Civil Service Portal</strong><small>One Municipality · Connected Services</small></div>
+          </div>
+          <h1>Welcome</h1>
+          <p>Residents sign in to submit civil-related transactions and track their status. Civil staff review the requests forwarded to them.</p>
+
+          <div class="cp-auth-steps" id="newUserSteps">
+            <div class="cp-auth-step">
+              <span class="num">1</span>
+              <div><strong>Create your resident account</strong><small>New user? Fill out the registration form below — name, username &amp; password. No ID needed.</small></div>
+            </div>
+            <div class="cp-auth-step">
+              <span class="num">2</span>
+              <div><strong>Pick a civil service</strong><small>Book an office appointment or file a community request form.</small></div>
+            </div>
+            <div class="cp-auth-step">
+              <span class="num">3</span>
+              <div><strong>Submit &amp; track</strong><small>Your form is forwarded to the Civil Service desk — follow status updates anytime.</small></div>
+            </div>
+          </div>
+
+          <div class="cp-auth-tabs" id="authTabs">
+            <button class="active" type="button" data-auth="resident">Resident</button>
+            <button type="button" data-auth="staff">Civil Staff</button>
+          </div>
+
+          <form id="residentForm" class="cp-auth-form">
+            <div class="cp-field">
+              <label for="resUsername">Username</label>
+              <input type="text" id="resUsername" autocomplete="username" placeholder="e.g. resident" required />
+            </div>
+            <div class="cp-field">
+              <label for="resPassword">Password</label>
+              <input type="password" id="resPassword" autocomplete="current-password" placeholder="••••••••" required />
+            </div>
+            <p class="cp-auth-switch"><button type="button" id="goRegister">New here? Create an account →</button></p>
+            <button class="cp-btn cp-btn-primary cp-btn-block" id="resSignInBtn" type="submit">Sign In</button>
+          </form>
+
+          <form id="registerForm" class="cp-auth-form" hidden>
+            <div class="cp-field">
+              <label for="regName">Full Name</label>
+              <input type="text" id="regName" placeholder="e.g. Maria Dela Cruz" required />
+            </div>
+            <div class="cp-field">
+              <label for="regUsername">Username</label>
+              <input type="text" id="regUsername" placeholder="e.g. maria" required />
+            </div>
+            <div class="cp-field">
+              <label for="regEmail">Email <span style="color:var(--cp-text-muted);font-weight:400">(optional)</span></label>
+              <input type="email" id="regEmail" placeholder="you@example.com" />
+            </div>
+            <div class="cp-field">
+              <label for="regPassword">Password <span style="color:var(--cp-text-muted);font-weight:400">(min 6 chars)</span></label>
+              <input type="password" id="regPassword" autocomplete="new-password" placeholder="••••••••" required />
+            </div>
+            <p class="cp-auth-switch"><button type="button" id="goLogin">Already have an account? Sign in →</button></p>
+            <button class="cp-btn cp-btn-primary cp-btn-block" id="regBtn" type="submit">Create Account &amp; Sign In</button>
+          </form>
+
+          <form id="staffForm" class="cp-auth-form" hidden>
+            <div class="cp-field">
+              <label for="staffEmail">Staff Email</label>
+              <input type="email" id="staffEmail" autocomplete="username" placeholder="staff@eshcat.local" required />
+            </div>
+            <div class="cp-field">
+              <label for="staffPassword">Password</label>
+              <input type="password" id="staffPassword" autocomplete="current-password" placeholder="••••••••" required />
+            </div>
+            <button class="cp-btn cp-btn-primary cp-btn-block" id="staffSignInBtn" type="submit">Sign In to Civil Desk</button>
+          </form>
+
+          <div class="cp-auth-demo">
+            <strong>Demo access</strong>
+            <div>Resident: <code>resident</code> / <code>change_me_123</code></div>
+            <div>Civil Staff: <code>staff@eshcat.local</code> / <code>change_me_123</code></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= RESIDENT VIEW ================= -->
+      <div id="residentView" hidden>
+        <div class="cp-topbar">
+          <div>
+            <h1>My Civil Transactions</h1>
+            <div class="sub">Submit civil-related requests and track what the Civil Service desk is doing.</div>
+          </div>
+          <div class="cp-top-actions">
+            <span class="cp-date-chip" id="residentDate"></span>
+            <button class="cp-btn cp-btn-ghost" id="residentRefresh" type="button">↻ Refresh</button>
+            <button class="cp-btn cp-btn-danger" data-logout type="button">Sign Out</button>
+          </div>
+        </div>
+
+        <div class="cp-greeting">
+          <div>
+            <h2 id="residentGreet"></h2>
+            <p id="residentSub"></p>
+          </div>
+          <span class="shift-pill" id="residentPill"></span>
+        </div>
+
+        <div class="cp-stats" id="residentStats"></div>
+
+        <div class="cp-bento">
+          <div class="cp-card">
+            <h3>Submit a Civil Transaction</h3>
+            <p class="cp-note">Your request is forwarded to the Civil Service desk for review.</p>
+            <div class="cp-type-switch">
+              <button class="active" type="button" data-formtype="appointment">📅 Office Appointment</button>
+              <button type="button" data-formtype="request">🚩 Community Request</button>
+            </div>
+
+            <form id="apptForm">
+              <div class="cp-field">
+                <label for="apptOffice">Office</label>
+                <select id="apptOffice" required>
+                  <option value="">Select an office...</option>
+                </select>
+              </div>
+              <div class="cp-grid2">
+                <div class="cp-field">
+                  <label for="apptDate">Preferred Date</label>
+                  <input type="date" id="apptDate" required />
+                </div>
+                <div class="cp-field">
+                  <label for="apptTime">Preferred Time</label>
+                  <input type="time" id="apptTime" required />
+                </div>
+              </div>
+              <div class="cp-grid2">
+                <div class="cp-field">
+                  <label for="apptName">Full Name</label>
+                  <input type="text" id="apptName" required />
+                </div>
+                <div class="cp-field">
+                  <label for="apptEmail">Email</label>
+                  <input type="email" id="apptEmail" required />
+                </div>
+              </div>
+              <div class="cp-field">
+                <label for="apptMobile">Mobile <span style="color:var(--cp-text-muted);font-weight:400">(optional)</span></label>
+                <input type="tel" id="apptMobile" placeholder="0917 000 0000" />
+              </div>
+              <button class="cp-btn cp-btn-primary cp-btn-block" id="apptSubmitBtn" type="submit">Forward Appointment Request →</button>
+            </form>
+
+            <form id="repForm" hidden>
+              <div class="cp-field">
+                <label for="repCategory">Category</label>
+                <select id="repCategory" required>
+                  <option value="">Select a category...</option>
+                  <option>Road &amp; Streetlight</option>
+                  <option>Water Supply</option>
+                  <option>Solid Waste</option>
+                  <option>Peace &amp; Order</option>
+                  <option>Health &amp; Sanitation</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="cp-field">
+                <label for="repLocation">Location</label>
+                <input type="text" id="repLocation" placeholder="e.g. Barangay 5, Maharlika Highway" />
+              </div>
+              <div class="cp-field">
+                <label for="repDescription">Describe the concern</label>
+                <textarea id="repDescription" rows="4" placeholder="What needs the attention of the Civil Service desk?" required></textarea>
+              </div>
+              <button class="cp-btn cp-btn-primary cp-btn-block" id="repSubmitBtn" type="submit">Forward Request →</button>
+            </form>
+          </div>
+
+          <div class="cp-card">
+            <h3>Recent Activity</h3>
+            <div id="residentRecent"></div>
+          </div>
+        </div>
+
+        <div class="cp-tabs" style="margin-top:24px">
+          <button class="active" type="button" data-mytab="all">All</button>
+          <button type="button" data-mytab="appointment">Appointments <span class="tabs-count" id="myTabApptCount">0</span></button>
+          <button type="button" data-mytab="request">Requests <span class="tabs-count" id="myTabReqCount">0</span></button>
+        </div>
+
+        <div class="cp-toolbar">
+          <div class="cp-search grow">
+            <input type="text" id="mySearch" placeholder="Search by reference, type, or detail..." />
+          </div>
+          <select class="cp-filter" id="myStatus">
+            <option value="">All statuses</option>
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+            <option>Open</option>
+            <option>In Progress</option>
+            <option>Resolved</option>
+          </select>
+        </div>
+        <div id="myTransactions"></div>
+      </div>
+
+      <!-- ================= STAFF VIEW ================= -->
+      <div id="staffView" hidden>
+        <div class="cp-topbar">
+          <div>
+            <h1>Civil Service Desk</h1>
+            <div class="sub">Appointments and community requests forwarded to you by residents.</div>
+          </div>
+          <div class="cp-top-actions">
+            <span class="cp-date-chip" id="staffDate"></span>
+            <button class="cp-btn cp-btn-ghost" id="staffRefresh" type="button">↻ Refresh</button>
+            <button class="cp-btn cp-btn-danger" data-logout type="button">Sign Out</button>
+          </div>
+        </div>
+
+        <div class="cp-greeting">
+          <div>
+            <h2 id="staffGreet"></h2>
+            <p id="staffSub"></p>
+          </div>
+          <span class="shift-pill" id="staffPill"></span>
+        </div>
+
+        <div class="cp-stats" id="staffStats"></div>
+
+        <div class="cp-tabs" id="staffTabs">
+          <button class="active" type="button" data-tab="appointments">📅 Appointments <span class="tabs-count" id="tabApptCount">0</span></button>
+          <button type="button" data-tab="requests">🚩 Requests <span class="tabs-count" id="tabReqCount">0</span></button>
+        </div>
+
+        <div class="cp-toolbar" id="staffToolbar">
+          <div class="cp-search grow">
+            <input type="text" id="staffSearch" placeholder="Search by reference, name, or office..." />
+          </div>
+          <select class="cp-filter" id="staffStatus">
+            <option value="">All statuses</option>
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+          </select>
+        </div>
+        <div id="staffTable"></div>
+        <section class="cp-card cp-activity-card" aria-labelledby="activityTitle">
+          <div class="cp-section-head">
+            <div>
+              <h3 id="activityTitle">Activity Log</h3>
+              <p class="cp-note">Recent staff actions. Showing 10 records per page.</p>
+            </div>
+          </div>
+          <div id="activityLog"></div>
+          <div class="cp-pagination" id="activityPagination"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="cp-modal-backdrop" id="detailModal">
+    <div class="cp-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <div class="cp-modal-head">
+        <div>
+          <h3 id="detailTitle"></h3>
+          <div class="cp-modal-sub" id="detailSub"></div>
+        </div>
+        <button class="cp-modal-close" id="modalCloseBtn" type="button" aria-label="Close">×</button>
+      </div>
+      <div id="detailBody"></div>
+    </div>
+  </div>
+
+  <div class="cp-modal-backdrop" id="updateModal">
+    <div class="cp-modal" role="dialog" aria-modal="true" aria-labelledby="updateTitle">
+      <div class="cp-modal-head">
+        <div>
+          <h3 id="updateTitle">Update Status</h3>
+          <div class="cp-modal-sub" id="updateSub"></div>
+        </div>
+        <button class="cp-modal-close" id="updateCloseBtn" type="button" aria-label="Close">×</button>
+      </div>
+      <div id="updateBody"></div>
+    </div>
+  </div>
+
+  <div class="cp-toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <script>
+    /* ======================================================
+       eSHCAT — Civil Service Portal logic
+       Resident login/register, submit civil transactions
+       (forwarded to staff), staff review + status updates.
+       ====================================================== */
+    (function () {
+      "use strict";
+
+      var API = "/api";
+
+      /* ---------------- api helpers ---------------- */
+
+      async function request(path, options) {
+        options = options || {};
+        var config = {
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          method: options.method || "GET",
+        };
+        if (options.body) config.body = JSON.stringify(options.body);
+        var response = await fetch(API + path, config);
+        var data = null;
+        try { data = await response.json(); } catch (e) { /* no body */ }
+        if (!response.ok) {
+          var err = new Error((data && data.error) || ("Request failed (" + response.status + ")."));
+          err.status = response.status;
+          throw err;
+        }
+        return data;
+      }
+
+      var api = {
+        get: function (p) { return request(p); },
+        post: function (p, b) { return request(p, { method: "POST", body: b }); },
+        patch: function (p, b) { return request(p, { method: "PATCH", body: b }); },
+      };
+
+      /* ---------------- small helpers ---------------- */
+
+      var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      function fmtDate(iso) {
+        if (!iso) return "—";
+        var p = iso.split("T")[0].split("-");
+        if (p.length !== 3) return iso;
+        return parseInt(p[2], 10) + " " + MONTHS[parseInt(p[1], 10) - 1] + ", " + p[0];
+      }
+
+      function fmtDateTime(iso) {
+        if (!iso) return "—";
+        var dt = new Date(iso.indexOf("T") > -1 ? iso : iso + "T00:00:00");
+        if (isNaN(dt.getTime())) return iso;
+        var h = dt.getHours();
+        var am = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        return MONTHS[dt.getMonth()] + " " + dt.getDate() + ", " +
+          dt.getFullYear() + ", " + h + ":" + pad(dt.getMinutes()) + " " + am;
+      }
+
+      function badge(status) {
+        var cls = (status || "").toLowerCase().replace(/\s+/g, "-");
+        return '<span class="cp-badge ' + cls + '">' + esc(status || "—") + "</span>";
+      }
+
+      function toast(msg, type) {
+        var wrap = document.getElementById("toastWrap");
+        var t = document.createElement("div");
+        t.className = "cp-toast " + (type || "info");
+        t.textContent = msg;
+        wrap.appendChild(t);
+        setTimeout(function () { t.remove(); }, 3200);
+      }
+
+      function todayChip(el) {
+        var d = new Date();
+        el.textContent = DAYS[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+      }
+
+      /* ---------------- state ---------------- */
+
+      var view = "auth"; // "auth" | "resident" | "staff"
+      var me = null;     // resident profile
+      var staff = null;  // staff profile
+      var residentTx = [];
+      var residentStats = {};
+      var adminStats = {};
+      var adminItems = [];
+      var adminTab = "appointments";
+      var activityPage = 1;
+      var myTab = "all";
+      var officesCache = null;
+
+      /* ---------------- view switching ---------------- */
+
+      function setView(v) {
+        view = v;
+        document.body.classList.toggle("cp-guest", v === "auth");
+        document.getElementById("authView").hidden = v !== "auth";
+        document.getElementById("residentView").hidden = v !== "resident";
+        document.getElementById("staffView").hidden = v !== "staff";
+        renderNav();
+        if (v === "resident") loadResident();
+        if (v === "staff") loadStaff();
+      }
+
+      function renderNav() {
+        var nav = document.getElementById("sideNav");
+        var foot = document.getElementById("sideFoot");
+        if (view === "auth") {
+          nav.innerHTML = "";
+          foot.innerHTML = "";
+          return;
+        }
+        if (view === "resident") {
+          nav.innerHTML =
+            '<span class="nav-section">Main</span>' +
+            '<a class="active" href="#dashboard"><span class="ico">📊</span>Dashboard</a>' +
+            '<a href="#submit"><span class="ico">📝</span>Submit Transaction</a>' +
+            '<a href="#transactions"><span class="ico">🗂️</span>My Transactions</a>' +
+            '<span class="nav-section">Links</span>' +
+            '<a href="/" target="_blank" rel="noopener"><span class="ico">🏠</span>Public Site</a>';
+          foot.innerHTML =
+            '<span class="u-name">' + esc((me || {}).full_name || "Resident") + '</span>' +
+            '<span class="u-role">Civil Service Resident</span><br>' +
+            '<a href="#" id="navLogout" style="color:#8fa9d4">Sign out</a>';
+        } else {
+          nav.innerHTML =
+            '<span class="nav-section">Main</span>' +
+            '<a class="active" href="#dashboard"><span class="ico">📊</span>Dashboard</a>' +
+            '<a href="#appointments" onclick="window.__civpSwitch && window.__civpSwitch(\'appointments\')"><span class="ico">📅</span>Appointments<span class="count" id="navApptCount">0</span></a>' +
+            '<a href="#requests" onclick="window.__civpSwitch && window.__civpSwitch(\'requests\')"><span class="ico">🚩</span>Requests<span class="count" id="navReqCount">0</span></a>' +
+            '<span class="nav-section">Links</span>' +
+            '<a href="/" target="_blank" rel="noopener"><span class="ico">🏠</span>Public Site</a>' +
+            '';
+          foot.innerHTML =
+            '<span class="u-name">' + esc((staff || {}).name || "Staff") + '</span>' +
+            '<span class="u-role">Civil Service Desk</span><br>' +
+            '<a href="#" id="navLogout" style="color:#8fa9d4">Sign out</a>';
+        }
+        var lo = document.getElementById("navLogout");
+        if (lo) lo.addEventListener("click", function (e) { e.preventDefault(); logout(); });
+      }
+
+      window.__civpSwitch = function (tab) {
+        if (view !== "staff") return;
+        switchAdminTab(tab);
+      };
+
+      /* ---------------- auth ---------------- */
+
+      function showAuthPanel(panel) {
+        var btns = document.querySelectorAll("#authTabs button");
+        btns.forEach(function (b) {
+          b.classList.toggle("active", b.dataset.auth === panel);
+        });
+        document.getElementById("residentForm").hidden = panel !== "resident";
+        document.getElementById("registerForm").hidden = true;
+        document.getElementById("staffForm").hidden = panel !== "staff";
+        document.getElementById("goLogin").hidden = true;
+        document.getElementById("goRegister").hidden = panel !== "resident";
+        document.getElementById("newUserSteps").hidden = panel === "staff";
+      }
+
+      function showRegister() {
+        var btns = document.querySelectorAll("#authTabs button");
+        btns.forEach(function (b) { b.classList.toggle("active", b.dataset.auth === "resident"); });
+        document.getElementById("residentForm").hidden = true;
+        document.getElementById("registerForm").hidden = false;
+        document.getElementById("staffForm").hidden = true;
+        document.getElementById("goLogin").hidden = false;
+        document.getElementById("goRegister").hidden = true;
+        document.getElementById("newUserSteps").hidden = false;
+      }
+
+      function bindAuth() {
+        document.querySelectorAll("#authTabs button").forEach(function (b) {
+          b.addEventListener("click", function () { showAuthPanel(b.dataset.auth); });
+        });
+        document.getElementById("goRegister").addEventListener("click", showRegister);
+        document.getElementById("goLogin").addEventListener("click", function () { showAuthPanel("resident"); });
+
+        var signIn = document.getElementById("residentForm");
+        signIn.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          var btn = document.getElementById("resSignInBtn");
+          setLoading(btn, "Signing in...");
+          try {
+            await api.post("/civil/login", {
+              username: document.getElementById("resUsername").value,
+              password: document.getElementById("resPassword").value,
+            });
+            location.reload();
+          } catch (err) {
+            unsetLoading(btn, "Sign In");
+            toast(err.message, "error");
+          }
+        });
+
+        var reg = document.getElementById("registerForm");
+        reg.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          var btn = document.getElementById("regBtn");
+          var username = document.getElementById("regUsername").value.trim();
+          var password = document.getElementById("regPassword").value;
+          if (password.length < 6) {
+            toast("Password must be at least 6 characters.", "error");
+            return;
+          }
+          setLoading(btn, "Creating account...");
+          try {
+            await api.post("/civil/register", {
+              username: username,
+              password: password,
+              full_name: document.getElementById("regName").value.trim(),
+              email: document.getElementById("regEmail").value.trim(),
+            });
+            location.reload();
+          } catch (err) {
+            unsetLoading(btn, "Create Account & Sign In");
+            toast(err.message, "error");
+          }
+        });
+
+        var staffFormEl = document.getElementById("staffForm");
+        staffFormEl.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          var btn = document.getElementById("staffSignInBtn");
+          setLoading(btn, "Signing in...");
+          try {
+            await api.post("/staff/login", {
+              email: document.getElementById("staffEmail").value,
+              password: document.getElementById("staffPassword").value,
+            });
+            location.reload();
+          } catch (err) {
+            unsetLoading(btn, "Sign In to Civil Desk");
+            toast(err.message, "error");
+          }
+        });
+
+        document.querySelectorAll("[data-logout]").forEach(function (b) {
+          b.addEventListener("click", logout);
+        });
+      }
+
+      function logout() {
+        var call = view === "staff" ? api.post("/staff/logout", {}) : api.post("/civil/logout", {});
+        call.then(function () { location.reload(); }).catch(function () { location.reload(); });
+      }
+
+      function setLoading(btn, label) {
+        btn.dataset.orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = label;
+      }
+
+      function unsetLoading(btn, label) {
+        btn.disabled = false;
+        btn.textContent = label || btn.dataset.orig || "Submit";
+      }
+
+      /* ---------------- resident ---------------- */
+
+      async function seedOfficeSelect() {
+        if (officesCache) return officesCache;
+        try {
+          officesCache = await api.get("/offices");
+        } catch (e) {
+          officesCache = [];
+        }
+        var sel = document.getElementById("apptOffice");
+        sel.innerHTML = '<option value="">Select an office...</option>';
+        officesCache.forEach(function (o) {
+          var opt = document.createElement("option");
+          opt.value = o.id;
+          opt.textContent = o.name;
+          sel.appendChild(opt);
+        });
+        return officesCache;
+      }
+
+      async function loadResident() {
+        try {
+          me = await api.get("/civil/me");
+        } catch (e) { /* ignore */ }
+
+        var d = new Date();
+        var h = d.getHours();
+        var greet = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+        document.getElementById("residentGreet").textContent = greet + ", " + ((me && me.full_name) ? me.full_name.split(" ")[0] : "there");
+        if (me && me.email) {
+          document.getElementById("residentSub").textContent = "Signed in as " + me.email + ". Your requests below are updated by the desk as they are processed.";
+        }
+        todayChip(document.getElementById("residentDate"));
+        seedOfficeSelect();
+
+        if (me) {
+          document.getElementById("apptName").value = me.full_name || "";
+          document.getElementById("apptName").readOnly = true;
+          document.getElementById("apptEmail").value = me.email || "";
+          document.getElementById("apptEmail").readOnly = true;
+        }
+
+        await Promise.all([loadResidentStats(), loadResidentTx()]);
+      }
+
+      async function loadResidentStats() {
+        try {
+          residentStats = await api.get("/civil/stats");
+        } catch (e) {
+          residentStats = {};
+          return;
+        }
+        var tiles = [
+          { num: residentStats.appointments || 0, label: "My Appointments", mini: "civil appointments", icon: "📅", tone: "info" },
+          { num: residentStats.appointments_pending || 0, label: "Pending Confirm", mini: "awaiting desk review", icon: "⏳", tone: "warning" },
+          { num: residentStats.requests || 0, label: "My Requests", mini: "community requests", icon: "🚩", tone: "danger" },
+          { num: residentStats.requests_open || 0, label: "In Progress", mini: "still being handled", icon: "✅", tone: "teal" },
+        ];
+        document.getElementById("residentStats").innerHTML = tiles.map(function (t) {
+          return '<div class="cp-stat"><span class="stat-ico ' + t.tone + '">' + t.icon +
+            '</span><div><div class="num">' + t.num + '</div><div class="label">' + t.label +
+            '<span class="mini">' + t.mini + "</span></div></div></div>";
+        }).join("");
+      }
+
+      async function loadResidentTx() {
+        try {
+          residentTx = await api.get("/civil/transactions");
+        } catch (e) {
+          residentTx = [];
+          toast("Could not load your transactions.", "error");
+        }
+        document.getElementById("myTabApptCount").textContent = residentTx.filter(function (x) { return x.type === "appointment"; }).length;
+        document.getElementById("myTabReqCount").textContent = residentTx.filter(function (x) { return x.type === "request"; }).length;
+        renderResidentRecent();
+        renderMyTransactions();
+        fillResidentSub();
+      }
+
+      function fillResidentSub() {
+        var pending = residentTx.filter(function (x) {
+          return x.status === "Pending" || x.status === "Open" || x.status === "In Progress";
+        }).length;
+        document.getElementById("residentSub").textContent =
+          (me && me.email ? "Signed in as " + me.email + ". " : "") +
+          (pending ? "You have " + pending + " transaction(s) awaiting the desk." : "All your transactions are up to date.");
+      }
+
+      function renderResidentRecent() {
+        var el = document.getElementById("residentRecent");
+        var recent = residentTx.slice().sort(function (a, b) {
+          return ((b.created_at || "") > (a.created_at || "")) ? 1 : -1;
+        }).slice(0, 5);
+        if (!recent.length) {
+          el.innerHTML = '<div class="cp-empty"><div class="big">🌱</div><h3>Nothing yet</h3><p>Submit your first civil transaction to get started.</p></div>';
+          return;
+        }
+        el.innerHTML = recent.map(function (it) {
+          return '<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--cp-border-light)">' +
+            '<span class="stat-ico info" style="width:38px;height:38px;font-size:1rem;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">' +
+            (it.type === "appointment" ? "📅" : "🚩") + "</span>" +
+            '<div style="min-width:0;flex:1">' +
+            '<div style="font-weight:600;font-size:0.9rem;color:var(--cp-text)">' + esc(it.type === "appointment" ? it.office : it.category) + "</div>" +
+            '<div style="font-size:0.76rem;color:var(--cp-text-muted)">' + esc(it.reference_number) + " · " + fmtDateTime(it.created_at) + "</div></div>" +
+            badge(it.status) + "</div>";
+        }).join("");
+      }
+
+      function myDetails(it) {
+        if (it.type === "appointment") {
+          return esc(it.office || "Office visit") + ' <span class="muted">· ' + fmtDate(it.date) + " at " + esc(it.time) + "</span>";
+        }
+        return esc(it.category) + ' <span class="muted">· ' + esc(it.location || "—") + "</span>";
+      }
+
+      function renderMyTransactions() {
+        var q = document.getElementById("mySearch").value.trim().toLowerCase();
+        var f = document.getElementById("myStatus").value;
+        var rows = residentTx.filter(function (x) {
+          var okTab = myTab === "all" || x.type === myTab;
+          var hay = (x.reference_number + " " + x.type + " " + (x.office || "") + " " + (x.category || "")).toLowerCase();
+          var okQ = !q || hay.indexOf(q) > -1;
+          var okF = !f || x.status === f;
+          return okTab && okQ && okF;
+        });
+
+        var el = document.getElementById("myTransactions");
+        if (!rows.length) {
+          el.innerHTML = '<div class="cp-empty"><div class="big">🗂️</div><h3>No transactions found</h3><p>Try a different filter, or submit a new civil transaction above.</p></div>';
+          return;
+        }
+        el.innerHTML = '<div class="cp-table-wrap"><table class="cp-table"><thead><tr>' +
+          "<th>Reference</th><th>Type</th><th>Details</th><th>Submitted</th><th>Status</th><th>Remarks</th>" +
+          "</tr></thead><tbody>" + rows.map(function (it) {
+            return '<tr data-modal-open data-tx="' + it.type + '" data-ref="' + esc(it.reference_number) + '">' +
+              '<td data-label="Reference"><span class="ref">' + esc(it.reference_number) + "</span></td>" +
+              '<td data-label="Type">' + (it.type === "appointment" ? "📅 Appointment" : "🚩 Request") + "</td>" +
+              '<td data-label="Details">' + myDetails(it) + "</td>" +
+              '<td data-label="Submitted">' + fmtDateTime(it.created_at) + "</td>" +
+              '<td data-label="Status">' + badge(it.status) + "</td>" +
+              '<td data-label="Remarks">' + (it.remarks ? '<span style="font-size:0.84rem">' + esc(it.remarks) + "</span>" : '<span class="muted">—</span>') + "</td>" +
+              "</tr>";
+          }).join("") + "</tbody></table></div>";
+      }
+
+      function bindResident() {
+        document.getElementById("residentRefresh").addEventListener("click", function () {
+          loadResidentStats();
+          loadResidentTx();
+          toast("Refreshed.", "info");
+        });
+
+        document.querySelectorAll("[data-formtype]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            document.querySelectorAll("[data-formtype]").forEach(function (x) { x.classList.toggle("active", x === b); });
+            var t = b.dataset.formtype;
+            document.getElementById("apptForm").hidden = t !== "appointment";
+            document.getElementById("repForm").hidden = t !== "request";
+          });
+        });
+
+        document.querySelectorAll("[data-mytab]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            document.querySelectorAll("[data-mytab]").forEach(function (x) { x.classList.toggle("active", x === b); });
+            myTab = b.dataset.mytab;
+            renderMyTransactions();
+          });
+        });
+
+        document.getElementById("mySearch").addEventListener("input", renderMyTransactions);
+        document.getElementById("myStatus").addEventListener("change", renderMyTransactions);
+
+        var apptForm = document.getElementById("apptForm");
+        apptForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          var btn = document.getElementById("apptSubmitBtn");
+          setLoading(btn, "Forwarding...");
+          try {
+            var res = await api.post("/civil/appointments", {
+              department_id: document.getElementById("apptOffice").value,
+              date: document.getElementById("apptDate").value,
+              time: document.getElementById("apptTime").value,
+              full_name: document.getElementById("apptName").value,
+              email: document.getElementById("apptEmail").value,
+              mobile: document.getElementById("apptMobile").value,
+            });
+            apptForm.reset();
+            unsetLoading(btn, "Forward Appointment Request →");
+            if (me) {
+              document.getElementById("apptName").value = me.full_name || "";
+              document.getElementById("apptEmail").value = me.email || "";
+            }
+            toast("Forwarded to the Civil Service desk. Reference: " + res.reference_number, "success");
+            loadResidentStats();
+            loadResidentTx();
+          } catch (err) {
+            unsetLoading(btn, "Forward Appointment Request →");
+            toast(err.message, "error");
+          }
+        });
+
+        var repForm = document.getElementById("repForm");
+        repForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          var btn = document.getElementById("repSubmitBtn");
+          setLoading(btn, "Forwarding...");
+          try {
+            var res = await api.post("/civil/reports", {
+              category: document.getElementById("repCategory").value,
+              location: document.getElementById("repLocation").value,
+              description: document.getElementById("repDescription").value,
+            });
+            repForm.reset();
+            unsetLoading(btn, "Forward Request →");
+            toast("Forwarded to the Civil Service desk. Reference: " + res.reference_number, "success");
+            loadResidentStats();
+            loadResidentTx();
+          } catch (err) {
+            unsetLoading(btn, "Forward Request →");
+            toast(err.message, "error");
+          }
+        });
+      }
+
+      /* ---------------- staff ---------------- */
+
+      function switchAdminTab(tab) {
+        adminTab = tab;
+        document.querySelectorAll("#staffTabs button").forEach(function (b) {
+          b.classList.toggle("active", b.dataset.tab === tab);
+        });
+        var toolbar = document.getElementById("staffToolbar");
+        toolbar.style.display = "";
+        var search = document.getElementById("staffSearch");
+        search.placeholder = tab === "appointments"
+          ? "Search by reference, name, or office..."
+          : "Search by reference, category, or location...";
+        var statusSel = document.getElementById("staffStatus");
+        statusSel.innerHTML = '<option value="">All statuses</option>';
+        var opts = tab === "appointments"
+          ? ["Pending", "Confirmed", "Completed", "Cancelled"]
+          : ["Open", "In Progress", "Resolved"];
+        opts.forEach(function (s) {
+          var o = document.createElement("option");
+          o.textContent = s;
+          statusSel.appendChild(o);
+        });
+        renderStaffTable();
+      }
+
+      async function loadStaff() {
+        try {
+          staff = await api.get("/staff/me");
+        } catch (e) { /* ignore */ }
+        var d = new Date();
+        var h = d.getHours();
+        var greet = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+        document.getElementById("staffGreet").textContent = greet + ", " + ((staff && staff.name) ? staff.name.split(" ")[0] : "Staff");
+        todayChip(document.getElementById("staffDate"));
+        document.getElementById("staffPill").textContent = "Mon–Fri · 8:00 AM – 5:00 PM";
+
+        await Promise.all([loadAdminStats(), loadAdminItems(), loadActivity(1)]);
+      }
+
+      async function loadAdminStats() {
+        try {
+          adminStats = await api.get("/civil/admin/stats");
+        } catch (e) {
+          adminStats = {};
+          return;
+        }
+        var tiles = [
+          { num: adminStats.appointments_pending || 0, label: "Pending Appointments", mini: "awaiting confirmation", icon: "📅", tone: "warning" },
+          { num: adminStats.appointments_today || 0, label: "Today's Visits", mini: "confirmed visits today", icon: "🕘", tone: "info" },
+          { num: adminStats.appointments_confirmed || 0, label: "Confirmed Upcoming", mini: "scheduled visits", icon: "✅", tone: "teal" },
+          { num: adminStats.appointments || 0, label: "Total Appointments", mini: "all requests", icon: "🗂️", tone: "purple" },
+          { num: adminStats.requests_open || 0, label: "Requests In Progress", mini: "open + in progress", icon: "🚩", tone: "danger" },
+          { num: adminStats.requests_resolved || 0, label: "Resolved Requests", mini: "closed concerns", icon: "📋", tone: "success" },
+        ];
+        document.getElementById("staffStats").innerHTML = tiles.map(function (t) {
+          return '<div class="cp-stat"><span class="stat-ico ' + t.tone + '">' + t.icon +
+            '</span><div><div class="num">' + t.num + '</div><div class="label">' + t.label +
+            '<span class="mini">' + t.mini + "</span></div></div></div>";
+        }).join("");
+        document.getElementById("staffSub").textContent =
+          "Forwarded to you by residents — you have " + (adminStats.appointments_pending || 0) +
+          " appointment(s) and " + (adminStats.requests_open || 0) + " request(s) to review.";
+      }
+
+      async function loadAdminItems() {
+        try {
+          adminItems = await api.get("/civil/admin/transactions");
+        } catch (e) {
+          adminItems = [];
+          toast("Could not load transactions.", "error");
+          return;
+        }
+        var apptPending = adminItems.filter(function (x) { return x.type === "appointment" && x.status === "Pending"; }).length;
+        var reqOpen = adminItems.filter(function (x) { return x.type === "request" && (x.status === "Open" || x.status === "In Progress"); }).length;
+        var n1 = document.getElementById("tabApptCount");
+        var n2 = document.getElementById("tabReqCount");
+        if (n1) n1.textContent = apptPending;
+        if (n2) n2.textContent = reqOpen;
+        var navAppt = document.getElementById("navApptCount");
+        var navReq = document.getElementById("navReqCount");
+        if (navAppt) navAppt.textContent = apptPending;
+        if (navReq) navReq.textContent = reqOpen;
+        renderStaffTable();
+      }
+
+      async function loadActivity(page) {
+        try {
+          var data = await api.get("/staff/activity?page=" + (page || 1));
+          activityPage = data.page || page || 1;
+          renderActivity(data);
+        } catch (e) {
+          document.getElementById("activityLog").innerHTML = '<div class="cp-empty"><p>Activity log unavailable.</p></div>';
+          document.getElementById("activityPagination").innerHTML = "";
+        }
+      }
+
+      function renderActivity(data) {
+        var log = document.getElementById("activityLog");
+        var items = data.items || [];
+        if (!items.length) {
+          log.innerHTML = '<div class="cp-empty"><p>No activity recorded yet.</p></div>';
+        } else {
+          log.innerHTML = '<div class="cp-activity-list">' + items.map(function (item) {
+            var action = item.action || "Activity";
+            var icon = action.indexOf("LOGIN") > -1 ? "↗" : action.indexOf("LOGOUT") > -1 ? "↙" : "✓";
+            return '<div class="cp-activity-row"><span class="cp-activity-icon ' + (action.indexOf("LOG") > -1 ? "auth" : "update") + '">' + icon + '</span><div class="cp-activity-main"><div class="cp-activity-title"><strong>' + esc(action) + '</strong><span>' + esc(item.entity_type || "record") + ' #' + esc(item.entity_id || "") + '</span></div>' +
+              '<span class="cp-activity-details">' + esc(item.details || "Activity recorded") + '</span></div>' +
+              '<div class="cp-activity-meta"><b>' + esc(item.staff_name || "System") + '</b><small>' + fmtDateTime(item.created_at) + '</small></div></div>';
+          }).join("") + "</div>";
+        }
+        var pages = data.pages || 1;
+        var start = Math.max(1, Math.min(activityPage - 4, pages - 9));
+        var end = Math.min(pages, start + 9);
+        var html = '<button type="button" data-activity-page="' + Math.max(1, activityPage - 1) + '"' + (activityPage <= 1 ? " disabled" : "") + '>Previous</button>';
+        for (var p = start; p <= end; p++) {
+          html += '<button type="button" data-activity-page="' + p + '" class="' + (p === activityPage ? "active" : "") + '">' + p + '</button>';
+        }
+        html += '<button type="button" data-activity-page="' + Math.min(pages, activityPage + 1) + '"' + (activityPage >= pages ? " disabled" : "") + '>Next</button>';
+        document.getElementById("activityPagination").innerHTML = html;
+      }
+
+      function statusControl(item) {
+        var options = item.type === "appointment"
+          ? ["Pending", "Confirmed", "Completed", "Cancelled"]
+          : ["Open", "In Progress", "Resolved"];
+        return '<select class="cp-status-select" data-status-change data-tx="' + item.type + '" data-id="' + item.id + '" aria-label="Change status">' +
+          options.map(function (s) { return '<option value="' + esc(s) + '"' + (s === item.status ? " selected" : "") + '>' + esc(s) + '</option>'; }).join("") + '</select>';
+      }
+
+      function renderStaffTable() {
+        var q = document.getElementById("staffSearch").value.trim().toLowerCase();
+        var f = document.getElementById("staffStatus").value;
+        var rows = adminItems.filter(function (x) {
+          if (x.type !== adminTab) return false;
+          var hay = (x.reference_number + " " + (x.full_name || "") + " " + (x.office || "") + " " + (x.category || "") + " " + (x.location || "")).toLowerCase();
+          var okQ = !q || hay.indexOf(q) > -1;
+          var okF = !f || x.status === f;
+          return okQ && okF;
+        }).sort(function (a, b) { return (b.created_at || "").localeCompare(a.created_at || ""); });
+
+        var el = document.getElementById("staffTable");
+        if (!rows.length) {
+          el.innerHTML = '<div class="cp-empty"><div class="big">' + (adminTab === "appointments" ? "📅" : "🚩") + '</div><h3>Nothing found</h3><p>No ' + adminTab + ' match your filters.</p></div>';
+          return;
+        }
+
+        var head, body;
+        if (adminTab === "appointments") {
+          head = "<th>Reference</th><th>Applicant</th><th>Office</th><th>Schedule</th><th>Submitted By</th><th>Status</th><th>Actions</th>";
+          body = rows.map(function (a) {
+            return '<tr data-modal-open data-tx="appointment" data-ref="' + esc(a.reference_number) + '">' +
+              '<td data-label="Reference"><span class="ref">' + esc(a.reference_number) + "</span></td>" +
+              '<td data-label="Applicant">' + esc(a.full_name) + '<div class="muted">' + esc(a.email) + "</div></td>" +
+              '<td data-label="Office" style="font-size:0.84rem">' + esc(a.office || "—") + "</td>" +
+              '<td data-label="Schedule">' + fmtDate(a.date) + ' <span class="muted">at ' + esc(a.time) + "</span></td>" +
+              '<td data-label="Submitted By" style="font-size:0.84rem">' + esc(a.submitted_by || "Public") + "</td>" +
+              '<td data-label="Status">' + statusControl(a) + "</td>" +
+              '<td data-label="Actions" onclick="event.stopPropagation()"><div class="cell-actions">' + apptActions(a) + "</div></td>" +
+              "</tr>";
+          }).join("");
+        } else {
+          head = "<th>Reference</th><th>Category</th><th>Location</th><th>Description</th><th>Submitted By</th><th>Submitted</th><th>Status</th><th>Actions</th>";
+          body = rows.map(function (r) {
+            var desc = r.description && r.description.length > 48 ? r.description.slice(0, 48) + "…" : r.description;
+            return '<tr data-modal-open data-tx="request" data-ref="' + esc(r.reference_number) + '">' +
+              '<td data-label="Reference"><span class="ref">' + esc(r.reference_number) + "</span></td>" +
+              '<td data-label="Category">' + esc(r.category) + "</td>" +
+              '<td data-label="Location" style="font-size:0.84rem">' + esc(r.location || "—") + "</td>" +
+              '<td data-label="Description"><span class="desc">' + esc(desc) + "</span></td>" +
+              '<td data-label="Submitted By" style="font-size:0.84rem">' + esc(r.submitted_by || r.name || "Public") + "</td>" +
+              '<td data-label="Submitted">' + fmtDateTime(r.created_at) + "</td>" +
+              '<td data-label="Status">' + statusControl(r) + "</td>" +
+              '<td data-label="Actions" onclick="event.stopPropagation()"><div class="cell-actions">' + reqActions(r) + "</div></td>" +
+              "</tr>";
+          }).join("");
+        }
+
+        el.innerHTML = '<div class="cp-table-wrap"><table class="cp-table"><thead><tr>' + head + "</tr></thead><tbody>" + body + "</tbody></table></div>";
+      }
+
+      function apptActions(a) {
+        if (a.status === "Pending") {
+          return '<button class="cp-btn cp-btn-sm cp-btn-approve" data-update="confirm" data-tx="appointment" data-id="' + a.id + '" type="button">✓ Confirm</button>' +
+            '<button class="cp-btn cp-btn-sm cp-btn-ghost" data-update="cancel" data-tx="appointment" data-id="' + a.id + '" type="button" style="color:var(--cp-danger)">Cancel</button>';
+        }
+        if (a.status === "Confirmed") {
+          return '<button class="cp-btn cp-btn-sm cp-btn-primary" data-update="complete" data-tx="appointment" data-id="' + a.id + '" type="button">✓ Mark Done</button>' +
+            '<button class="cp-btn cp-btn-sm cp-btn-ghost" data-update="cancel" data-tx="appointment" data-id="' + a.id + '" type="button" style="color:var(--cp-danger)">Cancel</button>';
+        }
+        return '<span class="muted" style="font-size:0.82rem">—</span>';
+      }
+
+      function reqActions(r) {
+        if (r.status === "Open") {
+          return '<button class="cp-btn cp-btn-sm cp-btn-start" data-update="start" data-tx="request" data-id="' + r.id + '" type="button">▶ Start</button>' +
+            '<button class="cp-btn cp-btn-sm cp-btn-resolve" data-update="resolve" data-tx="request" data-id="' + r.id + '" type="button">✓ Resolve</button>';
+        }
+        if (r.status === "In Progress") {
+          return '<button class="cp-btn cp-btn-sm cp-btn-resolve" data-update="resolve" data-tx="request" data-id="' + r.id + '" type="button">✓ Resolve</button>';
+        }
+        return '<span class="muted" style="font-size:0.82rem">Closed</span>';
+      }
+
+      function bindStaff() {
+        document.getElementById("staffRefresh").addEventListener("click", function () {
+          loadAdminStats();
+          loadAdminItems();
+          loadActivity(activityPage);
+          toast("Refreshed.", "info");
+        });
+
+        document.querySelectorAll("#staffTabs button").forEach(function (b) {
+          b.addEventListener("click", function () { switchAdminTab(b.dataset.tab); });
+        });
+
+        document.getElementById("staffSearch").addEventListener("input", renderStaffTable);
+        document.getElementById("staffStatus").addEventListener("change", renderStaffTable);
+        document.getElementById("activityPagination").addEventListener("click", function (e) {
+          var btn = e.target.closest("[data-activity-page]");
+          if (btn && !btn.disabled) loadActivity(Number(btn.dataset.activityPage));
+        });
+      }
+
+      /* ---------------- status update ---------------- */
+
+      function openUpdate(item) {
+        var isAppt = item.type === "appointment";
+        var options = isAppt
+          ? ["Pending", "Confirmed", "Completed", "Cancelled"]
+          : ["Open", "In Progress", "Resolved"];
+        var modal = document.getElementById("updateModal");
+        document.getElementById("updateTitle").textContent = "Update " + (isAppt ? "Appointment" : "Request");
+        document.getElementById("updateSub").textContent = item.reference_number + " — current: " + item.status;
+        document.getElementById("updateBody").innerHTML =
+          '<div class="cp-field"><label for="updStatus">New Status</label><select id="updStatus">' +
+          options.map(function (s) {
+            return '<option value="' + esc(s) + '"' + (s === item.status ? " selected" : "") + ">" + esc(s) + "</option>";
+          }).join("") +
+          '</select></div>' +
+          '<div class="cp-field"><label for="updRemarks">Remarks <span style="color:var(--cp-text-muted);font-weight:400">(visible to the resident)</span></label>' +
+          '<textarea id="updRemarks" rows="3" placeholder="e.g. Please bring a valid ID on your visit.">'+ esc(item.remarks || "") + "</textarea></div>" +
+          '<div class="cp-modal-actions">' +
+          '<button class="cp-btn cp-btn-ghost" id="updCancel" type="button">Cancel</button>' +
+          '<button class="cp-btn cp-btn-primary" id="updSave" type="button">Save Update</button>' +
+          "</div>";
+        modal.classList.add("show");
+
+        document.getElementById("updCancel").addEventListener("click", function () {
+          modal.classList.remove("show");
+        });
+        document.getElementById("updSave").addEventListener("click", async function () {
+          var btn = document.getElementById("updSave");
+          setLoading(btn, "Saving...");
+          var status = document.getElementById("updStatus").value;
+          var remarks = document.getElementById("updRemarks").value.trim();
+          var path = isAppt ? "/civil/admin/appointments/" + item.id : "/civil/admin/reports/" + item.id;
+          try {
+            await api.patch(path, { status: status, remarks: remarks });
+            modal.classList.remove("show");
+            toast("Status updated to " + status + ".", "success");
+            loadAdminStats();
+            loadAdminItems();
+            refreshDetailAfterUpdate();
+          } catch (err) {
+            unsetLoading(btn, "Save Update");
+            toast(err.message, "error");
+          }
+        });
+      }
+
+      function refreshDetailAfterUpdate() {
+        var openNode = document.getElementById("detailModal");
+        if (!openNode.classList.contains("show")) return;
+        var body = document.getElementById("detailBody");
+        var ref = body.dataset.ref;
+        var tx = body.dataset.tx;
+        if (!ref) return;
+        var item = adminItems.find(function (x) { return x.reference_number === ref && x.type === tx; });
+        if (item) openDetail(item, true);
+      }
+
+      /* ---------------- modal ---------------- */
+
+      function openDetail(item, canEdit) {
+        var modal = document.getElementById("detailModal");
+        var isAppt = item.type === "appointment";
+        var title = document.getElementById("detailTitle");
+        var sub = document.getElementById("detailSub");
+        var body = document.getElementById("detailBody");
+        body.dataset.ref = item.reference_number;
+        body.dataset.tx = item.type;
+
+        if (isAppt) {
+          title.textContent = "Office Appointment";
+          sub.textContent = item.reference_number + " · " + (item.full_name || "");
+          body.innerHTML =
+            '<div class="cp-detail-list">' +
+            '<div class="cp-detail-item full"><div class="k">Reference</div><div class="v">' + esc(item.reference_number) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Applicant</div><div class="v">' + esc(item.full_name) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Status</div><div class="v">' + badge(item.status) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Office</div><div class="v">' + esc(item.office || "—") + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Schedule</div><div class="v">' + fmtDate(item.date) + " at " + esc(item.time) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Email</div><div class="v">' + esc(item.email) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Mobile</div><div class="v">' + esc(item.mobile || "—") + "</div></div>" +
+            '<div class="cp-detail-item full"><div class="k">Requested by</div><div class="v">' + esc(item.submitted_by || "Public (no account)") + "</div></div>" +
+            '<div class="cp-detail-item full"><div class="k">Desk remarks</div><div class="v">' + (item.remarks ? esc(item.remarks) : '<span class="muted">No remarks yet.</span>') + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Requested</div><div class="v">' + fmtDateTime(item.created_at) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Last updated</div><div class="v">' + fmtDateTime(item.updated_at || item.created_at) + "</div></div>" +
+            "</div>";
+        } else {
+          title.textContent = item.category || "Community Request";
+          sub.textContent = item.reference_number;
+          body.innerHTML =
+            '<div class="cp-detail-list">' +
+            '<div class="cp-detail-item full"><div class="k">Reference</div><div class="v">' + esc(item.reference_number) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Category</div><div class="v">' + esc(item.category) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Status</div><div class="v">' + badge(item.status) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Location</div><div class="v">' + esc(item.location || "—") + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Submitted by</div><div class="v">' + esc(item.submitted_by || item.name || "Anonymous") + "</div></div>" +
+            '<div class="cp-detail-item full"><div class="k">Description</div><div class="v">' + esc(item.description) + "</div></div>" +
+            '<div class="cp-detail-item full"><div class="k">Desk remarks</div><div class="v">' + (item.remarks ? esc(item.remarks) : '<span class="muted">No remarks yet.</span>') + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Submitted</div><div class="v">' + fmtDateTime(item.created_at) + "</div></div>" +
+            '<div class="cp-detail-item"><div class="k">Last updated</div><div class="v">' + fmtDateTime(item.updated_at || item.created_at) + "</div></div>" +
+            "</div>";
+        }
+
+        var actions = "";
+        if (canEdit) {
+          if (isAppt && (item.status === "Pending" || item.status === "Confirmed")) {
+            actions += '<button class="cp-btn cp-btn-primary" data-update="edit" data-tx="appointment" data-id="' + item.id + '" type="button">↻ Update Status</button>';
+          }
+          if (!isAppt && (item.status === "Open" || item.status === "In Progress")) {
+            actions += '<button class="cp-btn cp-btn-primary" data-update="edit" data-tx="request" data-id="' + item.id + '" type="button">↻ Update Status</button>';
+          }
+        }
+        if (canEdit) actions += '<button class="cp-btn cp-btn-ghost" data-forward data-tx="' + item.type + '" data-id="' + item.id + '" type="button">Forward to Department</button>';
+        if (actions) body.innerHTML += '<div class="cp-modal-actions">' + actions + "</div>";
+
+        modal.classList.add("show");
+      }
+
+      function closeModal(id) {
+        document.getElementById(id || "detailModal").classList.remove("show");
+      }
+
+      function openForward(item) {
+        var modal = document.getElementById("updateModal");
+        document.getElementById("updateTitle").textContent = "Forward Record";
+        document.getElementById("updateSub").textContent = item.reference_number + " - choose the correct department";
+        document.getElementById("updateBody").innerHTML =
+          '<div class="cp-field"><label for="forwardDepartment">Destination Department</label><select id="forwardDepartment"><option value="">Loading departments...</option></select></div>' +
+          '<div class="cp-field"><label for="forwardRemarks">Remarks</label><textarea id="forwardRemarks" rows="3" placeholder="Add a note for the receiving department.">' + esc(item.remarks || "") + '</textarea></div>' +
+          '<div class="cp-modal-actions"><button class="cp-btn cp-btn-ghost" id="forwardCancel" type="button">Cancel</button><button class="cp-btn cp-btn-primary" id="forwardSave" type="button">Forward Record</button></div>';
+        modal.classList.add("show");
+        var select = document.getElementById("forwardDepartment");
+        api.get("/offices").then(function (offices) {
+          select.innerHTML = '<option value="">Select department</option>' + (offices || []).map(function (office) {
+            return '<option value="' + office.id + '">' + esc(office.name) + '</option>';
+          }).join("");
+        }).catch(function () { select.innerHTML = '<option value="">Could not load departments</option>'; });
+        document.getElementById("forwardCancel").addEventListener("click", function () { modal.classList.remove("show"); });
+        document.getElementById("forwardSave").addEventListener("click", async function () {
+          var btn = document.getElementById("forwardSave");
+          if (!select.value) { toast("Choose a destination department.", "error"); return; }
+          setLoading(btn, "Forwarding...");
+          var path = item.type === "appointment" ? "/civil/admin/appointments/" + item.id + "/forward" : "/civil/admin/reports/" + item.id + "/forward";
+          try {
+            await api.post(path, { department_id: Number(select.value), remarks: document.getElementById("forwardRemarks").value.trim() });
+            modal.classList.remove("show"); closeModal("detailModal");
+            toast("Record forwarded successfully.", "success");
+            loadAdminStats(); loadAdminItems(); loadActivity(activityPage);
+          } catch (err) { unsetLoading(btn, "Forward Record"); toast(err.message, "error"); }
+        });
+      }
+
+      /* ---------------- global click handling ---------------- */
+
+      document.addEventListener("click", function (e) {
+        var forward = e.target.closest("[data-forward]");
+        if (forward) {
+          var forwardItem = adminItems.find(function (x) { return String(x.id) === String(forward.dataset.id) && x.type === forward.dataset.tx; });
+          if (forwardItem) openForward(forwardItem);
+          return;
+        }
+        var upd = e.target.closest("[data-update]");
+        if (upd) {
+          var id = upd.dataset.id;
+          var tx = upd.dataset.tx;
+          var item = adminItems.find(function (x) { return String(x.id) === String(id) && x.type === tx; });
+          if (!item) return;
+          if (upd.dataset.update === "edit") {
+            openUpdate(item);
+          } else {
+            var map = {
+              confirm: "Confirmed", complete: "Completed", cancel: "Cancelled",
+              start: "In Progress", resolve: "Resolved",
+            };
+            var status = map[upd.dataset.update];
+            if (!status) return;
+            var path = tx === "appointment" ? "/civil/admin/appointments/" + item.id : "/civil/admin/reports/" + item.id;
+            api.patch(path, { status: status }).then(function () {
+              toast(tx === "appointment" ? "Appointment updated to " + status + "." : "Request updated to " + status + ".", "success");
+              loadAdminStats();
+              loadAdminItems();
+              refreshDetailAfterUpdate();
+            }).catch(function (err) { toast(err.message, "error"); });
+          }
+          return;
+        }
+
+        var row = e.target.closest("[data-modal-open]");
+        if (row) {
+          var ref = row.dataset.ref;
+          var tx = row.dataset.tx;
+          var pool = view === "staff" ? adminItems : residentTx;
+          var found = pool.find(function (x) { return x.reference_number === ref && x.type === tx; });
+          if (found) openDetail(found, view === "staff");
+          return;
+        }
+      });
+
+      document.addEventListener("change", function (e) {
+        var select = e.target.closest("[data-status-change]");
+        if (!select) return;
+        var item = adminItems.find(function (x) { return String(x.id) === String(select.dataset.id) && x.type === select.dataset.tx; });
+        if (!item) return;
+        var path = item.type === "appointment" ? "/civil/admin/appointments/" + item.id : "/civil/admin/reports/" + item.id;
+        api.patch(path, { status: select.value, remarks: item.remarks || "" }).then(function () {
+          toast("Status updated to " + select.value + ".", "success");
+          loadAdminStats(); loadAdminItems(); loadActivity(activityPage);
+        }).catch(function (err) { select.value = item.status; toast(err.message, "error"); });
+      });
+
+      document.getElementById("modalCloseBtn").addEventListener("click", function () { closeModal("detailModal"); });
+      document.getElementById("detailModal").addEventListener("click", function (e) { if (e.target === this) closeModal("detailModal"); });
+      document.getElementById("updateCloseBtn").addEventListener("click", function () { closeModal("updateModal"); });
+      document.getElementById("updateModal").addEventListener("click", function (e) {
+        if (e.target === this) closeModal("updateModal");
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") { closeModal("detailModal"); closeModal("updateModal"); }
+      });
+
+      /* ---------------- init ---------------- */
+
+      async function checkAuth() {
+        var staffRes;
+        try {
+          staffRes = await api.get("/staff/me");
+        } catch (e) { /* ignore */ }
+
+        if (staffRes) {
+          staff = staffRes;
+          setView("staff");
+        } else {
+          window.location.href = "/pages/staff/login.html";
+        }
+      }
+
+      bindAuth();
+      bindResident();
+      bindStaff();
+      todayChip(document.getElementById("residentDate"));
+      todayChip(document.getElementById("staffDate"));
+      checkAuth();
+    })();
+  </script>
+</body>
+</html>

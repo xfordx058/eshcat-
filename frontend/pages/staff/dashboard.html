@@ -8,8 +8,9 @@
   <link rel="icon" href="../../assets/logo/favicon.svg" />
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="../../css/components.css" />
-  <link rel="stylesheet" href="../../css/staff.css" />
+  <link rel="stylesheet" href="../../css/staff.css?v=20260923-activity" />
   <link rel="stylesheet" href="../../css/responsive.css" />
+  <link rel="stylesheet" href="../../css/bento.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body data-page="staff-dashboard" data-require-auth class="staff-body">
@@ -25,10 +26,10 @@
           <a class="active" href="dashboard.html"><span class="ico"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i></span>Dashboard</a>
           <a href="applications.html"><span class="ico"><i class="fa-solid fa-folder-open" aria-hidden="true"></i></span>Applications</a>
           <span class="nav-section">More</span>
-          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span>Appointments <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
-          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico"><i class="fa-solid fa-flag" aria-hidden="true"></i></span>Reports <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
-          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i></span>Messages <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
-          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico"><i class="fa-solid fa-gear" aria-hidden="true"></i></span>Settings <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+          <a href="appointments.html"><span class="ico"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span>Appointments</a>
+          <a href="reports.html"><span class="ico"><i class="fa-solid fa-flag" aria-hidden="true"></i></span>Reports</a>
+          <a href="messages.html"><span class="ico"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i></span>Messages</a>
+          <a href="settings.html"><span class="ico"><i class="fa-solid fa-gear" aria-hidden="true"></i></span>Settings</a>
         </nav>
         <div class="side-user">
           <span id="userChip"></span>
@@ -86,6 +87,15 @@
           </div>
           <div id="recentApplications"></div>
         </section>
+
+        <section class="staff-activity-section">
+          <div class="section-header">
+            <h2>Activity Log</h2>
+            <p>Latest staff actions, 10 records per page.</p>
+          </div>
+          <div id="activityLog"></div>
+          <div class="activity-pagination" id="activityPagination"></div>
+        </section>
       </div>
     </div>
   </main>
@@ -95,6 +105,6 @@
   <script src="../../js/api.js"></script>
   <script src="../../js/app.js"></script>
   <script src="../../js/staff/auth.js"></script>
-  <script src="../../js/staff/dashboard.js"></script>
+  <script src="../../js/staff/dashboard.js?v=20260923-activity"></script>
 </body>
 </html>
