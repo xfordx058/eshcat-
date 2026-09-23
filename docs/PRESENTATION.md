@@ -88,6 +88,16 @@ Important information is available in one public portal.
 
 ---
 
+# MDRRMO Emergency Alerts
+
+Residents can send a one-tap Red-level SOS alert from the floating button on the homepage. An optional follow-up dialog lets them add the incident type, a nearby landmark, and other details. The alert includes device location when sharing is available; responders receive a general Catarman map location otherwise.
+
+Only signed-in MDRRMO staff can access the live response portal. It focuses on live incidents, response history, and the staff profile. Staff can triage incidents to Yellow, Orange, or Red. The portal sounds a repeating alert and can pair the responder's shared GPS location with the rescue location on Google Maps, showing a suggested driving route and ETA. Responder GPS is used for that browser session and is not saved. A responder can take an incident to silence its new-alert alarm or ignore it for their own account; eSHCAT records who responded, resolved, or ignored each incident.
+
+Exact locations and responder names are shown only in the MDRRMO portal. This demonstration does not replace 911 or official emergency dispatch.
+
+---
+
 # COMELEC Services
 
 eSHCAT now includes a dedicated Commission on Elections workspace for Catarman.
@@ -229,7 +239,8 @@ The system uses standard web technologies with no frontend framework dependency.
 8. Return to mobile tracking and show the updated status
 9. Open Reports and show the daily summary/PDF option
 10. Open the COMELEC page and demonstrate present-number search and room assignment
-11. Open the COMELEC dashboard and review a voter transaction history
+11. Send a sample emergency alert, then sign in to the MDRRMO portal to show the alarm, map, and response actions
+12. Open the COMELEC dashboard and review a voter transaction history
 
 <!-- Speaker notes: Use synthetic data only. Do not present real citizen information. -->
 

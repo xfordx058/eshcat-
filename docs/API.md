@@ -1,8 +1,14 @@
 # eSHCAT — REST API Reference
 
-Base URL: `http://127.0.0.1:5000/api`
+Base URL on the host laptop: `http://127.0.0.1:5000/api`. Devices on the same Wi-Fi use `http://<laptop-ip>:5000/api` (for example, `http://192.168.1.25:5000/api`).
 
 All public endpoints return JSON. Staff endpoints require a logged-in session (cookie, `credentials: include`). Errors return `{"error": "message"}` with the appropriate status code.
+
+## Emergency response
+
+`GET /emergencies` returns recent public incident levels and response statuses without exact locations or reporter details.
+
+`POST /emergencies` creates an emergency incident with `severity` (`Yellow`, `Orange`, or `Red`), `category`, and optional location. It returns a private follow-up token for adding details or coordinates with `PATCH /emergencies/{id}/details`; GPS clients can include `accuracy_meters` so the staff portal can show the device's reported precision. MDRRMO staff can poll `GET /staff/emergencies`, review `GET /staff/emergencies/history`, and update incidents with `PATCH /staff/emergencies/{id}` using `{ "action": "respond" }`, `{ "action": "resolve" }`, `{ "action": "ignore" }`, or `{ "action": "set_severity", "severity": "Yellow" }`. Ignore is personal to the staff account; other MDRRMO users continue to see the incident. These staff routes require a signed-in account assigned to the MDRRMO department.
 
 ## Public
 

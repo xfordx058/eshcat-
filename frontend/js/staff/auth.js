@@ -18,6 +18,9 @@
     if (user.role === "Administrator" || (user.role === "Staff" && !String(user.email || "").startsWith("staff."))) {
       return "/pages/staff/dashboard.html";
     }
+    if (String(user.department_name || "").toLowerCase().includes("disaster risk reduction")) {
+      return "/pages/staff/drrmo_portal.html";
+    }
     if (Number(user.department_id) === 1) return "/pages/staff/civil_portal.html";
     const portals = {
       2: "bplo_portal.html",

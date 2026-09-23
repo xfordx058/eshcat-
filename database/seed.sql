@@ -21,6 +21,9 @@ INSERT INTO departments (id, name, description, location, contact_number, email,
 INSERT INTO departments (id, name, description, location, contact_number, email, office_hours) VALUES
     (11, 'Commission on Elections (COMELEC)', 'Handles voter registration, voter certifications, and election-day assistance.', 'Municipal Hall, Catarman, Northern Samar', '(055) 500-0712', 'comelec.catarman@gmail.com', 'Election day and office hours vary');
 
+INSERT INTO departments (id, name, description, location, contact_number, email, office_hours) VALUES
+    (12, 'Municipal Disaster Risk Reduction and Management Office (MDRRMO)', 'Coordinates emergency response and disaster risk reduction for Catarman.', 'Municipal Hall, Catarman, Northern Samar', '0906-357-0985', NULL, 'Contact MDRRMO for response availability');
+
 -- Services (mirror the official E-Services categories)
 INSERT INTO services (id, department_id, name, short_description, description, estimated_processing, is_online) VALUES
     (1, 1, 'Death Certificate', 'Apply for a certified copy of a death certificate.', 'Request a copy of a death certificate from the Local Civil Registry Office (LCRO) stating the date and place of death and the personal circumstances of the deceased.', '5-7 working days', 1),
@@ -257,7 +260,9 @@ INSERT INTO staff_users (id, name, email, password_hash, role, department_id, is
     (12, 'MSWDO Service Staff', 'staff.mswdo@eshcat.local', 'SEED_ME', 'Staff', 9, 1),
     (13, 'MENRO Service Staff', 'staff.menro@eshcat.local', 'SEED_ME', 'Staff', 10, 1),
     (14, 'COMELEC Service Staff', 'staff.comelec@eshcat.local', 'SEED_ME', 'Staff', 11, 1),
-    (15, 'COMELEC Department Head', 'head.comelec@eshcat.local', 'SEED_ME', 'Department Head', 11, 1);
+    (15, 'COMELEC Department Head', 'head.comelec@eshcat.local', 'SEED_ME', 'Department Head', 11, 1),
+    (16, 'MDRRMO Response Staff', 'staff.drrmo@eshcat.local', 'SEED_ME', 'Staff', 12, 1),
+    (17, 'MDRRMO Department Head', 'head.drrmo@eshcat.local', 'SEED_ME', 'Department Head', 12, 1);
 
 INSERT INTO comelec_settings (id, election_day_active, public_lookup_enabled, queue_room, announcement)
 VALUES (1, 0, 0, 'COMELEC Room 1', 'Election-day queue is currently inactive.');

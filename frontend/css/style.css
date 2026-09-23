@@ -1715,6 +1715,27 @@ input.invalid {
   color: var(--color-text);
 }
 
+.sos-fab { position:fixed; z-index:1100; right:max(22px,env(safe-area-inset-right)); bottom:max(22px,env(safe-area-inset-bottom)); display:flex; width:78px; height:78px; flex-direction:column; align-items:center; justify-content:center; border:4px solid #fff; border-radius:50%; background:#dc2626; box-shadow:0 8px 25px rgba(127,29,29,.42),0 0 0 5px rgba(220,38,38,.18); color:#fff; cursor:pointer; font:inherit; animation:sos-pulse 1.8s infinite; }
+.sos-fab span { font-size:1.25rem; font-weight:900; letter-spacing:.04em; line-height:1; }
+.sos-fab small { margin-top:3px; font-size:.66rem; font-weight:800; }
+.sos-fab:hover { background:#b91c1c; transform:scale(1.04); }
+.sos-fab:disabled { cursor:wait; opacity:.8; animation:none; }
+@keyframes sos-pulse { 50% { box-shadow:0 8px 25px rgba(127,29,29,.42),0 0 0 11px rgba(220,38,38,.08); } }
+.sos-dialog { width:min(480px,calc(100vw - 28px)); max-height:calc(100dvh - 32px); padding:0; overflow:auto; border:0; border-radius:18px; box-shadow:0 25px 80px rgba(15,23,42,.3); color:#172033; }
+.sos-dialog::backdrop { background:rgba(15,23,42,.58); backdrop-filter:blur(3px); }
+.sos-dialog form { display:grid; gap:10px; padding:24px; }
+.sos-dialog-heading { display:flex; align-items:center; gap:12px; }
+.sos-dialog-heading h2 { margin:0; color:#166534; font-size:1.25rem; }
+.sos-dialog-heading p { margin:4px 0 0; color:#475569; font-size:.85rem; }
+.sos-confirm-icon { display:grid; width:42px; height:42px; flex:none; place-items:center; border-radius:50%; background:#dcfce7; color:#15803d; font-size:1.3rem; font-weight:900; }
+.sos-dialog .note { margin:4px 0 8px; }
+.sos-location-status { margin:0; color:#475569; font-size:.82rem; font-weight:700; }
+.sos-dialog label { margin-top:3px; color:#334155; font-size:.83rem; font-weight:800; }
+.sos-dialog select,.sos-dialog input,.sos-dialog textarea { width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:9px; background:#fff; color:#172033; font:inherit; }
+.sos-followup-message { min-height:1.3em; margin:0; color:#b91c1c; font-size:.85rem; }
+.sos-dialog-actions { display:flex; justify-content:flex-end; gap:9px; margin-top:4px; }
+@media (max-width:480px) { .sos-fab { right:16px; bottom:max(18px,env(safe-area-inset-bottom)); width:70px; height:70px; } .sos-dialog form { padding:20px; } }
+
 /* ---------- PWA install prompt ---------- */
 
 .install-banner {

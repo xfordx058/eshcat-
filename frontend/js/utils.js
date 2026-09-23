@@ -11,7 +11,6 @@ const PUBLIC_NAV = [
   { href: "/pages/reports.html", label: "Report Concern" },
   { href: "/pages/announcements.html", label: "Announcements" },
   { href: "/pages/offices.html", label: "Offices" },
-  { href: "/pages/comelec.html", label: "Election-day Assistance" },
   { href: "/pages/about.html", label: "About" },
 ];
 

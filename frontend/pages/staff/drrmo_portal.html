@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#991b1b"><title>MDRRMO Emergency Portal — eSHCAT</title>
+  <link rel="icon" href="../../assets/logo/favicon.svg"><link rel="stylesheet" href="../../css/department_portal.css"><link rel="stylesheet" href="../../css/drrmo.css">
+</head>
+<body class="dp-body drrmo-body" data-require-auth data-drrmo-portal>
+  <div class="dp-shell">
+    <aside class="dp-sidebar drrmo-sidebar"><div class="dp-brand"><span class="mark">!</span><span><strong>eSHCAT</strong><small>Emergency Response</small></span></div>
+      <nav class="dp-nav drrmo-nav"><span class="nav-section">MDRRMO</span><button class="active" data-drrmo-view-link="incidents" type="button">Live Incidents</button><button data-drrmo-view-link="history" type="button">Response History</button><button data-drrmo-view-link="profile" type="button">Profile</button></nav>
+      <div class="dp-user"><strong id="drrmoStaffName">Staff</strong><small id="drrmoStaffRole">MDRRMO Responder</small></div>
+    </aside>
+    <main class="dp-main">
+      <header class="dp-topbar"><div><span class="drrmo-live"><i></i> LIVE DISPATCH</span><h1>MDRRMO Emergency Portal</h1><p>Active incidents and response locations. Keep this page open during the demo.</p></div>
+        <div class="dp-actions"><button class="dp-btn" id="enableAlarm" type="button">Enable alarm sound</button><button class="dp-btn" id="shareStaffLocation" type="button">Share my location</button><button class="dp-btn" id="refreshIncidents" type="button">Refresh</button><button class="dp-btn primary" data-logout type="button">Sign out</button><small id="staffLocationStatus" class="drrmo-location-status">Responder location not shared</small></div>
+      </header>
+      <section class="drrmo-warning" id="drrmoWarning" role="status"><strong>Emergency dispatch is a demo workflow.</strong> For real incidents, use official MDRRMO and emergency dispatch channels.</section>
+      <section data-drrmo-view="incidents">
+        <div class="dp-stats drrmo-stats"><div class="dp-stat"><div class="num" id="openIncidentCount">0</div><div class="label">New alerts</div></div><div class="dp-stat"><div class="num" id="respondingIncidentCount">0</div><div class="label">Responding</div></div><div class="dp-stat"><div class="num" id="redIncidentCount">0</div><div class="label">Red level</div></div><div class="dp-stat"><div class="num" id="lastRefreshTime">—</div><div class="label">Last refresh</div></div></div>
+        <div class="drrmo-section-heading"><div><h2>Active emergency alerts</h2><p>Google Maps location and driving directions are available for each report.</p></div><span id="connectionState" class="drrmo-connection">Connecting...</span></div>
+        <div id="incidentBoard" class="drrmo-board"><div class="dp-loading">Loading active incidents...</div></div>
+      </section>
+      <section id="responseHistoryView" class="drrmo-subview" data-drrmo-view="history" hidden>
+        <div class="drrmo-section-heading"><div><h2>My response history</h2><p>Incidents you responded to, resolved, or chose to ignore.</p></div><button class="dp-btn" id="refreshHistory" type="button">Refresh history</button></div>
+        <div id="responseHistory"><div class="dp-loading">Loading your history...</div></div>
+      </section>
+      <section class="drrmo-subview" data-drrmo-view="profile" hidden>
+        <div class="drrmo-section-heading"><div><h2>My MDRRMO profile</h2><p>Your authenticated response account.</p></div></div>
+        <div id="drrmoProfile" class="drrmo-profile"><div class="dp-loading">Loading profile...</div></div>
+      </section>
+    </main>
+  </div>
+  <script src="../../js/utils.js"></script><script src="../../js/api.js"></script><script src="../../js/staff/auth.js"></script><script src="../../js/staff/drrmo_portal.js"></script>
+</body>
+</html>

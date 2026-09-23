@@ -48,6 +48,23 @@
       </div>
     </section>
 
+    <button id="emergencySend" class="sos-fab" type="button" aria-label="Send SOS emergency alert"><span>SOS</span><small>Help</small></button>
+    <dialog id="sosFollowupDialog" class="sos-dialog">
+      <form id="sosFollowupForm">
+        <div class="sos-dialog-heading"><span class="sos-confirm-icon" aria-hidden="true">✓</span><div><h2>Emergency alert sent</h2><p id="sosReference">MDRRMO has been alerted.</p></div></div>
+        <p class="note">Add more information if you can. This is optional; your alert has already been sent.</p>
+        <p id="sosLocationStatus" class="sos-location-status" role="status">Getting device location...</p>
+        <label for="sosCategory">What kind of emergency?</label>
+        <select id="sosCategory"><option value="">Skip this</option><option>Road accident</option><option>Medical emergency</option><option>Fire</option><option>Flooding</option><option>Other</option></select>
+        <label for="sosLocation">Nearby barangay or landmark (optional)</label>
+        <input id="sosLocation" type="text" maxlength="300" placeholder="e.g. Brgy. Dalakit, near the public market" />
+        <label for="sosDescription">Extra details (optional)</label>
+        <textarea id="sosDescription" rows="3" maxlength="1000" placeholder="People involved, immediate danger, or other useful information"></textarea>
+        <p id="sosFollowupMessage" class="sos-followup-message" role="status"></p>
+        <div class="sos-dialog-actions"><button class="btn btn-secondary" id="sosSkip" type="button">Skip</button><button class="btn btn-danger" id="sosSaveDetails" type="submit">Send details</button></div>
+      </form>
+    </dialog>
+
     <!-- Quick actions -->
     <div class="container">
       <section class="quick-actions" aria-label="Quick actions">

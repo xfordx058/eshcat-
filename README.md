@@ -36,6 +36,7 @@ Inspired by the design direction *Modern Minimalism + Soft Glassmorphism + Bento
 - Request office appointments
 - Report community concerns
 - View announcements and the office directory
+- Send a one-tap MDRRMO SOS alert, then optionally add the incident type and details
 
 ### Staff
 
@@ -141,10 +142,12 @@ Never commit real SMTP credentials. The app still works without email enabled.
 
 ```bash
 python -m backend.app
-# or: flask --app backend.app run
+# or: flask --app backend.app run --host=0.0.0.0 --port=5000
 ```
 
-Open `http://127.0.0.1:5000`.
+Start the server with `python -m backend.app` so it listens for connections from devices on your local network. On the host laptop, open `http://127.0.0.1:5000`. To connect a phone on the same Wi-Fi, find the laptop's IPv4 address with `ipconfig` and open `http://<laptop-ip>:5000` on the phone (for example, `http://192.168.1.25:5000`). Allow Python through Windows Firewall on private networks if prompted. Keep the laptop and phone on the same Wi-Fi network.
+
+Mobile browsers generally require HTTPS to provide precise GPS to a page opened by local IP over Wi-Fi. If GPS is blocked during the HTTP demo, the SOS alert still reaches MDRRMO with an approximate Catarman location; add a nearby landmark in the optional dialog. Use a trusted HTTPS address to demonstrate device GPS.
 
 ### Demo accounts
 
@@ -153,6 +156,8 @@ Open `http://127.0.0.1:5000`.
 | Staff            | `staff@eshcat.local` | `change_me_123` |
 | Department Head  | `head@eshcat.local`  | `change_me_123` |
 | Administrator    | `admin@eshcat.local` | `change_me_123` |
+| MDRRMO Responder | `staff.drrmo@eshcat.local` | `change_me_123` |
+| MDRRMO Head      | `head.drrmo@eshcat.local`  | `change_me_123` |
 
 Change `STAFF_SEED_PASSWORD` in `.env` before seeding non-demo environments.
 

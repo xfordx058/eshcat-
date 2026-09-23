@@ -121,6 +121,9 @@ def login():
 
         log_audit(conn, user["id"], "LOGIN", "staff", user["id"])
         conn.commit()
+        department = conn.execute(
+            "SELECT name FROM departments WHERE id = ?", (user["department_id"],)
+        ).fetchone()
         return jsonify(
             {
                 "id": user["id"],
@@ -128,6 +131,7 @@ def login():
                 "email": user["email"],
                 "role": user["role"],
                 "department_id": user["department_id"],
+                "department_name": department["name"] if department else None,
             }
         )
     finally:
@@ -150,12 +154,23 @@ def logout():
 @staff_bp.get("/api/staff/me")
 @login_required
 def me():
+    conn = get_connection()
+    try:
+        user_details = conn.execute(
+            """SELECT u.email, d.name AS department_name FROM staff_users u
+               LEFT JOIN departments d ON d.id = u.department_id WHERE u.id = ?""",
+            (session["staff_id"],),
+        ).fetchone()
+    finally:
+        conn.close()
     return jsonify(
         {
             "id": session["staff_id"],
             "name": session["staff_name"],
             "role": session["staff_role"],
             "department_id": session["department_id"],
+            "email": user_details["email"] if user_details else None,
+            "department_name": user_details["department_name"] if user_details else None,
         }
     )
 

@@ -95,6 +95,8 @@ _CIVIL_MIGRATIONS = [
     ("community_reports", "remarks", "remarks TEXT"),
     ("community_reports", "photo_data", "photo_data TEXT"),
     ("community_reports", "updated_at", "updated_at TEXT DEFAULT (datetime('now'))"),
+    ("emergency_incidents", "followup_token_hash", "followup_token_hash TEXT"),
+    ("emergency_incidents", "accuracy_meters", "accuracy_meters REAL"),
 ]
 
 
@@ -121,6 +123,7 @@ def _ensure_columns() -> None:
                         "user_id": "user_id INTEGER",
                         "remarks": "remarks TEXT",
                         "updated_at": "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+                        "accuracy_meters": "accuracy_meters DOUBLE NULL",
                     }.get(column, ddl)
                     sqlite_ddl = {
                         "updated_at": "updated_at TEXT",
@@ -258,6 +261,48 @@ def ensure_runtime_schema() -> None:
     """Create small runtime tables/migrations for databases made by older builds."""
     conn = get_connection()
     try:
+        if config.DB_DRIVER == "mysql":
+            conn.execute(
+                """CREATE TABLE IF NOT EXISTS emergency_incidents (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    reference_number VARCHAR(40) NOT NULL UNIQUE,
+                    severity VARCHAR(20) NOT NULL,
+                    category VARCHAR(100) NOT NULL,
+                    location TEXT,
+                    latitude DOUBLE NULL,
+                    longitude DOUBLE NULL,
+                    accuracy_meters DOUBLE NULL,
+                    description TEXT,
+                    status VARCHAR(20) NOT NULL DEFAULT 'Open',
+                    responder_id INT NULL,
+                    resolved_by INT NULL,
+                    followup_token_hash TEXT NULL,
+                    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    resolved_at TIMESTAMP NULL
+                )"""
+            )
+        else:
+            conn.execute(
+                """CREATE TABLE IF NOT EXISTS emergency_incidents (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    reference_number TEXT NOT NULL UNIQUE,
+                    severity TEXT NOT NULL CHECK (severity IN ('Yellow', 'Orange', 'Red')),
+                    category TEXT NOT NULL,
+                    location TEXT,
+                    latitude REAL,
+                    longitude REAL,
+                    accuracy_meters REAL,
+                    description TEXT,
+                    status TEXT NOT NULL DEFAULT 'Open' CHECK (status IN ('Open', 'Responding', 'Resolved')),
+                    responder_id INTEGER REFERENCES staff_users(id),
+                    resolved_by INTEGER REFERENCES staff_users(id),
+                    followup_token_hash TEXT,
+                    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+                    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+                    resolved_at TEXT
+                )"""
+            )
         if config.DB_DRIVER != "mysql":
             has_core_tables = conn.execute(
                 "SELECT COUNT(*) AS c FROM sqlite_master WHERE type = 'table' AND name IN ('appointments', 'civil_users', 'staff_users')"
@@ -281,6 +326,16 @@ def ensure_runtime_schema() -> None:
                 )
                 """
             )
+            conn.execute(
+                """CREATE TABLE IF NOT EXISTS emergency_incident_actions (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    incident_id INT NOT NULL,
+                    staff_id INT NOT NULL,
+                    action VARCHAR(20) NOT NULL,
+                    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE KEY emergency_action_once (incident_id, staff_id, action)
+                )"""
+            )
         else:
             conn.execute(
                 """
@@ -293,6 +348,16 @@ def ensure_runtime_schema() -> None:
                     updated_at TEXT NOT NULL DEFAULT (datetime('now'))
                 )
                 """
+            )
+            conn.execute(
+                """CREATE TABLE IF NOT EXISTS emergency_incident_actions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    incident_id INTEGER NOT NULL REFERENCES emergency_incidents(id) ON DELETE CASCADE,
+                    staff_id INTEGER NOT NULL REFERENCES staff_users(id),
+                    action TEXT NOT NULL CHECK (action IN ('Responded', 'Resolved', 'Ignored')),
+                    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+                    UNIQUE (incident_id, staff_id, action)
+                )"""
             )
         if config.DB_DRIVER == "mysql":
             conn.execute(
@@ -338,6 +403,43 @@ def ensure_runtime_schema() -> None:
     _ensure_columns()
     _seed_emergency_defaults()
     _seed_comelec_defaults()
+    _seed_drrmo_defaults()
+
+
+def _seed_drrmo_defaults() -> None:
+    """Ensure a DRRMO department and demo staff accounts exist."""
+    from werkzeug.security import generate_password_hash
+
+    conn = get_connection()
+    try:
+        with conn:
+            if conn.execute("SELECT COUNT(*) AS c FROM departments").fetchone()["c"] == 0:
+                return
+            department = conn.execute(
+                "SELECT id FROM departments WHERE name = ?", ("Municipal Disaster Risk Reduction and Management Office (MDRRMO)",)
+            ).fetchone()
+            if department is None:
+                cursor = conn.execute(
+                    """INSERT INTO departments (name, description, location, contact_number, email, office_hours)
+                       VALUES (?, ?, ?, ?, ?, ?)""",
+                    ("Municipal Disaster Risk Reduction and Management Office (MDRRMO)",
+                     "Coordinates emergency response and disaster risk reduction for Catarman.",
+                     "Municipal Hall, Catarman, Northern Samar", "0906-357-0985", None, "Contact MDRRMO for response availability"),
+                )
+                department_id = cursor.lastrowid
+            else:
+                department_id = department["id"]
+            for name, email, role in (
+                ("MDRRMO Response Staff", "staff.drrmo@eshcat.local", "Staff"),
+                ("MDRRMO Department Head", "head.drrmo@eshcat.local", "Department Head"),
+            ):
+                if conn.execute("SELECT id FROM staff_users WHERE email = ?", (email,)).fetchone() is None:
+                    conn.execute(
+                        "INSERT INTO staff_users (name, email, password_hash, role, department_id, is_active) VALUES (?, ?, ?, ?, ?, 1)",
+                        (name, email, generate_password_hash(config.STAFF_SEED_PASSWORD), role, department_id),
+                    )
+    finally:
+        conn.close()
 
 
 def seed_db() -> None:
@@ -362,6 +464,7 @@ def seed_db() -> None:
             "UPDATE civil_users SET password_hash = ? WHERE password_hash = 'SEED_ME'",
             (password,),
         )
+    _seed_drrmo_defaults()
 
 
 def log_audit(conn: sqlite3.Connection, staff_id, action, entity_type=None, entity_id=None, details=None) -> None:

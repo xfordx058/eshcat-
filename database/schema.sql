@@ -150,6 +150,34 @@ CREATE TABLE IF NOT EXISTS emergency_numbers (
     updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS emergency_incidents (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    reference_number TEXT NOT NULL UNIQUE,
+    severity        TEXT NOT NULL CHECK (severity IN ('Yellow', 'Orange', 'Red')),
+    category        TEXT NOT NULL,
+    location        TEXT,
+    latitude        REAL,
+    longitude       REAL,
+    accuracy_meters REAL,
+    description     TEXT,
+    status          TEXT NOT NULL DEFAULT 'Open' CHECK (status IN ('Open', 'Responding', 'Resolved')),
+    responder_id    INTEGER REFERENCES staff_users(id),
+    resolved_by     INTEGER REFERENCES staff_users(id),
+    followup_token_hash TEXT,
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    resolved_at     TEXT
+);
+
+CREATE TABLE IF NOT EXISTS emergency_incident_actions (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    incident_id INTEGER NOT NULL REFERENCES emergency_incidents(id) ON DELETE CASCADE,
+    staff_id    INTEGER NOT NULL REFERENCES staff_users(id),
+    action      TEXT NOT NULL CHECK (action IN ('Responded', 'Resolved', 'Ignored')),
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (incident_id, staff_id, action)
+);
+
 CREATE TABLE IF NOT EXISTS agency_directory (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     name        TEXT NOT NULL,
