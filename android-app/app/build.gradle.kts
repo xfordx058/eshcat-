@@ -36,6 +36,14 @@ android {
             "SMTP_PASSWORD",
             providers.gradleProperty("SMTP_PASSWORD").orElse("").get().asBuildConfigString(),
         )
+        buildConfigField(
+            "String",
+            "BACKEND_BASE_URL",
+            providers.gradleProperty("BACKEND_BASE_URL")
+                .orElse("http://10.118.177.83:5000/")
+                .get()
+                .asBuildConfigString(),
+        )
     }
 
     buildTypes {

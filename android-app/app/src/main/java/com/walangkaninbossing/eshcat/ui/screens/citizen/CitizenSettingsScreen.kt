@@ -32,6 +32,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.walangkaninbossing.eshcat.ESHCATApplication
+import com.walangkaninbossing.eshcat.data.remote.BackendApi
 import com.walangkaninbossing.eshcat.navigation.Routes
 import com.walangkaninbossing.eshcat.ui.components.GlassCard
 import com.walangkaninbossing.eshcat.ui.components.ScreenHeader
@@ -46,6 +51,7 @@ import com.walangkaninbossing.eshcat.ui.theme.EshcatSpacing
 import com.walangkaninbossing.eshcat.ui.theme.Primary
 import com.walangkaninbossing.eshcat.ui.theme.ScreenPadding
 import com.walangkaninbossing.eshcat.util.ThemeMode
+import kotlinx.coroutines.launch
 
 @Composable
 fun CitizenSettingsScreen(nav: NavController) {
@@ -55,6 +61,9 @@ fun CitizenSettingsScreen(nav: NavController) {
 
     val notificationsEnabled by settingsManager.notificationsEnabled.collectAsState()
     val themeMode by settingsManager.themeMode.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+    var serverStatus by remember { mutableStateOf("Tap to check the Flask server") }
+    var checkingServer by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         ScreenHeader(title = "Settings", onBack = { nav.popBackStack() })
@@ -206,6 +215,56 @@ fun CitizenSettingsScreen(nav: NavController) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
+                }
+            }
+
+            // Local Wi-Fi backend check
+            GlassCard(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    if (!checkingServer) {
+                        checkingServer = true
+                        serverStatus = "Connecting..."
+                        coroutineScope.launch {
+                            serverStatus = try {
+                                val count = BackendApi.fetchServiceCount()
+                                "Connected · $count services received from server"
+                            } catch (error: Exception) {
+                                "Connection failed · ${error.message ?: "check Wi-Fi and server"}"
+                            } finally {
+                                checkingServer = false
+                            }
+                        }
+                    }
+                }
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Filled.SettingsSuggest,
+                        contentDescription = null,
+                        tint = Primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Spacer(Modifier.width(EshcatSpacing.md))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Local Server Connection",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Text(
+                            text = serverStatus,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Icon(
+                        imageVector = Icons.Filled.ChevronRight,
+                        contentDescription = "Check connection",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
             }
 
