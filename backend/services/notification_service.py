@@ -9,7 +9,10 @@ def notify_application_update(application_id: int, force_send: bool = True) -> b
     try:
         app = conn.execute(
             """
-            SELECT a.reference_number, a.email, a.full_name, a.status, s.name AS service_name
+            SELECT a.reference_number, a.email, a.full_name, a.status,
+                   (SELECT h.remarks FROM application_history h
+                    WHERE h.application_id = a.id ORDER BY h.id DESC LIMIT 1) AS remarks,
+                   s.name AS service_name
             FROM applications a
             JOIN services s ON s.id = a.service_id
             WHERE a.id = ?
@@ -20,6 +23,7 @@ def notify_application_update(application_id: int, force_send: bool = True) -> b
             return False
 
         requester_name = app["full_name"] or "Resident"
+        remarks = app["remarks"] or ""
         subject = f"eSHCAT Update — {requester_name} — {app['reference_number']}"
         message = (
             f"Hello {requester_name},\n\n"
@@ -28,10 +32,11 @@ def notify_application_update(application_id: int, force_send: bool = True) -> b
             f"Reference:\n{app['reference_number']}\n\n"
             f"Service:\n{app['service_name']}\n\n"
             f"New Status:\n{app['status']}\n\n"
+            f"Staff remarks:\n{remarks or 'No additional remarks were provided.'}\n\n"
             "Please use your reference number to track your request."
         )
 
-        _, _, html = status_email("application", app["reference_number"], app["service_name"], app["status"], requester_name)
+        _, _, html = status_email("application", app["reference_number"], app["service_name"], app["status"], requester_name, remarks)
         if force_send and send_email(app["email"], subject, message, html):
             conn.execute(
                 "INSERT INTO notifications (application_id, recipient_email, subject, message, status, sent_at) "
