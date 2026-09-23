@@ -43,15 +43,20 @@
       ? ESH.el("span", { class: "avail online", text: "● Apply online" })
       : ESH.el("span", { class: "avail offline", text: "● Inquire at office" });
     return ESH.el("a", { class: "card service-card", href: `/pages/service-details.html?id=${s.id}` }, [
-      ESH.el("div", { class: "icon-tile", text: "🏛" }),
+      ESH.el("div", { class: "icon-tile" }, [ESH.el("i", { class: "fa-solid fa-landmark", "aria-hidden": "true" })]),
       ESH.el("div", { class: "dept", text: s.department }),
       ESH.el("h3", { text: s.name }),
       ESH.el("p", { text: s.short_description || s.description || "" }),
       ESH.el("div", { class: "meta" }, [
-        s.estimated_processing ? ESH.el("span", { class: "pill", text: `⏱ ${s.estimated_processing}` }) : "",
+        s.estimated_processing
+          ? ESH.el("span", { class: "pill" }, [ESH.el("i", { class: "fa-solid fa-clock", "aria-hidden": "true" }), " ", s.estimated_processing])
+          : "",
         availability,
       ]),
-      ESH.el("div", { class: "foot" }, [ESH.el("span", { text: "View details →" })]),
+      ESH.el("div", { class: "foot" }, [
+        ESH.el("span", { text: "View details" }),
+        ESH.el("i", { class: "fa-solid fa-arrow-right", "aria-hidden": "true" }),
+      ]),
     ]);
   }
 
@@ -178,12 +183,14 @@
         ESH.el("a", { href: "/pages/services.html", text: "Services" }),
         ESH.el("span", { text: " / " + ESH.esc(svc.name) }),
       ]),
-      ESH.el("div", { class: "icon-tile", text: "🏛" }),
+      ESH.el("div", { class: "icon-tile" }, [ESH.el("i", { class: "fa-solid fa-landmark", "aria-hidden": "true" })]),
       ESH.el("div", { class: "dept", text: svc.department }),
       ESH.el("h1", { style: "font-size:1.7rem;margin:4px 0 8px", text: svc.name }),
       ESH.el("p", { class: "note", text: svc.description || svc.short_description || "" }),
       ESH.el("div", { style: "margin-top:14px;display:flex;gap:10px;flex-wrap:wrap" }, [
-        svc.estimated_processing ? ESH.el("span", { class: "pill", text: `⏱ ${svc.estimated_processing}` }) : "",
+        svc.estimated_processing
+          ? ESH.el("span", { class: "pill" }, [ESH.el("i", { class: "fa-solid fa-clock", "aria-hidden": "true" }), " ", svc.estimated_processing])
+          : "",
         svc.is_online
           ? ESH.el("span", { class: "avail online", text: "● Apply online" })
           : ESH.el("span", { class: "avail offline", text: "● Inquire at office" }),
@@ -264,7 +271,8 @@
         ESH.el("li", { text: "This prototype does not handle payments — no real fees are charged here." }),
       ]),
       ESH.el("p", { class: "note", style: "margin-top:8px;font-size:0.86rem;background:var(--color-warning-bg);padding:12px 14px;border-radius:10px" }, [
-        ESH.el("span", { text: "⚠️ This is a hackathon prototype. Verify official fees and requirements with the municipal office." }),
+        ESH.el("i", { class: "fa-solid fa-triangle-exclamation", "aria-hidden": "true" }),
+        ESH.el("span", { text: " This is a hackathon prototype. Verify official fees and requirements with the municipal office." }),
       ]),
     ]);
   }
@@ -302,7 +310,10 @@
     ]);
 
     if (svc.is_online) {
-      card.appendChild(ESH.el("a", { class: "btn btn-primary", style: "width:100%;justify-content:center", href: `/pages/apply.html?id=${svc.id}`, text: "Apply Online →" }));
+      card.appendChild(ESH.el("a", { class: "btn btn-primary", style: "width:100%;justify-content:center", href: `/pages/apply.html?id=${svc.id}` }, [
+      ESH.el("span", { text: "Apply Online" }),
+      ESH.el("i", { class: "fa-solid fa-arrow-right", "aria-hidden": "true" }),
+    ]));
     } else {
       card.appendChild(ESH.el("a", { class: "btn btn-secondary", style: "width:100%;justify-content:center", href: "/pages/offices.html", text: "View Office Information" }));
     }
@@ -312,7 +323,9 @@
       const saved = savedServices().includes(svc.id);
       saveBtn.classList.toggle("btn-ghost", !saved);
       saveBtn.classList.toggle("btn-secondary", saved);
-      saveBtn.textContent = saved ? "✓ Saved for later" : "☆ Save for later";
+      saveBtn.innerHTML = saved
+        ? '<i class="fa-solid fa-bookmark" aria-hidden="true"></i> Saved for later'
+        : '<i class="fa-regular fa-bookmark" aria-hidden="true"></i> Save for later';
     };
     saveBtn.addEventListener("click", () => {
       const saved = savedServices().includes(svc.id);

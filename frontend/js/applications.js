@@ -132,7 +132,7 @@
     /* --- Step 4: Submit --- */
     const stepSubmit = ESH.el("div", { "data-wizard-panel": "4", hidden: "hidden" }, [
       ESH.el("div", { class: "card", style: "text-align:center" }, [
-        ESH.el("div", { style: "font-size:2.2rem;margin-bottom:6px", text: "📨" }),
+          ESH.el("div", { style: "font-size:2.2rem;margin-bottom:6px" }, [ESH.el("i", { class: "fa-solid fa-file-circle-check", "aria-hidden": "true" })]),
         ESH.el("h3", { text: "Ready to Submit?" }),
         ESH.el("p", { class: "note", text: "Double-check your information. Once submitted, you will receive a reference number to track your application." }),
         ESH.el("div", { style: "margin:14px 0" }, [
@@ -307,7 +307,7 @@
     const container = document.getElementById("applyForm");
     container.innerHTML = "";
     const box = ESH.el("div", { class: "card", style: "max-width:560px;margin:0 auto;text-align:center" }, [
-      ESH.el("div", { style: "font-size:2.6rem;margin-bottom:8px", text: "🎉" }),
+      ESH.el("div", { style: "font-size:2.6rem;margin-bottom:8px", text: "" }, [ESH.el("i", { class: "fa-solid fa-circle-check", "aria-hidden": "true" })]),
       ESH.el("h2", { text: "Application Submitted" }),
       ESH.el("p", { class: "note", text: "Your request has been recorded and is now with the responsible office." }),
       ESH.el("div", { class: "ref-box" }, [
@@ -330,7 +330,7 @@
     const container = document.getElementById("applyForm");
     container.innerHTML = "";
     const box = ESH.el("div", { class: "card", style: "max-width:560px;margin:0 auto" }, [
-      ESH.el("div", { style: "font-size:2.4rem", text: "📴" }),
+      ESH.el("div", { style: "font-size:2.4rem", text: "" }, [ESH.el("i", { class: "fa-solid fa-cloud", "aria-hidden": "true" })]),
       ESH.el("h2", { text: "Saved Locally" }),
       ESH.el("p", { class: "note", text: "You are offline. Your application was saved on this device and will be submitted automatically when your connection returns." }),
       ESH.el("div", { class: "ref-box", style: "border-style:solid" }, [

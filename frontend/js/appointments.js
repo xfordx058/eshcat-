@@ -63,7 +63,7 @@
         const data = await ESH.api.post("/appointments", payload);
         form.remove();
         const card = ESH.el("div", { class: "card", style: "max-width:560px;margin:0 auto;text-align:center" }, [
-          ESH.el("div", { style: "font-size:2.4rem", text: "✓" }),
+          ESH.el("div", { style: "font-size:2.4rem;color:var(--color-success)", text: "" }, [ESH.el("i", { class: "fa-solid fa-circle-check", "aria-hidden": "true" })]),
           ESH.el("h2", { text: "Appointment Requested" }),
           ESH.el("p", { class: "note", text: "Keep your reference number for your visit." }),
           ESH.el("div", { class: "ref-box" }, [

@@ -73,7 +73,7 @@
     shown.forEach((a) => {
       const desc = a.description || "";
       const item = ESH.el("div", { class: `announcement${a.is_pinned ? " pinned" : ""}` }, [
-        a.is_pinned ? ESH.el("span", { class: "pin-badge", text: "📌 Pinned" }) : "",
+        a.is_pinned ? ESH.el("span", { class: "pin-badge", text: "" }, [ESH.el("i", { class: "fa-solid fa-thumbtack", "aria-hidden": "true" }), " ", "Pinned"]) : "",
         ESH.el("h3", { text: a.title }),
         ESH.el("div", { class: "meta", text: `${a.date_text || ESH.fmtDate(a.created_at)} · ${a.department || "Municipal Government"}` }),
         ESH.el("p", { class: `body${limit ? " clamped" : ""}`, text: desc }),

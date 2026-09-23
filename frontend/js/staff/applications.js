@@ -139,7 +139,7 @@
     container.innerHTML = "";
 
     const head = ESH.el("div", { style: "margin-bottom:20px" }, [
-      ESH.el("a", { class: "note", href: "/pages/staff/applications.html", text: "← Applications" }),
+      ESH.el("a", { class: "note", href: "/pages/staff/applications.html" }, [ESH.el("i", { class: "fa-solid fa-arrow-left", "aria-hidden": "true" }), " Applications"]),
       ESH.el("div", { style: "display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px" }, [
         ESH.el("div", {}, [
           ESH.el("div", { class: "dept", text: app.department_name }),
@@ -218,13 +218,13 @@
     card.appendChild(ESH.el("div", { style: "margin:12px 0" }, [ESH.statusBadge(app.status)]));
     card.appendChild(ESH.el("p", { class: "note", text: "Last updated: " + ESH.fmtDateTime(app.updated_at) }));
 
-    const approveBtn = ESH.el("button", { class: "btn approve", style: "flex:1", type: "button", text: "✓ Approve" });
-    const rejectBtn = ESH.el("button", { class: "btn reject", style: "flex:1", type: "button", text: "✕ Reject" });
+    const approveBtn = ESH.el("button", { class: "btn approve", style: "flex:1", type: "button" }, [ESH.el("i", { class: "fa-solid fa-circle-check", "aria-hidden": "true" }), " Approve"]);
+    const rejectBtn = ESH.el("button", { class: "btn reject", style: "flex:1", type: "button" }, [ESH.el("i", { class: "fa-solid fa-circle-xmark", "aria-hidden": "true" }), " Reject"]);
     card.appendChild(ESH.el("div", { class: "status-actions", style: "display:flex" }, [approveBtn, rejectBtn]));
 
-    const updateBtn = ESH.el("button", { class: "btn btn-secondary", style: "width:100%;margin-top:8px", type: "button", text: "↻ Update Status" });
-    const reqBtn = ESH.el("button", { class: "btn btn-secondary", style: "width:100%;margin-top:8px", type: "button", text: "📋 Request Requirements" });
-    const forwardBtn = ESH.el("button", { class: "btn btn-secondary", style: "width:100%;margin-top:8px", type: "button", text: "➡ Forward to Department" });
+    const updateBtn = ESH.el("button", { class: "btn btn-secondary", style: "width:100%;margin-top:8px", type: "button" }, [ESH.el("i", { class: "fa-solid fa-rotate", "aria-hidden": "true" }), " Update Status"]);
+    const reqBtn = ESH.el("button", { class: "btn btn-secondary", style: "width:100%;margin-top:8px", type: "button" }, [ESH.el("i", { class: "fa-solid fa-clipboard-list", "aria-hidden": "true" }), " Request Requirements"]);
+    const forwardBtn = ESH.el("button", { class: "btn btn-secondary", style: "width:100%;margin-top:8px", type: "button" }, [ESH.el("i", { class: "fa-solid fa-share", "aria-hidden": "true" }), " Forward to Department"]);
     card.appendChild(updateBtn);
     card.appendChild(reqBtn);
     card.appendChild(forwardBtn);

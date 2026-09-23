@@ -64,7 +64,7 @@
     ]);
 
     const privacy = ESH.el("p", { class: "note", style: "max-width:640px;margin:14px auto 0;font-size:0.82rem;text-align:center" }, [
-      ESH.el("span", { text: "🔒 Privacy: tracking shows status only — no personal records are displayed." }),
+      ESH.el("span", { text: "" }, [ESH.el("i", { class: "fa-solid fa-lock", "aria-hidden": "true" }), " Privacy: tracking shows \"status only\" — no personal records are displayed." ]),
     ]);
 
     const timelineCard = ESH.el("div", { class: "card", style: "max-width:640px;margin:18px auto 0" }, [

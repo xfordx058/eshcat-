@@ -5,7 +5,7 @@
    Staff pages and API responses are NOT cached.
  */
 
-const CACHE_NAME = "eshcat-v3";
+const CACHE_NAME = "eshcat-v4";
 const ASSETS = [
   "/",
   "/index.html",
@@ -34,6 +34,10 @@ const ASSETS = [
   "/pages/offices.html",
   "/pages/about.html",
   "/assets/logo/favicon.svg",
+  "/assets/fontawesome/css/all.min.css",
+  "/assets/fontawesome/webfonts/fa-solid-900.woff2",
+  "/assets/fontawesome/webfonts/fa-regular-400.woff2",
+  "/assets/fontawesome/webfonts/fa-brands-400.woff2",
 ];
 
 self.addEventListener("install", (event) => {

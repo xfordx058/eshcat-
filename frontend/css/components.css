@@ -267,9 +267,11 @@ table.data tbody tr:hover {
 }
 
 .req-list li::before {
-  content: "✓";
+  content: "\f00c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 0.82em;
   color: var(--color-success);
-  font-weight: 700;
   flex-shrink: 0;
 }
 

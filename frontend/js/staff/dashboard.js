@@ -6,12 +6,12 @@
   const ESH = window.ESH;
 
   const TILES = [
-    { key: "total", label: "Total Applications", icon: "🗂️", tone: "info" },
-    { key: "Pending", label: "Pending Review", icon: "⏳", tone: "warning" },
-    { key: "Under Review", label: "Under Review", icon: "🔄", tone: "purple" },
-    { key: "Completed", label: "Completed", icon: "✅", tone: "success" },
-    { key: "appointments", label: "Pending Appointments", icon: "📅", tone: "info" },
-    { key: "reports", label: "Open Reports", icon: "🚩", tone: "danger" },
+    { key: "total", label: "Total Applications", icon: "fa-solid fa-folder-open", tone: "info" },
+    { key: "Pending", label: "Pending Review", icon: "fa-solid fa-hourglass-half", tone: "warning" },
+    { key: "Under Review", label: "Under Review", icon: "fa-solid fa-rotate", tone: "purple" },
+    { key: "Completed", label: "Completed", icon: "fa-solid fa-circle-check", tone: "success" },
+    { key: "appointments", label: "Pending Appointments", icon: "fa-solid fa-calendar-check", tone: "info" },
+    { key: "reports", label: "Open Reports", icon: "fa-solid fa-flag", tone: "danger" },
   ];
 
   const CHART_SERIES = [

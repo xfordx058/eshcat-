@@ -29,7 +29,7 @@
         const data = await ESH.api.post("/reports", payload);
         form.remove();
         const card = ESH.el("div", { class: "card", style: "max-width:560px;margin:0 auto;text-align:center" }, [
-          ESH.el("div", { style: "font-size:2.4rem", text: "✓" }),
+          ESH.el("div", { style: "font-size:2.4rem;color:var(--color-success)", text: "" }, [ESH.el("i", { class: "fa-solid fa-circle-check", "aria-hidden": "true" })]),
           ESH.el("h2", { text: "Report Submitted" }),
           ESH.el("p", { class: "note", text: "Thank you. Your concern has been recorded." }),
           ESH.el("div", { class: "ref-box" }, [

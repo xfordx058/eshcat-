@@ -15,8 +15,8 @@ const PUBLIC_NAV = [
 ];
 
 const STAFF_NAV = [
-  { href: "/pages/staff/dashboard.html", label: "📊 Dashboard" },
-  { href: "/pages/staff/applications.html", label: "🗂 Applications" },
+  { href: "/pages/staff/dashboard.html", label: '<i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Dashboard' },
+  { href: "/pages/staff/applications.html", label: '<i class="fa-solid fa-folder-open" aria-hidden="true"></i> Applications' },
   { href: "/pages/staff/login.html", label: "Logout" },
 ];
 
@@ -102,7 +102,7 @@ function showSkeleton(container, count = 3) {
 
 function showEmpty(container, message, actionHtml = "") {
   const box = el("div", { class: "empty" }, [
-    el("div", { class: "big", text: "🕊️" }),
+    el("div", { class: "big" }, [el("i", { class: "fa-solid fa-inbox", "aria-hidden": "true" })]),
     el("h3", { text: "Nothing here yet" }),
     el("p", { text: message }),
   ]);
@@ -114,7 +114,7 @@ function showEmpty(container, message, actionHtml = "") {
 function showError(container, message, retry) {
   container.innerHTML = "";
   const box = el("div", { class: "empty" }, [
-    el("div", { class: "big", text: "⚠️" }),
+    el("div", { class: "big" }, [el("i", { class: "fa-solid fa-triangle-exclamation", "aria-hidden": "true" })]),
     el("h3", { text: "Something went wrong" }),
     el("p", { text: message }),
   ]);

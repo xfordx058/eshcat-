@@ -8,6 +8,16 @@
   window.ESH = window.ESH || {};
   const ESH = window.ESH;
 
+  function injectFontAwesome() {
+    if (document.getElementById("eshcat-fa-css")) return;
+    const link = document.createElement("link");
+    link.id = "eshcat-fa-css";
+    link.rel = "stylesheet";
+    link.href = "/assets/fontawesome/css/all.min.css";
+    document.head.appendChild(link);
+  }
+  injectFontAwesome();
+
   function currentPath() {
     return window.location.pathname;
   }
@@ -42,7 +52,7 @@
     header.innerHTML = `
       <div class="header-inner">
         <a href="/" class="brand" aria-label="eSHCAT home">
-          <span class="brand-mark" aria-hidden="true">eS</span>
+          <img class="brand-mark" src="/assets/images/eSHCATlofogo.png" alt="" aria-hidden="true" />
           <span>eSHCAT<small>Electronic Services Hub for Catarman</small></span>
         </a>
         <nav class="main-nav" aria-label="Primary navigation">
@@ -51,7 +61,7 @@
         </nav>
         <div class="header-right">
           <span class="conn-dot" id="connDot" title="Online" aria-label="Connection status"></span>
-          <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+          <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
         </div>
       </div>
     `;
@@ -91,7 +101,7 @@
       <div class="footer-inner">
         <div class="footer-brand">
           <a href="/" class="brand" aria-label="eSHCAT home">
-            <span class="brand-mark" aria-hidden="true">eS</span>
+            <img class="brand-mark" src="/assets/images/eSHCATlofogo.png" alt="" aria-hidden="true" />
             <span>eSHCAT<small>Electronic Services Hub for Catarman</small></span>
           </a>
           <p>One Municipality. Connected Services. Easier Access.

@@ -14,14 +14,20 @@
 
   function officeCard(o) {
     const services = (o.services || []).map((s) => s.name).slice(0, 4);
+    const li = (icon, text) =>
+      ESH.el("li", { style: "display:flex;align-items:flex-start;gap:8px" }, [
+        ESH.el("i", { class: `fa-solid ${icon}`, "aria-hidden": "true", style: "margin-top:2px;color:var(--color-text-muted)" }),
+        ESH.el("span", { text }),
+      ]);
     const items = [
-      o.location && ESH.el("li", { text: `📍 ${o.location}` }),
-      o.contact_number && ESH.el("li", { text: `📞 ${o.contact_number}` }),
-      o.email && ESH.el("li", { text: `✉️ ${o.email}` }),
-      o.office_hours && ESH.el("li", { text: `🕘 ${o.office_hours}` }),
+      o.location && li("fa-location-dot", o.location),
+      o.contact_number && li("fa-phone", o.contact_number),
+      o.email && li("fa-envelope", o.email),
+      o.office_hours && li("fa-clock", o.office_hours),
+      o.days && li("fa-calendar-days", o.days),
     ].filter(Boolean);
     return ESH.el("div", { class: "card" }, [
-      ESH.el("div", { class: "icon-tile", text: "🏢" }),
+      ESH.el("div", { class: "icon-tile" }, [ESH.el("i", { class: "fa-solid fa-building-columns", "aria-hidden": "true" })]),
       ESH.el("h3", { text: o.name }),
       ESH.el("ul", { class: "note", style: "margin:8px 0 12px;padding-left:0;list-style:none" }, items),
       services.length
