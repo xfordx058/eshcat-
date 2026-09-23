@@ -18,6 +18,9 @@ INSERT INTO departments (id, name, description, location, contact_number, email,
     (9, 'Municipal Social Welfare and Development Office (MSWDO)', 'Renders social welfare and development services to individuals and families.', 'Municipal Hall, Catarman, Northern Samar', '0928-479-4710', 'minnielldurens@yahoo.com', 'Mon-Fri 8:00 AM - 5:00 PM'),
     (10, 'Municipal Environment and Natural Resources Office (MENRO)', 'Manages environmental protection, solid waste, and natural resources programs.', 'Municipal Hall, Catarman, Northern Samar', '(055) 500-1735', 'menrocatarman@gmail.com', 'Mon-Fri 8:00 AM - 5:00 PM');
 
+INSERT INTO departments (id, name, description, location, contact_number, email, office_hours) VALUES
+    (11, 'Commission on Elections (COMELEC)', 'Handles voter registration, voter certifications, and election-day assistance.', 'Municipal Hall, Catarman, Northern Samar', '(055) 500-0712', 'comelec.catarman@gmail.com', 'Election day and office hours vary');
+
 -- Services (mirror the official E-Services categories)
 INSERT INTO services (id, department_id, name, short_description, description, estimated_processing, is_online) VALUES
     (1, 1, 'Death Certificate', 'Apply for a certified copy of a death certificate.', 'Request a copy of a death certificate from the Local Civil Registry Office (LCRO) stating the date and place of death and the personal circumstances of the deceased.', '5-7 working days', 1),
@@ -36,6 +39,10 @@ INSERT INTO services (id, department_id, name, short_description, description, e
     (14, 5, 'Certification of Improvement / No Improvement', 'Request certification of property improvements.', 'Official statement regarding the status of improvements made to a property.', '2-3 working days', 0),
     (15, 6, 'Locational Clearance', 'Apply for a locational clearance.', 'Certify that a proposed development or construction project complies with zoning laws and land-use regulations.', '5-7 working days', 1),
     (16, 6, 'Zoning Certification', 'Verify a property''s compliance with zoning regulations.', 'Confirm that a property adheres to local zoning regulations with the Municipal Planning and Development Office (MPDO).', '3-5 working days', 0);
+
+INSERT INTO services (id, department_id, name, short_description, description, estimated_processing, is_online) VALUES
+    (17, 11, 'Voter''s Certification', 'Request a certification of voter registration.', 'Submit your information for COMELEC verification and receive a reference number for tracking.', '3-5 working days', 1),
+    (18, 11, 'Transfer of Voter Registration', 'Request transfer to a new voting precinct or barangay.', 'Submit your current and new registration details for COMELEC verification and transfer processing.', '7-10 working days', 1);
 
 -- Service Requirements
 INSERT INTO service_requirements (service_id, requirement) VALUES
@@ -79,6 +86,16 @@ INSERT INTO service_requirements (service_id, requirement) VALUES
     (15, 'Valid government-issued ID'),
     (16, 'Tax declaration of the property'),
     (16, 'Valid government-issued ID');
+
+INSERT INTO service_requirements (service_id, requirement) VALUES
+    (17, 'Valid government-issued ID'),
+    (17, 'Voter registration details or precinct number'),
+    (17, 'Correct full name and date of birth'),
+    (18, 'Valid government-issued ID'),
+    (18, 'Current voter registration record or Voter''s ID'),
+    (18, 'Proof of new residence or barangay certification'),
+    (18, 'Previous precinct or barangay information'),
+    (18, 'Authorization letter if filed by a representative');
 
 -- Service Form Fields (configurable form engine)
 INSERT INTO service_form_fields (service_id, label, field_name, field_type, required, options) VALUES
@@ -202,6 +219,28 @@ INSERT INTO service_form_fields (service_id, label, field_name, field_type, requ
     (16, 'Property Owner Name', 'propertyOwner', 'text', 1, NULL),
     (16, 'Property Location', 'propertyLocation', 'text', 1, NULL);
 
+INSERT INTO service_form_fields (service_id, label, field_name, field_type, required, options) VALUES
+    (17, 'Full Name', 'fullName', 'text', 1, NULL),
+    (17, 'Email Address', 'email', 'email', 1, NULL),
+    (17, 'Mobile Number', 'mobile', 'tel', 0, NULL),
+    (17, 'Complete Address', 'address', 'text', 1, NULL),
+    (17, 'Date of Birth', 'dateOfBirth', 'date', 1, NULL),
+    (17, 'Precinct Number', 'precinctNumber', 'text', 1, NULL),
+    (17, 'Barangay', 'barangay', 'text', 1, NULL),
+    (17, 'Valid Government-Issued ID', 'validIdType', 'select', 1, '["National ID / PhilSys ID","Driver''s License","Philippine Passport","UMID / SSS / GSIS ID","Voter''s ID","Other Government-Issued ID"]'),
+    (17, 'Purpose of Certification', 'purpose', 'select', 1, '["Employment","School","Government transaction","Personal record","Other"]'),
+    (18, 'Full Name', 'fullName', 'text', 1, NULL),
+    (18, 'Email Address', 'email', 'email', 1, NULL),
+    (18, 'Mobile Number', 'mobile', 'tel', 0, NULL),
+    (18, 'Current Address', 'address', 'text', 1, NULL),
+    (18, 'Date of Birth', 'dateOfBirth', 'date', 1, NULL),
+    (18, 'Current Precinct Number', 'currentPrecinct', 'text', 1, NULL),
+    (18, 'Current Barangay', 'currentBarangay', 'text', 1, NULL),
+    (18, 'New Address', 'newAddress', 'text', 1, NULL),
+    (18, 'New Barangay', 'newBarangay', 'text', 1, NULL),
+    (18, 'Valid Government-Issued ID', 'validIdType', 'select', 1, '["National ID / PhilSys ID","Driver''s License","Philippine Passport","UMID / SSS / GSIS ID","Voter''s ID","Other Government-Issued ID"]'),
+    (18, 'Filing as', 'filingAs', 'select', 1, '["Registered voter","Authorized representative"]');
+
 -- Staff users (password: change_me_123 -- hashed via werkzeug when seeded through the app)
 INSERT INTO staff_users (id, name, email, password_hash, role, department_id, is_active) VALUES
     (1, 'Maria Santos', 'admin@eshcat.local', 'SEED_ME', 'Administrator', 1, 1),
@@ -216,7 +255,12 @@ INSERT INTO staff_users (id, name, email, password_hash, role, department_id, is
     (10, 'Mayor Office Staff', 'staff.mayor@eshcat.local', 'SEED_ME', 'Staff', 7, 1),
     (11, 'MHO Service Staff', 'staff.mho@eshcat.local', 'SEED_ME', 'Staff', 8, 1),
     (12, 'MSWDO Service Staff', 'staff.mswdo@eshcat.local', 'SEED_ME', 'Staff', 9, 1),
-    (13, 'MENRO Service Staff', 'staff.menro@eshcat.local', 'SEED_ME', 'Staff', 10, 1);
+    (13, 'MENRO Service Staff', 'staff.menro@eshcat.local', 'SEED_ME', 'Staff', 10, 1),
+    (14, 'COMELEC Service Staff', 'staff.comelec@eshcat.local', 'SEED_ME', 'Staff', 11, 1),
+    (15, 'COMELEC Department Head', 'head.comelec@eshcat.local', 'SEED_ME', 'Department Head', 11, 1);
+
+INSERT INTO comelec_settings (id, election_day_active, public_lookup_enabled, queue_room, announcement)
+VALUES (1, 0, 0, 'COMELEC Room 1', 'Election-day queue is currently inactive.');
 
 -- Civil portal resident (password: change_me_123 -- hashed via werkzeug when seeded through the app)
 INSERT INTO civil_users (id, username, password_hash, full_name, email) VALUES

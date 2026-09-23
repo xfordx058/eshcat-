@@ -87,6 +87,17 @@ def admin_required(view):
     return wrapped
 
 
+def _department_filter():
+    """Return the requested department for administrators, or force staff scope."""
+    if session.get("staff_role") == "Administrator":
+        return request.args.get("department_id", type=int)
+    return session.get("department_id") or -1
+
+
+def _department_allowed(department_id):
+    return session.get("staff_role") == "Administrator" or department_id == session.get("department_id")
+
+
 @staff_bp.post("/api/staff/login")
 def login():
     payload = request.get_json(silent=True) or {}
@@ -154,14 +165,17 @@ def me():
 def list_staff_users():
     conn = get_connection()
     try:
+        department_filter = request.args.get("department_id", type=int)
+        where = " WHERE u.department_id = ?" if department_filter else ""
+        params = (department_filter,) if department_filter else ()
         rows = conn.execute(
             """
             SELECT u.id, u.name, u.email, u.role, u.department_id, u.is_active,
                    d.name AS department_name
             FROM staff_users u
             LEFT JOIN departments d ON d.id = u.department_id
-            ORDER BY u.name ASC
-            """
+            """ + where + " ORDER BY u.name ASC",
+            params,
         ).fetchall()
         return jsonify([dict(row) for row in rows])
     finally:
@@ -392,20 +406,29 @@ def update_staff_user(user_id):
 def dashboard():
     conn = get_connection()
     try:
-        def count_by(sql):
-            return conn.execute(sql).fetchone()["c"]
+        department_id = _department_filter()
+
+        def count_by(table, condition="", params=()):
+            sql = f"SELECT COUNT(*) c FROM {table}"
+            query_params = list(params)
+            if condition:
+                sql += " WHERE " + condition
+            if department_id:
+                sql += " AND department_id = ?" if condition else " WHERE department_id = ?"
+                query_params.append(department_id)
+            return conn.execute(sql, query_params).fetchone()["c"]
 
         stats = {
-            "total": count_by("SELECT COUNT(*) c FROM applications"),
-            "today": count_by("SELECT COUNT(*) c FROM applications WHERE DATE(created_at) = CURRENT_DATE"),
-            "Pending": count_by("SELECT COUNT(*) c FROM applications WHERE status = 'Submitted'"),
-            "Received": count_by("SELECT COUNT(*) c FROM applications WHERE status = 'Received'"),
-            "Under Review": count_by("SELECT COUNT(*) c FROM applications WHERE status = 'Under Review'"),
-            "Approved": count_by("SELECT COUNT(*) c FROM applications WHERE status = 'Approved'"),
-            "Rejected": count_by("SELECT COUNT(*) c FROM applications WHERE status = 'Rejected'"),
-            "Completed": count_by("SELECT COUNT(*) c FROM applications WHERE status = 'Completed'"),
-            "appointments": count_by("SELECT COUNT(*) c FROM appointments WHERE status = 'Pending'"),
-            "reports": count_by("SELECT COUNT(*) c FROM community_reports WHERE status = 'Open'"),
+            "total": count_by("applications"),
+            "today": count_by("applications", "DATE(created_at) = CURRENT_DATE"),
+            "Pending": count_by("applications", "status = 'Submitted'"),
+            "Received": count_by("applications", "status = 'Received'"),
+            "Under Review": count_by("applications", "status = 'Under Review'"),
+            "Approved": count_by("applications", "status = 'Approved'"),
+            "Rejected": count_by("applications", "status = 'Rejected'"),
+            "Completed": count_by("applications", "status = 'Completed'"),
+            "appointments": count_by("appointments", "status = 'Pending'"),
+            "reports": count_by("community_reports", "status = 'Open'"),
         }
         return jsonify(stats)
     finally:
@@ -418,7 +441,7 @@ def list_applications():
     conn = get_connection()
     try:
         status_filter = request.args.get("status")
-        department_filter = request.args.get("department_id", type=int)
+        department_filter = _department_filter()
         sql = """
             SELECT a.id, a.reference_number, a.full_name, a.status, a.created_at,
                    s.name AS service_name, d.name AS department_name
@@ -431,7 +454,7 @@ def list_applications():
         if status_filter:
             filters.append("a.status = ?")
             params.append(status_filter)
-        if department_filter:
+        if department_filter is not None:
             filters.append("a.department_id = ?")
             params.append(department_filter)
         if filters:
@@ -448,7 +471,7 @@ def list_applications():
 def list_appointments():
     conn = get_connection()
     try:
-        department_filter = request.args.get("department_id", type=int)
+        department_filter = _department_filter()
         sql = """
             SELECT a.*, s.name AS service_name, d.name AS department_name
             FROM appointments a
@@ -456,7 +479,7 @@ def list_appointments():
             LEFT JOIN departments d ON d.id = a.department_id
         """
         params = []
-        if department_filter:
+        if department_filter is not None:
             sql += " WHERE a.department_id = ?"
             params.append(department_filter)
         sql += " ORDER BY a.appointment_date ASC, a.appointment_time ASC, a.created_at DESC"
@@ -471,10 +494,10 @@ def list_appointments():
 def list_reports():
     conn = get_connection()
     try:
-        department_filter = request.args.get("department_id", type=int)
+        department_filter = _department_filter()
         sql = "SELECT * FROM community_reports"
         params = []
-        if department_filter:
+        if department_filter is not None:
             sql += " WHERE department_id = ?"
             params.append(department_filter)
         sql += " ORDER BY created_at DESC"
@@ -584,6 +607,8 @@ def get_application(app_id):
         ).fetchone()
         if row is None:
             return jsonify({"error": "Application not found."}), 404
+        if not _department_allowed(row["department_id"]):
+            return jsonify({"error": "This application belongs to another department."}), 403
         history = conn.execute(
             """
             SELECT h.*, su.name AS staff_name
@@ -610,6 +635,15 @@ def patch_status(app_id):
     payload = request.get_json(silent=True) or {}
     new_status = payload.get("status")
     remarks = payload.get("remarks") or ""
+    conn = get_connection()
+    try:
+        row = conn.execute("SELECT department_id FROM applications WHERE id = ?", (app_id,)).fetchone()
+    finally:
+        conn.close()
+    if row is None:
+        return jsonify({"error": "Application not found."}), 404
+    if not _department_allowed(row["department_id"]):
+        return jsonify({"error": "This application belongs to another department."}), 403
     try:
         result = update_status(app_id, session["staff_id"], new_status, remarks)
     except ValueError as exc:
@@ -637,9 +671,11 @@ def forward_application(app_id):
         return jsonify({"error": "Destination department is required."}), 400
     conn = get_connection()
     try:
-        row = conn.execute("SELECT id FROM applications WHERE id = ?", (app_id,)).fetchone()
+        row = conn.execute("SELECT id, department_id FROM applications WHERE id = ?", (app_id,)).fetchone()
         if row is None:
             return jsonify({"error": "Application not found."}), 404
+        if not _department_allowed(row["department_id"]):
+            return jsonify({"error": "This application belongs to another department."}), 403
         current = conn.execute(
             "SELECT status FROM applications WHERE id = ?", (app_id,)
         ).fetchone()["status"]

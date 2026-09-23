@@ -190,3 +190,29 @@ CREATE TABLE IF NOT EXISTS sync_queue (
     endpoint_path TEXT,
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS comelec_settings (
+    id                    INTEGER PRIMARY KEY CHECK (id = 1),
+    election_day_active   INTEGER NOT NULL DEFAULT 0,
+    public_lookup_enabled INTEGER NOT NULL DEFAULT 0,
+    election_date        TEXT,
+    queue_room            TEXT NOT NULL DEFAULT 'COMELEC Room 1',
+    announcement          TEXT,
+    updated_by            INTEGER REFERENCES staff_users(id),
+    updated_at            TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS comelec_queue (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    queue_date     TEXT NOT NULL,
+    present_number INTEGER NOT NULL,
+    full_name      TEXT NOT NULL,
+    email          TEXT,
+    precinct_number TEXT,
+    purpose        TEXT NOT NULL DEFAULT 'Voter verification',
+    room           TEXT NOT NULL,
+    status         TEXT NOT NULL DEFAULT 'Waiting',
+    created_at     TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at     TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(queue_date, present_number)
+);

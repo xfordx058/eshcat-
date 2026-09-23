@@ -8,7 +8,7 @@
 
   const STATUSES = [
     "Submitted", "Received", "Under Review", "Additional Requirements",
-    "For Verification", "Forwarded", "Approved", "Rejected",
+    "For Verification", "Forwarded", "Approved", "Rejected", "Not Found",
     "Ready for Release", "Completed", "Cancelled",
   ];
 

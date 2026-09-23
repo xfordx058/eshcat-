@@ -29,6 +29,7 @@
       8: "health_portal.html",
       9: "social_welfare_portal.html",
       10: "environment_portal.html",
+      11: "comelec_portal.html",
     };
     return `/pages/staff/${portals[Number(user.department_id)] || "department_portal.html"}`;
   }

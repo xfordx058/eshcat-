@@ -13,6 +13,7 @@ VALID_STATUSES = {
     "Forwarded",
     "Approved",
     "Rejected",
+    "Not Found",
     "Ready for Release",
     "Completed",
     "Cancelled",

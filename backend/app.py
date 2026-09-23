@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 from . import config, database
 from .routes.announcements import announcements_bp
+from .routes.comelec import comelec_bp
 from .routes.applications import applications_bp
 from .routes.appointments import appointments_bp
 from .routes.civil import civil_bp
@@ -59,6 +60,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(reports_bp)
     app.register_blueprint(civil_bp)
     app.register_blueprint(announcements_bp)
+    app.register_blueprint(comelec_bp)
     app.register_blueprint(emergency_bp)
     app.register_blueprint(staff_bp)
 

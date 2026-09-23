@@ -10,7 +10,7 @@
     document.getElementById("portalRoot").innerHTML = `
       <div class="dp-shell">
         <aside class="dp-sidebar"><div class="dp-brand"><span class="mark">eS</span><span><strong>eSHCAT</strong><small>Department Portal</small></span></div>
-          <nav class="dp-nav"><span class="nav-section">Portal</span><a class="active" href="#">Overview</a><a href="dashboard.html">Main Staff Dashboard</a><a href="applications.html">All Applications</a><a href="settings.html">Account Settings</a></nav>
+          <nav class="dp-nav"><span class="nav-section">BPLO Workspace</span><a class="active" href="#">Overview</a><a href="#applications" data-portal-link="applications">Applications</a><a href="#appointments" data-portal-link="appointments">Appointments</a><a href="#reports" data-portal-link="reports">Reports</a></nav>
           <div class="dp-user"><strong id="departmentUser">Staff</strong><small id="departmentName">Loading department...</small></div>
         </aside>
         <main class="dp-main"><div class="dp-topbar"><div><h1>Department Portal</h1><p>Applications and requests assigned to your department.</p></div><div class="dp-actions"><button class="dp-btn" id="refreshPortal" type="button">Refresh</button><button class="dp-btn primary" data-logout type="button">Sign out</button></div></div>
@@ -42,9 +42,13 @@
   async function init() {
     ensureShell();
     const me = await api.get("/staff/me");
-    departmentId = me.department_id;
     const expectedDepartment = Number(document.body.dataset.portalDepartment || 0);
-    if (expectedDepartment && Number(me.department_id) !== expectedDepartment && me.role !== "Administrator") {
+    if (expectedDepartment && me.role === "Administrator") {
+      departmentId = expectedDepartment;
+    } else {
+      departmentId = me.department_id;
+    }
+    if (expectedDepartment && Number(departmentId) !== expectedDepartment) {
       qs("#portalTable").innerHTML = "<div class=\"dp-empty\">This portal belongs to a different department.</div>";
       return;
     }
@@ -65,6 +69,10 @@
     qs("#servicesCount").textContent = mine.length;
     render("applications");
     document.querySelectorAll("[data-portal-tab]").forEach((button) => button.addEventListener("click", () => render(button.dataset.portalTab)));
+    document.querySelectorAll("[data-portal-link]").forEach((link) => link.addEventListener("click", (event) => {
+      event.preventDefault();
+      render(link.dataset.portalLink);
+    }));
     qs("#refreshPortal").addEventListener("click", () => window.location.reload());
   }
 
