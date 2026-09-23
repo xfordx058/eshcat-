@@ -12,10 +12,26 @@
   <link rel="stylesheet" href="../../css/responsive.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
-<body data-page="staff-login">
+<body data-page="staff-login" class="staff-body">
   <main>
-    <div class="container">
-      <section class="section">
+    <div class="staff-login-shell">
+      <section class="login-panel" aria-hidden="true">
+        <div class="panel-content">
+          <div class="panel-brand">
+            <span class="mark">eS</span>
+            <span>eSHCAT Staff</span>
+          </div>
+          <h2>Municipal Services,<br /><span class="block">handled online.</span></h2>
+          <p>Manage citizen applications, appointments, community reports, and more — from one dashboard.</p>
+        </div>
+        <div class="panel-art">
+          <div class="row"><span class="ico">🗂️</span><span>Applications from residents, in one queue</span></div>
+          <div class="row"><span class="ico">🔄</span><span>Update statuses, forward between offices</span></div>
+          <div class="row"><span class="ico">📊</span><span>Live dashboard of municipal service load</span></div>
+        </div>
+      </section>
+
+      <section class="login-form-panel">
         <form id="loginForm" class="auth-card" novalidate>
           <div class="icon-tile" style="margin-bottom:14px">🔐</div>
           <h1>Staff Login</h1>
@@ -25,11 +41,14 @@
             <label for="loginEmail">Email / Username</label>
             <input type="email" id="loginEmail" autocomplete="username" required />
           </div>
-          <div class="form-group" style="margin-bottom:18px">
+          <div class="form-group" style="margin-bottom:14px">
             <label for="loginPassword">Password</label>
             <input type="password" id="loginPassword" autocomplete="current-password" required />
           </div>
-          <button class="btn btn-primary" id="loginBtn" type="submit" style="width:100%">Login</button>
+          <label style="display:flex;align-items:center;gap:8px;font-weight:500;font-size:0.88rem;margin-bottom:18px;cursor:pointer">
+            <input type="checkbox" id="loginRemember" style="width:auto;height:auto" /> Keep me signed in
+          </label>
+          <button class="btn btn-primary" id="loginBtn" type="submit" style="width:100%">Sign In</button>
 
           <div class="alert info" style="margin-top:18px;font-size:0.82rem">
             <span>Demo account — email: <strong>staff@eshcat.local</strong> · password: <strong>change_me_123</strong></span>

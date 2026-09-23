@@ -1,5 +1,5 @@
 /* eSHCAT — utils.js
-   Shared helpers: DOM, toasts, formatting, status classes. */
+   Shared helpers: DOM, toasts, formatting, status classes, modals. */
 
 const API_BASE = "/api";
 
@@ -11,6 +11,13 @@ const PUBLIC_NAV = [
   { href: "/pages/reports.html", label: "Report Concern" },
   { href: "/pages/announcements.html", label: "Announcements" },
   { href: "/pages/offices.html", label: "Offices" },
+  { href: "/pages/about.html", label: "About" },
+];
+
+const STAFF_NAV = [
+  { href: "/pages/staff/dashboard.html", label: "📊 Dashboard" },
+  { href: "/pages/staff/applications.html", label: "🗂 Applications" },
+  { href: "/pages/staff/login.html", label: "Logout" },
 ];
 
 function el(tag, attrs = {}, children = []) {
@@ -80,13 +87,40 @@ function showLoading(container, text = "Loading...") {
   container.appendChild(box);
 }
 
+function showSkeleton(container, count = 3) {
+  container.innerHTML = "";
+  for (let i = 0; i < count; i += 1) {
+    const card = el("div", { class: "skeleton-card" }, [
+      el("div", { class: "skeleton", style: "width:44px;height:44px;border-radius:12px;margin-bottom:14px" }),
+      el("div", { class: "skeleton", style: "width:60%;height:18px;margin-bottom:10px" }),
+      el("div", { class: "skeleton", style: "width:92%;height:12px;margin-bottom:6px" }),
+      el("div", { class: "skeleton", style: "width:74%;height:12px" }),
+    ]);
+    container.appendChild(card);
+  }
+}
+
 function showEmpty(container, message, actionHtml = "") {
   const box = el("div", { class: "empty" }, [
     el("div", { class: "big", text: "🕊️" }),
+    el("h3", { text: "Nothing here yet" }),
     el("p", { text: message }),
   ]);
   if (actionHtml) box.insertAdjacentHTML("beforeend", actionHtml);
   container.innerHTML = "";
+  container.appendChild(box);
+}
+
+function showError(container, message, retry) {
+  container.innerHTML = "";
+  const box = el("div", { class: "empty" }, [
+    el("div", { class: "big", text: "⚠️" }),
+    el("h3", { text: "Something went wrong" }),
+    el("p", { text: message }),
+  ]);
+  if (retry && typeof retry === "function") {
+    box.appendChild(el("button", { class: "btn btn-secondary", text: "Try Again", onclick: () => retry() }));
+  }
   container.appendChild(box);
 }
 
@@ -109,9 +143,71 @@ function getParam(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
 
+/* Modal helper */
+let activeKeyHandler = null;
+
+function openModal(html, { title = "", onMount } = {}) {
+  closeModal();
+  const backdrop = el("div", { class: "modal-backdrop", "aria-modal": "true", role: "dialog" });
+  backdrop.innerHTML = `<div class="modal">${title ? `<h3>${esc(title)}</h3>` : ""}${html}</div>`;
+  document.body.appendChild(backdrop);
+  document.body.style.overflow = "hidden";
+
+  const modal = backdrop.querySelector(".modal");
+  const close = () => closeModal();
+  backdrop.addEventListener("mousedown", (e) => {
+    if (e.target === backdrop) close();
+  });
+  backdrop.addEventListener("click", (e) => {
+    if (e.target.closest("[data-close-modal]")) close();
+  });
+
+  const onKey = (e) => {
+    if (e.key === "Escape") close();
+  };
+  activeKeyHandler = onKey;
+  document.addEventListener("keydown", onKey);
+
+  if (onMount) onMount(modal, backdrop);
+  return {
+    close,
+    modal,
+    backdrop,
+    el: (sel) => modal.querySelector(sel),
+  };
+}
+
+function closeModal() {
+  const backdrop = document.querySelector(".modal-backdrop");
+  if (backdrop) backdrop.remove();
+  if (activeKeyHandler) {
+    document.removeEventListener("keydown", activeKeyHandler);
+    activeKeyHandler = null;
+  }
+  document.body.style.overflow = "";
+}
+
+function confirmModal(message, { title = "Are you sure?", confirmLabel = "Confirm", danger = false } = {}) {
+  return new Promise((resolve) => {
+    const m = openModal(
+      `<p class="modal-sub">${esc(message)}</p>
+       <div class="modal-actions">
+         <button class="btn btn-secondary" data-close-modal>Cancel</button>
+         <button class="btn ${danger ? "btn-danger" : "btn-primary"}" data-confirm>${esc(confirmLabel)}</button>
+       </div>`,
+      { title }
+    );
+    m.el("[data-confirm]").addEventListener("click", () => {
+      m.close();
+      resolve(true);
+    });
+  });
+}
+
 window.ESH = {
   API_BASE,
   PUBLIC_NAV,
+  STAFF_NAV,
   el,
   esc,
   uid,
@@ -121,8 +217,13 @@ window.ESH = {
   statusBadge,
   showToast,
   showLoading,
+  showSkeleton,
   showEmpty,
+  showError,
   setLoading,
   unsetLoading,
   getParam,
+  openModal,
+  closeModal,
+  confirmModal,
 };

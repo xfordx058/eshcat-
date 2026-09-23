@@ -12,28 +12,77 @@
   <link rel="stylesheet" href="../../css/responsive.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
-<body data-page="staff-dashboard" data-require-auth>
+<body data-page="staff-dashboard" data-require-auth class="staff-body">
   <main>
-    <div class="admin-shell">
-      <aside class="side-nav" aria-label="Staff navigation">
-        <a class="active" href="dashboard.html">📊 Overview</a>
-        <a href="applications.html">📄 Applications</a>
-        <a href="#" data-logout>🚪 Logout</a>
+    <div class="staff-shell">
+      <aside class="staff-sidebar" aria-label="Staff navigation">
+        <div class="side-brand">
+          <span class="mark">eS</span>
+          <span><strong>eSHCAT</strong><small>Staff Portal</small></span>
+        </div>
+        <nav class="side-nav">
+          <span class="nav-section">Main</span>
+          <a class="active" href="dashboard.html"><span class="ico">📊</span>Dashboard</a>
+          <a href="applications.html"><span class="ico">🗂️</span>Applications</a>
+          <span class="nav-section">More</span>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">📅</span>Appointments <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">🚩</span>Reports <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">💬</span>Messages <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+          <a href="applications.html" title="Coming soon" style="opacity:.55"><span class="ico">⚙️</span>Settings <span style="margin-left:auto;font-size:0.66rem">Soon</span></a>
+        </nav>
+        <div class="side-user">
+          <span id="userChip"></span>
+          <button class="side-user-logout" data-logout title="Log out" aria-label="Log out">⏻</button>
+        </div>
       </aside>
-      <div class="admin-main">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px" id="userChip"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin:10px 0 20px">
-          <h1 style="margin:0">Dashboard</h1>
-          <button class="btn btn-secondary btn-sm" id="refreshBtn" type="button">↻ Refresh</button>
+
+      <div class="staff-main">
+        <div class="greeting-card">
+          <div>
+            <h2 id="greetName">Welcome back</h2>
+            <p id="greetSub">Here's what's happening with municipal services today.</p>
+          </div>
+          <span class="date" id="todayDate"></span>
         </div>
 
-        <section id="statTiles" style="margin-bottom:26px">
+        <div class="staff-top">
+          <div>
+            <h1>Dashboard</h1>
+            <div class="sub">Overview of applications and community activity</div>
+          </div>
+          <div class="top-actions">
+            <button class="btn btn-secondary btn-sm" id="refreshBtn" type="button">↻ Refresh</button>
+            <a class="btn btn-primary btn-sm" href="applications.html">All Applications</a>
+          </div>
+        </div>
+
+        <div id="statTiles" style="margin-bottom:24px">
           <div class="loading"><span class="spinner"></span><span>Loading dashboard...</span></div>
-        </section>
+        </div>
+
+        <div class="bento-grid" style="margin-bottom:24px">
+          <div class="bento-8">
+            <div class="card chart-card" style="height:100%">
+              <h3>Applications Overview</h3>
+              <p class="note" style="font-size:0.85rem;margin-bottom:12px">Current volume by status</p>
+              <div class="chart-bars" id="appChart">
+                <div class="loading"><span class="spinner"></span><span>Loading...</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="bento-4">
+            <div class="card" style="height:100%">
+              <h3>Quick Summary</h3>
+              <p class="note" style="font-size:0.87rem;margin:10px 0 14px">Today's municipal service activity.</p>
+              <div id="summaryTiles"></div>
+            </div>
+          </div>
+        </div>
 
         <section>
           <div class="section-header">
             <h2>Recent Applications</h2>
+            <p>Latest submissions needing attention.</p>
           </div>
           <div id="recentApplications"></div>
         </section>

@@ -15,47 +15,66 @@
   <main>
     <div class="container">
       <section class="section">
-        <p class="note"><a href="javascript:history.back()">← Back</a></p>
-        <div style="margin-top:8px;margin-bottom:22px">
-          <div class="kicker">Community Reports</div>
-          <h1 style="font-size:1.6rem">Report a Community Concern</h1>
-          <p class="note">Help keep Catarman connected. Report issues without creating an account.</p>
+        <div class="section-header">
+          <span class="kicker">Community Reports</span>
+          <h1 style="font-size:1.7rem">Report a Community Concern</h1>
+          <p>Help keep Catarman clean, safe, and connected. Report an issue without creating an account.</p>
         </div>
-        <form id="reportForm" class="glass-card" style="max-width:620px;margin:0 auto">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="reportCategory">Concern Category</label>
-              <select id="reportCategory" required>
-                <option value="">Select category...</option>
-                <option>Road problem</option>
-                <option>Streetlight</option>
-                <option>Drainage</option>
-                <option>Waste</option>
-                <option>Flooding</option>
-                <option>Public facility</option>
-                <option>Environment</option>
-                <option>Other</option>
-              </select>
+
+        <div class="split-narrow" style="grid-template-columns:1.2fr 0.8fr">
+          <form id="reportForm" class="card" style="padding:28px">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="reportCategory">Concern Category</label>
+                <select id="reportCategory" required>
+                  <option value="">Select category...</option>
+                  <option>Road Damage</option>
+                  <option>Waste / Garbage</option>
+                  <option>Flooding</option>
+                  <option>Street Light</option>
+                  <option>Public Safety</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="reportLocation">Location</label>
+                <input type="text" id="reportLocation" placeholder="e.g. Rizal St., Brgy. 1" />
+              </div>
+              <div class="form-group full">
+                <label for="reportDescription">Description</label>
+                <textarea id="reportDescription" rows="4" placeholder="Describe the concern..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="reportName">Your Name</label>
+                <input type="text" id="reportName" placeholder="Optional" />
+              </div>
+              <div class="form-group">
+                <label for="reportEmail">Email</label>
+                <input type="email" id="reportEmail" placeholder="Optional" />
+              </div>
+              <div class="form-group full">
+                <label for="reportPhoto">Photo (optional)</label>
+                <input type="file" id="reportPhoto" accept="image/*" />
+                <div class="note" style="font-size:0.82rem">Photos are kept on your device in this prototype — they are not uploaded.</div>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="reportLocation">Location</label>
-              <input type="text" id="reportLocation" placeholder="e.g. Rizal St., Brgy. 1" />
-            </div>
-            <div class="form-group full">
-              <label for="reportDescription">Description</label>
-              <textarea id="reportDescription" rows="4" placeholder="Describe the concern..." required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="reportName">Your Name</label>
-              <input type="text" id="reportName" />
-            </div>
-            <div class="form-group">
-              <label for="reportEmail">Email</label>
-              <input type="email" id="reportEmail" />
+            <button class="btn btn-primary" id="reportBtn" type="submit" style="width:100%;margin-top:20px">Submit Report →</button>
+          </form>
+
+          <div class="card" style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-color:#BFDBFE;position:static">
+            <div class="icon-tile">🏘️</div>
+            <h3>Together for a better Catarman</h3>
+            <p class="note" style="margin:10px 0 14px">Your reports help the municipal government respond to issues faster — from road damage to waste management.</p>
+            <ul class="req-list">
+              <li>Be as specific as possible about the location.</li>
+              <li>Describe what needs attention and any safety risk.</li>
+              <li>Only share what you are comfortable with.</li>
+            </ul>
+            <div class="alert info" style="margin:14px 0 0;font-size:0.84rem">
+              <span>For urgent emergencies, call the MDRRMO at <strong>0906-357-0985</strong> or dial <strong>911/112</strong>.</span>
             </div>
           </div>
-          <button class="btn btn-primary" id="reportBtn" type="submit" style="width:100%;margin-top:16px">Submit Report →</button>
-        </form>
+        </div>
       </section>
     </div>
   </main>

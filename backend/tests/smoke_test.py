@@ -131,6 +131,14 @@ def main():
     assert r.status_code == 201
     print("OK  POST /api/reports ->", r.get_json()["reference_number"])
 
+    # 16. offices directory
+    r = client.get("/api/offices")
+    assert r.status_code == 200
+    offices = r.get_json()
+    assert len(offices) >= 6
+    assert "services" in offices[0]
+    print("OK  GET /api/offices ->", len(offices), "offices")
+
     print("\nALL CHECKS PASSED")
 
 

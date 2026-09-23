@@ -1,47 +1,56 @@
 /* ============================================================
    eSHCAT — responsive.css
-   Breakpoints: <640 mobile · 640–1023 tablet · 1024+ desktop ·
-   1280+ large desktop. Standard CSS media queries only.
+   Breakpoints (per design spec):
+     ≤767 mobile · 768–1023 tablet · 1024–1439 desktop · ≥1440 large
+   Standard CSS media queries only.
    ============================================================ */
 
-/* ---------- Desktop default ---------- */
+/* ---------- Bento grid (12-col system) ---------- */
+
 .bento-grid {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(1, 1fr);
 }
 
-@media (min-width: 640px) {
+.bento-12, .bento-8, .bento-6, .bento-4, .bento-3, .bento-2 {
+  grid-column: auto / span 1;
+}
+
+@media (min-width: 560px) {
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .bento-6 { grid-column: span 2; }
-  .bento-4 { grid-column: span 2; }
-  .bento-3 { grid-column: span 1; }
-  .bento-2 { grid-column: span 1; }
+  .bento-12, .bento-8, .bento-6, .bento-4 { grid-column: auto / span 2; }
+  .bento-3, .bento-2 { grid-column: auto / span 1; }
 }
 
 @media (min-width: 1024px) {
   .bento-grid {
     grid-template-columns: repeat(6, 1fr);
-  }
-
-  .bento-6 { grid-column: span 6; }
-  .bento-4 { grid-column: span 4; }
-  .bento-3 { grid-column: span 3; }
-  .bento-2 { grid-column: span 2; }
-
-  .grid-2 { grid-template-columns: repeat(2, 1fr); }
-  .grid-3 { grid-template-columns: repeat(3, 1fr); }
-  .grid-4 { grid-template-columns: repeat(4, 1fr); }
-}
-
-@media (min-width: 1280px) {
-  .bento-grid {
     gap: 20px;
   }
+
+  .bento-12, .bento-8 { grid-column: auto / span 6; }
+  .bento-6 { grid-column: auto / span 6; }
+  .bento-4 { grid-column: auto / span 4; }
+  .bento-3 { grid-column: auto / span 3; }
+  .bento-2 { grid-column: auto / span 2; }
 }
 
-/* ---------- Generic grids overrides (mobile first) ---------- */
+@media (min-width: 1440px) {
+  .bento-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .bento-12 { grid-column: auto / span 12; }
+  .bento-8 { grid-column: auto / span 8; }
+  .bento-6 { grid-column: auto / span 6; }
+  .bento-4 { grid-column: auto / span 4; }
+  .bento-3 { grid-column: auto / span 3; }
+  .bento-2 { grid-column: auto / span 2; }
+}
+
+/* ---------- Generic grids (mobile first) ---------- */
 
 .grid,
 .grid-2,
@@ -65,86 +74,92 @@
   .grid-4 { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* ---------- Split detail layout ---------- */
+/* ---------- Service cards grid ---------- */
 
-.split {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-@media (min-width: 860px) {
-  .split {
-    grid-template-columns: 1.4fr 1fr;
-  }
-
-  .split .sticky-form {
-    position: sticky;
-    top: 96px;
-  }
-}
-
-.detail-list {
+.services-grid {
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 640px) {
-  .detail-list {
-    grid-template-columns: repeat(2, 1fr);
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* ---------- Navigation (mobile drawer) ---------- */
+@media (min-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 
-@media (max-width: 767px) {
-  .nav-toggle {
-    display: inline-flex;
-    align-items: center;
+@media (min-width: 1440px) {
+  .services-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  padding: 48px 16px 76px;
+}
+
+.hero-grid {
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.hero-visual {
+  display: none;
+}
+
+.quick-actions {
+  margin-top: -44px;
+}
+
+.info-strip {
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 900px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 40px;
   }
 
-  .main-nav {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    flex-direction: column;
-    align-items: stretch;
-    padding: 10px;
-    display: none;
-  }
-
-  .main-nav.open {
+  .hero-visual {
     display: flex;
   }
 }
 
-@media (min-width: 768px) {
-  .main-nav {
-    display: flex !important;
+@media (min-width: 1024px) {
+  .info-strip {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* ---------- Hero actions ---------- */
+/* ---------- Search strip ---------- */
 
-.hero-actions {
-  flex-direction: column;
-  align-items: stretch;
-}
+@media (max-width: 479px) {
+  .search-strip {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: var(--radius-lg);
+    padding: 10px;
+    gap: 8px;
+  }
 
-@media (min-width: 480px) {
-  .hero-actions {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  .search-strip input {
+    padding: 12px 10px;
+  }
+
+  .search-strip .btn {
+    width: 100%;
   }
 }
 
-/* ---------- Steps ---------- */
+/* ---------- Steps / how-it-works ---------- */
 
 .steps {
   grid-template-columns: 1fr;
@@ -180,43 +195,164 @@
   grid-template-columns: 1fr;
 }
 
+.review-card dl {
+  grid-template-columns: 1fr;
+}
+
 @media (min-width: 640px) {
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
 
-/* ---------- Tables on mobile ---------- */
-
-@media (max-width: 639px) {
-  .table-wrap {
-    margin: 0;
-    border-radius: var(--radius-md);
+  .review-card dl {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* ---------- Staff layout ---------- */
+/* ---------- Emergency contacts ---------- */
 
-@media (max-width: 900px) {
-  .admin-shell {
+.emergency-card .contacts {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .emergency-card .contacts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Footer ---------- */
+
+.footer-inner {
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .footer-inner {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-inner {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+/* ---------- Split layouts ---------- */
+
+.split,
+.split-narrow {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .split {
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+  .split-narrow {
+    grid-template-columns: 1fr 0.8fr;
+  }
+
+  .split .sticky-form,
+  .split-narrow .sticky-form {
+    position: sticky;
+    top: calc(var(--header-h) + 20px);
+  }
+}
+
+/* ---------- Navigation (mobile drawer) ---------- */
+
+@media (max-width: 767px) {
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .main-nav {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 16px;
+    right: 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+    display: none;
   }
 
-  .side-nav {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
-    padding: 12px;
+  .main-nav.open {
+    display: flex;
   }
 
-  .side-nav a {
-    padding: 8px 12px;
+  .main-nav a.staff-link {
+    margin-left: 0;
   }
 }
 
-/* ---------- Misc spacing ---------- */
+@media (min-width: 768px) {
+  .main-nav {
+    display: flex !important;
+  }
+}
+
+/* ---------- Toast (top-center on mobile) ---------- */
+
+@media (max-width: 767px) {
+  .toast-wrap {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(var(--header-h) + 12px);
+    width: min(92vw, 380px);
+    max-width: none;
+  }
+}
+
+/* ---------- Modal ---------- */
+
+@media (max-width: 479px) {
+  .modal {
+    padding: 22px;
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* ---------- Service directory filters (mobile) ---------- */
+
+@media (max-width: 767px) {
+  .filter-panel {
+    position: static !important;
+  }
+
+  .filter-panel .category-list {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+  }
+
+  .filter-panel .category-list .cat {
+    padding: 8px 14px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+}
+
+/* ---------- Section / container tweaks ---------- */
+
+@media (min-width: 1440px) {
+  .header-inner,
+  .footer-inner,
+  .footer-bottom {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
 
 @media (max-width: 480px) {
   .section {
@@ -225,5 +361,13 @@
 
   .ref-box .ref {
     font-size: 1.2rem;
+  }
+
+  .page-hero {
+    padding: 40px 16px;
+  }
+
+  .page-hero h1 {
+    font-size: 1.6rem;
   }
 }

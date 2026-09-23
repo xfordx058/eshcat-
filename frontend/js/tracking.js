@@ -42,16 +42,29 @@
     container.innerHTML = "";
 
     const card = ESH.el("div", { class: "card", style: "max-width:640px;margin:0 auto" }, [
-      ESH.el("div", { class: "dept", text: data.department }),
-      ESH.el("h2", { text: data.service }),
-      ESH.el("div", { style: "margin:10px 0 18px", text: "" }, [
-        ESH.el("span", { class: "note", text: "Reference: " }),
-        ESH.el("strong", { text: data.reference_number }),
-      ]),
-      ESH.el("div", { style: "margin-bottom:6px" }, [
+      ESH.el("div", { style: "display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px" }, [
+        ESH.el("div", { class: "dept", text: data.department }),
         ESH.statusBadge(data.status),
       ]),
-      ESH.el("p", { class: "note", text: `Last updated: ${ESH.fmtDateTime(data.updated_at)}` }),
+      ESH.el("h2", { style: "font-size:1.4rem", text: data.service }),
+      ESH.el("div", { class: "detail-list", style: "margin:14px 0 6px" }, [
+        ESH.el("div", { class: "detail-item" }, [
+          ESH.el("div", { class: "k", text: "Reference Number" }),
+          ESH.el("div", { class: "v", text: data.reference_number }),
+        ]),
+        ESH.el("div", { class: "detail-item" }, [
+          ESH.el("div", { class: "k", text: "Last Updated" }),
+          ESH.el("div", { class: "v", text: ESH.fmtDateTime(data.updated_at) }),
+        ]),
+        ESH.el("div", { class: "detail-item" }, [
+          ESH.el("div", { class: "k", text: "Submitted" }),
+          ESH.el("div", { class: "v", text: ESH.fmtDateTime(data.created_at || data.updated_at) }),
+        ]),
+      ]),
+    ]);
+
+    const privacy = ESH.el("p", { class: "note", style: "max-width:640px;margin:14px auto 0;font-size:0.82rem;text-align:center" }, [
+      ESH.el("span", { text: "🔒 Privacy: tracking shows status only — no personal records are displayed." }),
     ]);
 
     const timelineCard = ESH.el("div", { class: "card", style: "max-width:640px;margin:18px auto 0" }, [
@@ -60,6 +73,7 @@
     ]);
 
     container.appendChild(card);
+    container.appendChild(privacy);
     container.appendChild(timelineCard);
   }
 

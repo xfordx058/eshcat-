@@ -15,15 +15,19 @@
   <main>
     <section class="page-hero">
       <h1>Track Your Request</h1>
-      <p>Enter your eSHCAT reference number to view the current status.</p>
+      <p>Enter your eSHCAT reference number to view the current status and timeline.</p>
     </section>
     <div class="container">
       <section class="section">
-        <form id="trackForm" class="glass-card" style="max-width:560px;margin:0 auto 24px">
-          <label for="referenceInput">Reference Number</label>
-          <input type="text" id="referenceInput" placeholder="CAT-DC-7F3A91D2" autocomplete="off" spellcheck="false" />
-          <button class="btn btn-primary" type="submit" style="width:100%;margin-top:14px">Track Request</button>
-        </form>
+        <div class="card" style="max-width:640px;margin:0 auto 24px">
+          <form id="trackForm" role="search">
+            <label for="referenceInput">Reference Number</label>
+            <div class="search-strip" style="margin-top:10px">
+              <input type="text" id="referenceInput" placeholder="e.g. CAT-DC-7F3A91D2" autocomplete="off" spellcheck="false" aria-label="Reference number" />
+              <button class="btn btn-primary" type="submit">Track</button>
+            </div>
+          </form>
+        </div>
         <div id="trackResult"></div>
       </section>
     </div>

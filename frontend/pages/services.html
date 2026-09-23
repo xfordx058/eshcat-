@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#2563EB" />
   <title>Municipal Services — eSHCAT</title>
+  <meta name="description" content="Browse Catarman municipal services, view requirements, and apply online." />
   <link rel="icon" href="../assets/logo/favicon.svg" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/components.css" />
@@ -19,14 +20,20 @@
     </section>
     <div class="container">
       <section class="section">
-        <div class="glass-card" style="margin-bottom:24px">
-          <form class="search-strip" role="search" id="serviceSearchForm">
-            <input type="search" id="serviceSearch" placeholder="Search municipal services..." aria-label="Search services" autocomplete="off" />
-            <button class="btn btn-primary" type="submit">Search</button>
-          </form>
-        </div>
-        <div id="serviceList">
-          <div class="loading"><span class="spinner"></span><span>Loading services...</span></div>
+        <div class="split-narrow" style="align-items:start">
+          <aside class="card filter-panel" aria-label="Filters" style="position:sticky;top:calc(var(--header-h) + 20px)">
+            <h3 style="margin-bottom:14px">Find a Service</h3>
+            <form id="serviceSearchForm" role="search" style="margin-bottom:16px">
+              <input type="search" id="serviceSearch" placeholder="Search services..." aria-label="Search services" autocomplete="off" />
+            </form>
+            <p class="note" style="margin-bottom:10px;font-size:0.82rem;font-weight:600">Filter by department</p>
+            <div class="chips category-list" id="categoryChips" style="flex-direction:column;align-items:stretch"></div>
+          </aside>
+          <div>
+            <div id="serviceList">
+              <div class="loading"><span class="spinner"></span><span>Loading services...</span></div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

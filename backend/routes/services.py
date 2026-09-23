@@ -49,6 +49,40 @@ def list_services():
         conn.close()
 
 
+@public_bp.route("/api/offices", methods=["GET"])
+def list_offices():
+    """Public office directory with real contact info + services."""
+    conn = get_connection()
+    try:
+        rows = conn.execute(
+            """
+            SELECT id, name, description, location, contact_number, email, office_hours
+            FROM departments
+            ORDER BY name
+            """
+        ).fetchall()
+        offices = []
+        for row in rows:
+            department = dict(row)
+            services = conn.execute(
+                """
+                SELECT id, name, is_online
+                FROM services
+                WHERE department_id = ?
+                ORDER BY name
+                """,
+                (row["id"],),
+            ).fetchall()
+            department["services"] = [
+                {"id": s["id"], "name": s["name"], "is_online": bool(s["is_online"])}
+                for s in services
+            ]
+            offices.append(department)
+        return jsonify(offices)
+    finally:
+        conn.close()
+
+
 @public_bp.route("/api/services/<int:service_id>", methods=["GET"])
 def get_service(service_id):
     conn = get_connection()
