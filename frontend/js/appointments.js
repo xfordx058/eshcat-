@@ -61,6 +61,7 @@
       ESH.setLoading(btn, "Requesting...");
       try {
         const data = await ESH.api.post("/appointments", payload);
+        const formContainer = form.parentElement;
         form.remove();
         const card = ESH.el("div", { class: "card", style: "max-width:560px;margin:0 auto;text-align:center" }, [
           ESH.el("div", { style: "font-size:2.4rem;color:var(--color-success)", text: "" }, [ESH.el("i", { class: "fa-solid fa-circle-check", "aria-hidden": "true" })]),
@@ -74,7 +75,7 @@
             ESH.el("a", { class: "btn btn-secondary", href: "/pages/track.html", text: "Track a Request" }),
           ]),
         ]);
-        form.parentElement.appendChild(card);
+        formContainer.appendChild(card);
         ESH.showToast("Appointment requested.", "success");
       } catch (err) {
         ESH.unsetLoading(btn);

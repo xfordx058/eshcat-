@@ -93,6 +93,7 @@ _CIVIL_MIGRATIONS = [
     ("community_reports", "department_id", "department_id INTEGER"),
     ("community_reports", "user_id", "user_id INTEGER"),
     ("community_reports", "remarks", "remarks TEXT"),
+    ("community_reports", "photo_data", "photo_data TEXT"),
     ("community_reports", "updated_at", "updated_at TEXT DEFAULT (datetime('now'))"),
 ]
 
@@ -125,6 +126,22 @@ def _ensure_columns() -> None:
                         "updated_at": "updated_at TEXT",
                     }.get(column, ddl)
                     conn.execute(f"ALTER TABLE {table} ADD COLUMN {mysql_ddl if config.DB_DRIVER == 'mysql' else sqlite_ddl}")
+            if config.DB_DRIVER == "mysql":
+                conn.execute(
+                    """CREATE TABLE IF NOT EXISTS appointment_history (
+                        id INT AUTO_INCREMENT PRIMARY KEY, appointment_id INT NOT NULL,
+                        staff_id INT NULL, old_status VARCHAR(100), new_status VARCHAR(100),
+                        remarks TEXT, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                    )"""
+                )
+            else:
+                conn.execute(
+                    """CREATE TABLE IF NOT EXISTS appointment_history (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT, appointment_id INTEGER NOT NULL,
+                        staff_id INTEGER, old_status TEXT, new_status TEXT, remarks TEXT,
+                        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+                    )"""
+                )
     finally:
         conn.close()
 

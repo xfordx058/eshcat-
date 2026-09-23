@@ -67,8 +67,15 @@
       ESH.el("span", { text: "" }, [ESH.el("i", { class: "fa-solid fa-lock", "aria-hidden": "true" }), " Privacy: tracking shows \"status only\" — no personal records are displayed." ]),
     ]);
 
+    if (data.request_type === "appointment") {
+      card.querySelector(".detail-list").appendChild(ESH.el("div", { class: "detail-item" }, [
+        ESH.el("div", { class: "k", text: "Appointment Schedule" }),
+        ESH.el("div", { class: "v", text: `${data.appointment_date || "—"} · ${data.appointment_time || "—"}` }),
+      ]));
+    }
+
     const timelineCard = ESH.el("div", { class: "card", style: "max-width:640px;margin:18px auto 0" }, [
-      ESH.el("h3", { text: "Application Timeline" }),
+      ESH.el("h3", { text: data.request_type === "appointment" ? "Appointment Timeline" : "Application Timeline" }),
       buildTimeline((data.timeline || []).reverse()),
     ]);
 

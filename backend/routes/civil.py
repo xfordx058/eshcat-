@@ -377,6 +377,10 @@ def update_appointment(appt_id):
             "UPDATE appointments SET status = ?, remarks = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
             (status, remarks, appt_id),
         )
+        conn.execute(
+            "INSERT INTO appointment_history (appointment_id, staff_id, old_status, new_status, remarks) VALUES (?, ?, ?, ?, ?)",
+            (appt_id, session.get("staff_id"), current["status"], status, remarks),
+        )
         row = conn.execute(_APPT_QUERY + " WHERE a.id = ?", (appt_id,)).fetchone()
         conn.commit()
         notify_civil_update("appointment", appt_id)

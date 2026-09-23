@@ -104,6 +104,16 @@ CREATE TABLE IF NOT EXISTS appointments (
     updated_at       TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS appointment_history (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    appointment_id INTEGER NOT NULL REFERENCES appointments(id) ON DELETE CASCADE,
+    staff_id       INTEGER REFERENCES staff_users(id),
+    old_status     TEXT,
+    new_status     TEXT,
+    remarks        TEXT,
+    created_at     TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS community_reports (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     reference_number TEXT NOT NULL UNIQUE,
@@ -113,6 +123,7 @@ CREATE TABLE IF NOT EXISTS community_reports (
     description      TEXT NOT NULL,
     name             TEXT,
     email            TEXT,
+    photo_data       TEXT,
     status           TEXT NOT NULL DEFAULT 'Open',
     user_id          INTEGER REFERENCES civil_users(id),
     remarks          TEXT,

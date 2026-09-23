@@ -10,6 +10,8 @@
       subtitle: "Review citizen appointment requests.",
       columns: ["reference_number", "full_name", "service_name", "department_name", "appointment_date", "appointment_time", "status"],
       labels: ["Reference", "Applicant", "Service", "Department", "Date", "Time", "Status"],
+      statusOptions: ["Pending", "Confirmed", "Completed", "Cancelled"],
+      updateEndpoint: (row) => `/civil/admin/appointments/${row.id}`,
     },
     "staff-reports": {
       endpoint: "/staff/reports",
@@ -17,6 +19,8 @@
       subtitle: "Review community concerns submitted by residents.",
       columns: ["reference_number", "category", "location", "description", "name", "status", "created_at"],
       labels: ["Reference", "Category", "Location", "Description", "Reporter", "Status", "Submitted"],
+      statusOptions: ["Open", "In Progress", "Resolved"],
+      updateEndpoint: (row) => `/civil/admin/reports/${row.id}`,
     },
     "staff-messages": {
       endpoint: "/staff/messages",
@@ -33,35 +37,125 @@
     return row[key] ?? "—";
   }
 
-  function drawTable(container, rows, cfg) {
+  function drawTable(container, rows, cfg, onView) {
     if (!rows.length) {
       ESH.showEmpty(container, `No ${cfg.title.toLowerCase()} found.`);
       return;
     }
     container.innerHTML = "";
-    const table = ESH.el("table", { class: "data" }, [
-      ESH.el("thead", {}, [ESH.el("tr", {}, cfg.labels.map((label) => ESH.el("th", { text: label })))]),
-      ESH.el("tbody", {}, rows.map((row) => ESH.el("tr", {}, cfg.columns.map((key) => {
+    const headerCells = cfg.labels.concat(cfg.updateEndpoint ? ["Action"] : []).map((label) => ESH.el("th", { text: label }));
+    const bodyRows = rows.map((row) => {
+      const cells = cfg.columns.map((key, index) => {
         const text = String(value(row, key));
-        return ESH.el("td", { "data-label": cfg.labels[cfg.columns.indexOf(key)] }, [
-          key === "status" ? ESH.statusBadge(text) : ESH.el("span", { text }),
-        ]);
-      })))),
+        return ESH.el("td", { "data-label": cfg.labels[index] }, [key === "status" ? ESH.statusBadge(text) : ESH.el("span", { text })]);
+      });
+      if (cfg.updateEndpoint) cells.push(ESH.el("td", { "data-label": "Action" }, [ESH.el("button", { class: "btn btn-secondary btn-sm", type: "button", text: "View" })]));
+      return ESH.el("tr", {}, cells);
+    });
+    const table = ESH.el("table", { class: "data" }, [
+      ESH.el("thead", {}, [ESH.el("tr", {}, headerCells)]),
+      ESH.el("tbody", {}, bodyRows),
     ]);
     container.appendChild(ESH.el("div", { class: "table-wrap" }, [table]));
+    if (cfg.updateEndpoint) table.querySelectorAll("tbody button").forEach((button, index) => button.addEventListener("click", () => onView(rows[index])));
   }
 
   async function initList(cfg) {
     const container = document.getElementById("operationsTable");
     if (!container) return;
-    ESH.showLoading(container, `Loading ${cfg.title.toLowerCase()}...`);
-    try {
-      const rows = await ESH.api.get(cfg.endpoint);
-      drawTable(container, rows, cfg);
-    } catch (err) {
-      ESH.showError(container, err.message, () => initList(cfg));
+    if (cfg.title === "Reports") renderDailyReportSummary(container);
+    if (cfg.statusOptions && !document.getElementById("operationsStatusFilter")) {
+      const filter = ESH.el("select", { id: "operationsStatusFilter", "aria-label": `Filter ${cfg.title.toLowerCase()} status`, style: "margin-bottom:12px" }, [
+        ESH.el("option", { value: "", text: `All ${cfg.title}` }),
+        ...cfg.statusOptions.map((status) => ESH.el("option", { value: status, text: status })),
+      ]);
+      container.parentElement.insertBefore(filter, container);
     }
-    document.getElementById("refreshBtn")?.addEventListener("click", () => initList(cfg));
+    const load = async () => {
+      ESH.showLoading(container, `Loading ${cfg.title.toLowerCase()}...`);
+      try {
+        const rows = await ESH.api.get(cfg.endpoint);
+        const filter = document.getElementById("operationsStatusFilter")?.value || "";
+        const filtered = filter ? rows.filter((row) => row.status === filter) : rows;
+        drawTable(container, filtered, cfg, (row) => openRecordDetail(row, cfg, load));
+      } catch (err) { ESH.showError(container, err.message, load); }
+    };
+    document.getElementById("refreshBtn")?.addEventListener("click", load);
+    document.getElementById("operationsStatusFilter")?.addEventListener("change", load);
+    load();
+  }
+
+  async function renderDailyReportSummary(tableContainer) {
+    let summary = document.getElementById("dailyReportSummary");
+    if (!summary) {
+      summary = ESH.el("section", { id: "dailyReportSummary", class: "daily-report-summary card" });
+      tableContainer.parentElement.insertBefore(summary, tableContainer);
+    }
+    ESH.showLoading(summary, "Loading today’s report...");
+    try {
+      const data = await ESH.api.get("/staff/reports/daily-summary");
+      const totals = data.totals || {};
+      const total = Number(totals.total || 0);
+      const resolved = Number(totals.Resolved || 0);
+      const percent = total ? Math.round((resolved / total) * 100) : 0;
+      summary.innerHTML = "";
+      summary.appendChild(ESH.el("div", { class: "daily-report-heading" }, [
+        ESH.el("div", {}, [ESH.el("h2", { text: "Today’s Reports" }), ESH.el("p", { class: "note", text: `${data.date} · Community concerns received today` })]),
+        ESH.el("a", { class: "btn btn-secondary btn-sm", href: "/api/staff/reports/daily.pdf", download: "eshcat-daily-reports.pdf" }, [ESH.el("i", { class: "fa-solid fa-file-pdf", "aria-hidden": "true" }), " Download PDF"]),
+      ]));
+      const ring = ESH.el("div", { class: "report-ring", style: `--ring-progress:${percent * 3.6}deg` }, [
+        ESH.el("div", { class: "report-ring__center" }, [ESH.el("strong", { text: String(total) }), ESH.el("span", { text: "Total" })]),
+      ]);
+      summary.appendChild(ESH.el("div", { class: "daily-report-content" }, [
+        ring,
+        ESH.el("div", { class: "daily-report-stats" }, [
+          reportStat("Open", totals.Open || 0, "open"), reportStat("In Progress", totals["In Progress"] || 0, "progress"), reportStat("Resolved", totals.Resolved || 0, "resolved"),
+        ]),
+      ]));
+    } catch (err) { ESH.showError(summary, err.message, () => renderDailyReportSummary(tableContainer)); }
+  }
+
+  function reportStat(label, value, tone) {
+    return ESH.el("div", { class: "report-stat" }, [ESH.el("span", { class: `report-stat__dot ${tone}` }), ESH.el("span", { text: label }), ESH.el("strong", { text: String(value) })]);
+  }
+
+  function openRecordDetail(row, cfg, reload) {
+    const isReport = cfg.title === "Reports";
+    const image = isReport && /^data:image\//.test(row.photo_data || "")
+      ? `<img src="${ESH.esc(row.photo_data)}" alt="Attached report evidence" style="display:block;width:100%;max-height:360px;object-fit:contain;border-radius:12px;background:#f1f5f9;margin-top:10px">`
+      : "";
+    const modal = ESH.openModal(`
+      <div class="record-detail-grid">
+        <div><span class="detail-label">Reference</span><strong>${ESH.esc(row.reference_number || "—")}</strong></div>
+        <div><span class="detail-label">${isReport ? "Reporter" : "Applicant"}</span><strong>${ESH.esc(row.full_name || row.name || "—")}</strong></div>
+        <div><span class="detail-label">Email</span><strong>${ESH.esc(row.email || "—")}</strong></div>
+        <div><span class="detail-label">${isReport ? "Category" : "Service"}</span><strong>${ESH.esc(isReport ? row.category : row.service_name || "—")}</strong></div>
+        <div><span class="detail-label">${isReport ? "Location" : "Office"}</span><strong>${ESH.esc(isReport ? row.location || "—" : row.department_name || "—")}</strong></div>
+        ${!isReport ? `<div><span class="detail-label">Schedule</span><strong>${ESH.esc(`${row.appointment_date || "—"} · ${row.appointment_time || "—"}`)}</strong></div>` : ""}
+      </div>
+      <div class="record-description"><span class="detail-label">${isReport ? "Concern details" : "Remarks"}</span><p>${ESH.esc(isReport ? row.description || "—" : row.remarks || "No remarks yet.")}</p></div>
+      ${image ? `<div class="record-attachment"><span class="detail-label">Attached photo</span>${image}</div>` : ""}
+      <div class="form-group" style="margin-top:18px"><label for="recordStatus">Update status</label><select id="recordStatus">${cfg.statusOptions.map((status) => `<option value="${ESH.esc(status)}"${status === row.status ? " selected" : ""}>${ESH.esc(status)}</option>`).join("")}</select></div>
+      <div class="form-group"><label for="recordRemarks">Staff remarks</label><textarea id="recordRemarks" rows="3" placeholder="Add a note that will be sent to the requester...">${ESH.esc(row.remarks || "")}</textarea></div>
+      <div class="modal-actions"><button class="btn btn-secondary" data-close-modal type="button">Close</button><button class="btn btn-primary" id="saveRecordBtn" type="button">Save Status Update</button></div>`,
+      { title: isReport ? "Report Details" : "Appointment Details" }
+    );
+    modal.el("#saveRecordBtn").addEventListener("click", async () => {
+      const status = modal.el("#recordStatus").value;
+      const remarks = modal.el("#recordRemarks").value.trim();
+      if (status === row.status && remarks === (row.remarks || "")) {
+        ESH.showToast("No changes to save.", "error");
+        return;
+      }
+      const button = modal.el("#saveRecordBtn");
+      ESH.setLoading(button, "Saving...");
+      try {
+        await ESH.api.patch(cfg.updateEndpoint(row), { status, remarks });
+        modal.close();
+        ESH.showToast("Status updated successfully.", "success");
+        reload();
+      } catch (err) { ESH.unsetLoading(button); ESH.showToast(err.message, "error"); }
+    });
   }
 
   async function loadOfficeManagement(panel) {

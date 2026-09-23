@@ -23,13 +23,17 @@ def request_appointment():
     conn = get_connection()
     try:
         reference = generate_reference("CAT-APT")
-        conn.execute(
+        cursor = conn.execute(
             """
             INSERT INTO appointments
                 (reference_number, department_id, service_id, appointment_date, appointment_time, full_name, email, mobile)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (reference, department_id, service_id, date, time, full_name, email, mobile),
+        )
+        conn.execute(
+            "INSERT INTO appointment_history (appointment_id, old_status, new_status, remarks) VALUES (?, NULL, 'Pending', 'Appointment requested.')",
+            (cursor.lastrowid,),
         )
         conn.commit()
         return jsonify(

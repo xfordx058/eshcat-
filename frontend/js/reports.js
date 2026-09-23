@@ -11,6 +11,7 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = document.getElementById("reportBtn");
+      const photoFile = document.getElementById("reportPhoto")?.files?.[0];
       const payload = {
         category: document.getElementById("reportCategory").value,
         location: document.getElementById("reportLocation").value,
@@ -26,6 +27,7 @@
 
       ESH.setLoading(btn, "Submitting...");
       try {
+        if (photoFile) payload.photo_data = await readFileAsDataUrl(photoFile);
         const data = await ESH.api.post("/reports", payload);
         const formContainer = form.parentElement;
         form.remove();
@@ -44,6 +46,15 @@
         ESH.unsetLoading(btn);
         ESH.showToast(err.message, "error");
       }
+    });
+  }
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("The selected photo could not be read."));
+      reader.readAsDataURL(file);
     });
   }
 
