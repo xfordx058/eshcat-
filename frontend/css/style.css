@@ -890,6 +890,72 @@ a.card:hover {
   gap: 18px;
 }
 
+.application-section {
+  margin-bottom: 18px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.application-section--requester {
+  border-left: 4px solid var(--color-primary);
+}
+
+.application-section--details {
+  border-left: 4px solid var(--color-cyan);
+}
+
+.application-section--claimant {
+  border-left: 4px solid #8b5cf6;
+}
+
+.application-section__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.application-section__header h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.application-section__header p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.application-section__icon {
+  display: grid;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.11);
+}
+
+.application-section--details .application-section__icon {
+  color: var(--color-cyan);
+  background: rgba(14, 165, 164, 0.12);
+}
+
+.application-section--claimant .application-section__icon {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.12);
+}
+
+@media (max-width: 640px) {
+  .application-section {
+    padding: 16px;
+  }
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

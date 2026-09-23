@@ -27,6 +27,7 @@
       ESH.setLoading(btn, "Submitting...");
       try {
         const data = await ESH.api.post("/reports", payload);
+        const formContainer = form.parentElement;
         form.remove();
         const card = ESH.el("div", { class: "card", style: "max-width:560px;margin:0 auto;text-align:center" }, [
           ESH.el("div", { style: "font-size:2.4rem;color:var(--color-success)", text: "" }, [ESH.el("i", { class: "fa-solid fa-circle-check", "aria-hidden": "true" })]),
@@ -37,7 +38,7 @@
           ]),
           ESH.el("a", { class: "btn btn-secondary", href: "/", text: "Back to Home" }),
         ]);
-        form.parentElement.appendChild(card);
+        formContainer.appendChild(card);
         ESH.showToast("Report submitted.", "success");
       } catch (err) {
         ESH.unsetLoading(btn);

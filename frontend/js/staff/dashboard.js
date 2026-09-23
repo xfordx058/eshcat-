@@ -108,6 +108,113 @@
     } catch (err) { log.innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
   }
 
+  async function loadOfficeManagement() {
+    const section = document.getElementById("officeManagementSection");
+    const container = document.getElementById("officeManagement");
+    if (!section || !container) return;
+    section.hidden = false;
+    ESH.showLoading(container, "Loading office information...");
+    try {
+      const offices = await ESH.api.get("/staff/departments");
+      container.innerHTML = "";
+      if (!offices.length) {
+        ESH.showEmpty(container, "No offices have been added yet.");
+        return;
+      }
+      offices.forEach((office) => {
+        const serviceRows = (office.services || []).map((service) => `
+          <div class="office-service-row">
+            <span>${ESH.esc(service.name)}</span>
+            <input class="office-processing" data-service-id="${service.id}" value="${ESH.esc(service.estimated_processing || "")}" placeholder="e.g. 5-7 working days" />
+            <button class="btn btn-ghost btn-sm save-processing" data-service-id="${service.id}" type="button">Save</button>
+          </div>`).join("");
+        const card = ESH.el("div", { class: "card bento-6 office-management-card" }, [
+          ESH.el("div", { style: "display:flex;justify-content:space-between;align-items:flex-start;gap:12px" }, [
+            ESH.el("div", {}, [ESH.el("h3", { text: office.name }), ESH.el("p", { class: "note", text: office.description || "No office description." })]),
+            ESH.el("div", { style: "display:flex;gap:6px;flex-shrink:0" }, [
+              ESH.el("button", { class: "btn btn-secondary btn-sm edit-office", "data-office-id": office.id, type: "button", text: "Edit" }),
+              ESH.el("button", { class: "btn btn-danger btn-sm delete-office", "data-office-id": office.id, type: "button", text: "Delete" }),
+            ]),
+          ]),
+          ESH.el("div", { class: "detail-list", style: "margin-top:14px" }, [
+            detailItem("Office location", office.location),
+            detailItem("Contact number", office.contact_number),
+            detailItem("Office hours", office.office_hours),
+            detailItem("Email", office.email),
+          ]),
+          serviceRows ? ESH.el("div", { class: "office-services" }, [ESH.el("h4", { text: "Service processing times" }), ESH.el("div", { class: "office-service-list" })]) : "",
+        ]);
+        if (serviceRows) card.querySelector(".office-service-list").innerHTML = serviceRows;
+        container.appendChild(card);
+      });
+      container.querySelectorAll(".edit-office").forEach((button) => {
+        button.addEventListener("click", () => openOfficeForm(offices.find((office) => String(office.id) === button.dataset.officeId)));
+      });
+      container.querySelectorAll(".delete-office").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const office = offices.find((item) => String(item.id) === button.dataset.officeId);
+          if (!(await ESH.confirmModal(`Delete ${office.name}? Offices with linked services or records cannot be deleted.`, { title: "Delete office?", confirmLabel: "Delete", danger: true }))) return;
+          try {
+            await ESH.api.delete(`/staff/departments/${office.id}`);
+            ESH.showToast("Office deleted.", "success");
+            loadOfficeManagement();
+          } catch (err) { ESH.showToast(err.message, "error"); }
+        });
+      });
+      container.querySelectorAll(".save-processing").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const input = container.querySelector(`.office-processing[data-service-id="${button.dataset.serviceId}"]`);
+          try {
+            await ESH.api.patch(`/staff/services/${button.dataset.serviceId}`, { estimated_processing: input.value.trim() });
+            ESH.showToast("Processing time updated.", "success");
+          } catch (err) { ESH.showToast(err.message, "error"); }
+        });
+      });
+    } catch (err) { ESH.showError(container, err.message, loadOfficeManagement); }
+  }
+
+  function detailItem(label, value) {
+    return ESH.el("div", { class: "detail-item" }, [
+      ESH.el("div", { class: "k", text: label }),
+      ESH.el("div", { class: "v", text: value || "—" }),
+    ]);
+  }
+
+  function openOfficeForm(office) {
+    const editing = Boolean(office);
+    const modal = ESH.openModal(`
+      <div class="form-group"><label for="officeName">Office name</label><input id="officeName" value="${ESH.esc(office?.name || "")}" required></div>
+      <div class="form-group"><label for="officeDescription">Description</label><textarea id="officeDescription" rows="2">${ESH.esc(office?.description || "")}</textarea></div>
+      <div class="form-group"><label for="officeLocation">Office location</label><input id="officeLocation" value="${ESH.esc(office?.location || "")}" placeholder="Municipal Hall, Catarman, Northern Samar"></div>
+      <div class="form-group"><label for="officeContact">Contact number</label><input id="officeContact" value="${ESH.esc(office?.contact_number || "")}"></div>
+      <div class="form-group"><label for="officeHours">Office hours</label><input id="officeHours" value="${ESH.esc(office?.office_hours || "")}" placeholder="Mon-Fri 8:00 AM - 5:00 PM"></div>
+      <div class="form-group"><label for="officeEmail">Email</label><input id="officeEmail" type="email" value="${ESH.esc(office?.email || "")}"></div>
+      <div class="modal-actions"><button class="btn btn-secondary" data-close-modal type="button">Cancel</button><button class="btn btn-primary" id="saveOfficeBtn" type="button">${editing ? "Save Changes" : "Add Office"}</button></div>`,
+      { title: editing ? "Edit Office Information" : "Add Office" }
+    );
+    modal.el("#saveOfficeBtn").addEventListener("click", async () => {
+      const name = modal.el("#officeName").value.trim();
+      if (!name) { ESH.showToast("Office name is required.", "error"); return; }
+      const payload = {
+        name,
+        description: modal.el("#officeDescription").value.trim(),
+        location: modal.el("#officeLocation").value.trim(),
+        contact_number: modal.el("#officeContact").value.trim(),
+        office_hours: modal.el("#officeHours").value.trim(),
+        email: modal.el("#officeEmail").value.trim(),
+      };
+      const button = modal.el("#saveOfficeBtn");
+      ESH.setLoading(button, editing ? "Saving..." : "Adding...");
+      try {
+        if (editing) await ESH.api.patch(`/staff/departments/${office.id}`, payload);
+        else await ESH.api.post("/staff/departments", payload);
+        modal.close();
+        ESH.showToast(editing ? "Office information updated." : "Office added.", "success");
+        loadOfficeManagement();
+      } catch (err) { ESH.unsetLoading(button); ESH.showToast(err.message, "error"); }
+    });
+  }
+
   async function init() {
     const statsEl = document.getElementById("statTiles");
     const chartEl = document.getElementById("appChart");
@@ -117,10 +224,12 @@
 
     let stats;
     let recent;
+    let me;
     try {
-      [stats, recent] = await Promise.all([
+      [stats, recent, me] = await Promise.all([
         ESH.api.get("/staff/dashboard"),
         ESH.api.get("/staff/applications"),
+        ESH.api.get("/staff/me"),
       ]);
     } catch (err) {
       if (statsEl) ESH.showError(statsEl, err.message, () => init());
@@ -162,6 +271,7 @@
       }
     }
     loadActivity();
+    if (me.role === "Administrator") loadOfficeManagement();
   }
 
   document.addEventListener("DOMContentLoaded", () => {

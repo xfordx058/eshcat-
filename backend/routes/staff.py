@@ -117,8 +117,134 @@ def list_staff_users():
 def list_staff_departments():
     conn = get_connection()
     try:
-        rows = conn.execute("SELECT id, name FROM departments ORDER BY name ASC").fetchall()
-        return jsonify([dict(row) for row in rows])
+        rows = conn.execute(
+            """
+            SELECT id, name, description, location, contact_number, email, office_hours
+            FROM departments ORDER BY name ASC
+            """
+        ).fetchall()
+        departments = []
+        for row in rows:
+            department = dict(row)
+            department["services"] = [
+                dict(service)
+                for service in conn.execute(
+                    "SELECT id, name, estimated_processing FROM services WHERE department_id = ? ORDER BY name",
+                    (row["id"],),
+                ).fetchall()
+            ]
+            departments.append(department)
+        return jsonify(departments)
+    finally:
+        conn.close()
+
+
+@staff_bp.post("/api/staff/departments")
+@admin_required
+def create_department():
+    payload = request.get_json(silent=True) or {}
+    name = (payload.get("name") or "").strip()
+    description = (payload.get("description") or "").strip()
+    location = (payload.get("location") or "").strip()
+    contact_number = (payload.get("contact_number") or "").strip()
+    email = (payload.get("email") or "").strip()
+    office_hours = (payload.get("office_hours") or "").strip()
+    if not name:
+        return jsonify({"error": "Office name is required."}), 400
+
+    conn = get_connection()
+    try:
+        cursor = conn.execute(
+            """
+            INSERT INTO departments
+                (name, description, location, contact_number, email, office_hours)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (name, description, location, contact_number, email, office_hours),
+        )
+        log_audit(conn, session["staff_id"], "CREATE_DEPARTMENT", "department", cursor.lastrowid, name)
+        conn.commit()
+        return jsonify({"message": "Office created.", "id": cursor.lastrowid}), 201
+    finally:
+        conn.close()
+
+
+@staff_bp.patch("/api/staff/services/<int:service_id>")
+@admin_required
+def update_service_admin(service_id):
+    payload = request.get_json(silent=True) or {}
+    estimated_processing = (payload.get("estimated_processing") or "").strip()
+    conn = get_connection()
+    try:
+        current = conn.execute("SELECT name FROM services WHERE id = ?", (service_id,)).fetchone()
+        if current is None:
+            return jsonify({"error": "Service not found."}), 404
+        conn.execute(
+            "UPDATE services SET estimated_processing = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (estimated_processing, service_id),
+        )
+        log_audit(conn, session["staff_id"], "UPDATE_SERVICE_PROCESSING", "service", service_id, current["name"])
+        conn.commit()
+        return jsonify({"message": "Processing time updated."})
+    finally:
+        conn.close()
+
+
+@staff_bp.patch("/api/staff/departments/<int:department_id>")
+@admin_required
+def update_department(department_id):
+    payload = request.get_json(silent=True) or {}
+    name = (payload.get("name") or "").strip()
+    description = (payload.get("description") or "").strip()
+    location = (payload.get("location") or "").strip()
+    contact_number = (payload.get("contact_number") or "").strip()
+    email = (payload.get("email") or "").strip()
+    office_hours = (payload.get("office_hours") or "").strip()
+    if not name:
+        return jsonify({"error": "Office name is required."}), 400
+
+    conn = get_connection()
+    try:
+        current = conn.execute("SELECT id FROM departments WHERE id = ?", (department_id,)).fetchone()
+        if current is None:
+            return jsonify({"error": "Office not found."}), 404
+        conn.execute(
+            """
+            UPDATE departments
+            SET name = ?, description = ?, location = ?, contact_number = ?,
+                email = ?, office_hours = ?
+            WHERE id = ?
+            """,
+            (name, description, location, contact_number, email, office_hours, department_id),
+        )
+        log_audit(conn, session["staff_id"], "UPDATE_DEPARTMENT", "department", department_id, name)
+        conn.commit()
+        return jsonify({"message": "Office updated."})
+    finally:
+        conn.close()
+
+
+@staff_bp.delete("/api/staff/departments/<int:department_id>")
+@admin_required
+def delete_department(department_id):
+    conn = get_connection()
+    try:
+        current = conn.execute("SELECT name FROM departments WHERE id = ?", (department_id,)).fetchone()
+        if current is None:
+            return jsonify({"error": "Office not found."}), 404
+        linked = {
+            "services": conn.execute("SELECT COUNT(*) AS c FROM services WHERE department_id = ?", (department_id,)).fetchone()["c"],
+            "staff": conn.execute("SELECT COUNT(*) AS c FROM staff_users WHERE department_id = ?", (department_id,)).fetchone()["c"],
+            "applications": conn.execute("SELECT COUNT(*) AS c FROM applications WHERE department_id = ?", (department_id,)).fetchone()["c"],
+            "appointments": conn.execute("SELECT COUNT(*) AS c FROM appointments WHERE department_id = ?", (department_id,)).fetchone()["c"],
+            "reports": conn.execute("SELECT COUNT(*) AS c FROM community_reports WHERE department_id = ?", (department_id,)).fetchone()["c"],
+        }
+        if any(linked.values()):
+            return jsonify({"error": "This office cannot be deleted while it has linked services, staff, or records."}), 409
+        conn.execute("DELETE FROM departments WHERE id = ?", (department_id,))
+        log_audit(conn, session["staff_id"], "DELETE_DEPARTMENT", "department", department_id, current["name"])
+        conn.commit()
+        return jsonify({"message": "Office deleted."})
     finally:
         conn.close()
 
@@ -389,18 +515,20 @@ def patch_status(app_id):
     new_status = payload.get("status")
     remarks = payload.get("remarks") or ""
     try:
-        ok = update_status(app_id, session["staff_id"], new_status, remarks)
+        result = update_status(app_id, session["staff_id"], new_status, remarks)
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
-    if not ok:
+    if result is False:
         return jsonify({"error": "Application not found."}), 404
+    if not result["changed"]:
+        return jsonify({"error": f"Application is already {result['status']}. No status change was made."}), 409
     conn = get_connection()
     try:
         log_audit(conn, session["staff_id"], "UPDATE_STATUS", "application", app_id, new_status)
         conn.commit()
     finally:
         conn.close()
-    return jsonify({"message": "Status updated.", "status": new_status})
+    return jsonify({"message": "Status updated.", "status": new_status, "changed": True})
 
 
 @staff_bp.post("/api/staff/applications/<int:app_id>/forward")

@@ -1,6 +1,8 @@
+import os
 import smtplib
 import ssl
 
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -8,16 +10,31 @@ from .. import config
 from ..database import get_connection
 
 
-def send_email(recipient: str, subject: str, message: str) -> bool:
+def send_email(recipient: str, subject: str, message: str, html_message: str = "") -> bool:
     """Send an email via Gmail SMTP. Returns True on success."""
     if not config.EMAIL_ENABLED:
         return False
 
-    msg = MIMEMultipart("alternative")
+    msg = MIMEMultipart("related")
     msg["Subject"] = subject
     msg["From"] = config.MAIL_FROM
     msg["To"] = recipient
-    msg.attach(MIMEText(message, "plain", "utf-8"))
+    alternative = MIMEMultipart("alternative")
+    alternative.attach(MIMEText(message, "plain", "utf-8"))
+    if html_message:
+        alternative.attach(MIMEText(html_message, "html", "utf-8"))
+    msg.attach(alternative)
+
+    logo_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+        "frontend", "assets", "images", "eSHCATlofogo.png",
+    )
+    if html_message and os.path.exists(logo_path):
+        with open(logo_path, "rb") as logo_file:
+            logo = MIMEImage(logo_file.read(), _subtype="png")
+        logo.add_header("Content-ID", "<eshcat-logo>")
+        logo.add_header("Content-Disposition", "inline", filename="eSHCATlofogo.png")
+        msg.attach(logo)
 
     context = ssl.create_default_context()
     try:

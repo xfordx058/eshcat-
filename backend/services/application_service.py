@@ -107,7 +107,7 @@ def get_application_by_reference(reference: str) -> dict:
         conn.close()
 
 
-def update_status(application_id: int, staff_id: int, new_status: str, remarks: str = "") -> bool:
+def update_status(application_id: int, staff_id: int, new_status: str, remarks: str = "") -> dict | bool:
     if new_status not in VALID_STATUSES:
         raise ValueError("Invalid status.")
 
@@ -119,10 +119,17 @@ def update_status(application_id: int, staff_id: int, new_status: str, remarks: 
         if row is None:
             return False
         old_status = row["status"]
-        conn.execute(
-            "UPDATE applications SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-            (new_status, application_id),
+        # Idempotency guard: a repeated request for the current status is a
+        # no-op. Do not create duplicate history or send another notification.
+        if old_status == new_status:
+            return {"changed": False, "status": old_status}
+        cursor = conn.execute(
+            "UPDATE applications SET status = ?, updated_at = CURRENT_TIMESTAMP "
+            "WHERE id = ? AND status <> ?",
+            (new_status, application_id, new_status),
         )
+        if cursor.rowcount == 0:
+            return {"changed": False, "status": new_status}
         conn.execute(
             "INSERT INTO application_history (application_id, staff_id, old_status, new_status, remarks) "
             "VALUES (?, ?, ?, ?, ?)",
@@ -130,6 +137,6 @@ def update_status(application_id: int, staff_id: int, new_status: str, remarks: 
         )
         conn.commit()
         notify_application_update(application_id)
-        return True
+        return {"changed": True, "status": new_status}
     finally:
         conn.close()

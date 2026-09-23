@@ -318,6 +318,16 @@
       card.appendChild(ESH.el("a", { class: "btn btn-secondary", style: "width:100%;justify-content:center", href: "/pages/offices.html", text: "View Office Information" }));
     }
 
+    card.appendChild(ESH.el("a", {
+      class: "btn btn-secondary",
+      style: "width:100%;justify-content:center;margin-top:8px",
+      href: `/api/services/${svc.id}/form.pdf`,
+      download: `${String(svc.name).toLowerCase().replace(/[^a-z0-9]+/g, "-")}-application-form.pdf`,
+    }, [
+      ESH.el("i", { class: "fa-solid fa-file-pdf", "aria-hidden": "true" }),
+      ESH.el("span", { text: "Download Blank Form (PDF)" }),
+    ]));
+
     const saveBtn = ESH.el("button", { class: "btn btn-ghost btn-sm", style: "width:100%;margin-top:8px", type: "button" });
     const paintSave = () => {
       const saved = savedServices().includes(svc.id);

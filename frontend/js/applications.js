@@ -39,7 +39,23 @@
       descEl.textContent = svc.short_description || svc.description || "Fill in the required information. You will receive a reference number after submission.";
     }
 
-    const fields = svc.form_fields || [svc];
+    const isBirthCertificate = String(svc.name || "").toLowerCase() === "birth certificate";
+    // Contact details are rendered in the clearly labeled requester section below.
+    // Older seed data also contains these fields, so filter them to avoid duplicates.
+    const configuredFields = (svc.form_fields || [svc]).filter((f) =>
+      !["fullName", "email", "mobile", "address"].includes(f.field_name)
+    );
+    const birthFallbackFields = [
+      { label: "Full Name of Person Whose Birth Certificate is Requested", field_name: "registrantName", field_type: "text", required: true },
+      { label: "Full Name of Person Who Will Claim / Pick Up the Certificate", field_name: "claimantName", field_type: "text", required: true },
+      { label: "Father's Full Name", field_name: "fatherName", field_type: "text", required: true },
+      { label: "Mother's Maiden Name", field_name: "motherMaidenName", field_type: "text", required: true },
+      { label: "Valid Government-Issued ID", field_name: "validIdType", field_type: "select", required: true, options: ["Philippine Passport", "Driver's License", "UMID / SSS / GSIS ID", "PhilHealth ID", "TIN ID", "Postal ID", "National ID / PhilSys ID", "Voter's ID", "Senior Citizen ID", "Other Government-Issued ID"] },
+    ];
+    const configuredNames = new Set(configuredFields.map((f) => f.field_name));
+    const fields = isBirthCertificate
+      ? configuredFields.concat(birthFallbackFields.filter((f) => !configuredNames.has(f.field_name)))
+      : configuredFields;
     const requirements = Array.isArray(svc.requirements) ? svc.requirements : [];
 
     container.innerHTML = "";
@@ -49,18 +65,20 @@
     /* --- Step 1: Information --- */
     const stepInfo = ESH.el("div", { "data-wizard-panel": "1" });
     const grid = ESH.el("div", { class: "form-grid" });
+    const serviceGrid = ESH.el("div", { class: "form-grid" });
+    const claimantGrid = ESH.el("div", { class: "form-grid" });
 
     fields.forEach((f) => {
       const group = ESH.el("div", { class: "form-group" });
       switch (f.field_type) {
         case "textarea":
           group.appendChild(ESH.el("label", { for: f.field_name }, [f.label, reqMark(f.required)]));
-          group.appendChild(ESH.el("textarea", { id: f.field_name, name: f.field_name, rows: "3" }));
+          group.appendChild(ESH.el("textarea", { id: f.field_name, name: f.field_name, rows: "3", "data-service-required": f.required ? "true" : "false" }));
           group.appendChild(ESH.el("div", { class: "form-error", id: `err-${f.field_name}` }));
           break;
         case "select":
           group.appendChild(ESH.el("label", { for: f.field_name }, [f.label, reqMark(f.required)]));
-          const select = ESH.el("select", { id: f.field_name, name: f.field_name });
+          const select = ESH.el("select", { id: f.field_name, name: f.field_name, "data-service-required": f.required ? "true" : "false" });
           select.appendChild(ESH.el("option", { value: "", text: "Select..." }));
           (f.options || []).forEach((o) => select.appendChild(ESH.el("option", { value: o, text: o })));
           group.appendChild(select);
@@ -68,17 +86,18 @@
           break;
         default:
           group.appendChild(ESH.el("label", { for: f.field_name }, [f.label, reqMark(f.required)]));
-          group.appendChild(ESH.el("input", { id: f.field_name, name: f.field_name, type: f.field_type || "text" }));
+          group.appendChild(ESH.el("input", { id: f.field_name, name: f.field_name, type: f.field_type || "text", "data-service-required": f.required ? "true" : "false" }));
           group.appendChild(ESH.el("div", { class: "form-error", id: `err-${f.field_name}` }));
       }
-      grid.appendChild(group);
+      const isClaimantField = ["claimantName", "validIdType"].includes(f.field_name);
+      (isBirthCertificate && isClaimantField ? claimantGrid : serviceGrid).appendChild(group);
     });
 
     const applicantFields = [
-      { label: "Full Name", name: "fullName", type: "text", placeholder: "e.g. Juan A. Dela Cruz", required: true },
-      { label: "Email Address", name: "email", type: "email", placeholder: "you@example.com", required: true },
-      { label: "Mobile Number", name: "mobile", type: "tel", placeholder: "09xx-xxx-xxxx (optional)", required: false },
-      { label: "Address", name: "address", type: "text", placeholder: "e.g. Purok 3, Brgy. 1, Catarman", required: true },
+      { label: "Requester / Appointment Contact Full Name", name: "fullName", type: "text", placeholder: "Pangalan ng nag-a-apply o nagse-set ng appointment", required: true },
+      { label: "Requester Email Address", name: "email", type: "email", placeholder: "you@example.com", required: true },
+      { label: "Requester Mobile Number", name: "mobile", type: "tel", placeholder: "09xx-xxx-xxxx (optional)", required: false },
+      { label: "Requester Address", name: "address", type: "text", placeholder: "e.g. Purok 3, Brgy. 1, Catarman", required: true },
     ];
     applicantFields.forEach((f) => {
       const group = ESH.el("div", { class: "form-group" }, [
@@ -89,7 +108,42 @@
       grid.appendChild(group);
     });
 
-    stepInfo.appendChild(grid);
+    const requesterSection = ESH.el("section", { class: "application-section application-section--requester" }, [
+      ESH.el("div", { class: "application-section__header" }, [
+        ESH.el("div", { class: "application-section__icon" }, [ESH.el("i", { class: "fa-solid fa-user-pen", "aria-hidden": "true" })]),
+        ESH.el("div", {}, [
+          ESH.el("h3", { text: "1. Requester / Appointment Contact" }),
+          ESH.el("p", { text: "Impormasyon ng taong nag-a-apply o nagse-set ng appointment." }),
+        ]),
+      ]),
+      grid,
+    ]);
+    stepInfo.appendChild(requesterSection);
+    if (fields.length) {
+      const detailsSection = ESH.el("section", { class: "application-section application-section--details" }, [
+        ESH.el("div", { class: "application-section__header" }, [
+          ESH.el("div", { class: "application-section__icon" }, [ESH.el("i", { class: "fa-solid fa-file-lines", "aria-hidden": "true" })]),
+          ESH.el("div", {}, [
+            ESH.el("h3", { text: isBirthCertificate ? "2. Birth Record Information" : "2. Request Details" }),
+            ESH.el("p", { text: isBirthCertificate ? "Impormasyon ng taong kukuhaan ng birth certificate, kasama ang pangalan ng mga magulang." : "Ilagay dito ang detalye ng dokumentong hinihingi." }),
+          ]),
+        ]),
+        serviceGrid,
+      ]);
+      stepInfo.appendChild(detailsSection);
+      if (isBirthCertificate && claimantGrid.children.length) {
+        stepInfo.appendChild(ESH.el("section", { class: "application-section application-section--claimant" }, [
+          ESH.el("div", { class: "application-section__header" }, [
+            ESH.el("div", { class: "application-section__icon" }, [ESH.el("i", { class: "fa-solid fa-hand-holding", "aria-hidden": "true" })]),
+            ESH.el("div", {}, [
+              ESH.el("h3", { text: "3. Certificate Claimant / Pick-up Person" }),
+              ESH.el("p", { text: "Pangalan ng taong aktuwal na kukuha o magke-claim ng certificate." }),
+            ]),
+          ]),
+          claimantGrid,
+        ]));
+      }
+    }
     stepInfo.appendChild(
       ESH.el("div", { class: "form-group full", style: "display:flex;gap:10px;justify-content:flex-end;margin-top:20px" }, [
         ESH.el("a", { class: "btn btn-secondary", href: "/pages/services.html", text: "Cancel" }),
@@ -217,7 +271,9 @@
       values.forEach((v, k) => (data[k] = v));
 
       let firstError = null;
-      const required = ["fullName", "email", "address"];
+      const required = ["fullName", "email", "address"].concat(
+        Array.from(form.querySelectorAll("[data-service-required='true']")).map((el) => el.name)
+      );
       for (const name of required) {
         if (!String(data[name] || "").trim()) {
           const errEl = document.getElementById(`err-${name}`);

@@ -573,3 +573,37 @@
 .activity-pagination button:disabled { opacity:.45; cursor:not-allowed; }
 @media (max-width:640px) { .activity-row { grid-template-columns:34px minmax(0,1fr); padding:12px; } .activity-row small { grid-column:2; min-width:0; text-align:left; } .activity-pagination { justify-content:flex-start; } }
 .activity-pagination button:disabled { opacity:.45; cursor:not-allowed; }
+.office-management-card .detail-list {
+  margin-bottom: 16px;
+}
+
+.office-services {
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+.office-services h4 {
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+}
+
+.office-service-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.86rem;
+}
+
+.office-service-row input {
+  height: 36px;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 700px) {
+  .office-service-row {
+    grid-template-columns: 1fr;
+  }
+}

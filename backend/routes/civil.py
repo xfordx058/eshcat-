@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from ..database import get_connection, log_audit
 from ..routes.staff import login_required as staff_login_required
 from ..services.reference_service import generate_reference
+from ..services.notification_service import notify_civil_update
 
 civil_bp = Blueprint("civil", __name__)
 
@@ -370,12 +371,15 @@ def update_appointment(appt_id):
             return jsonify({"error": "Appointment not found."}), 404
         if session.get("staff_role") != "Administrator" and current["department_id"] != session.get("department_id"):
             return jsonify({"error": "This appointment belongs to another department."}), 403
+        if current["status"] == status:
+            return jsonify({"error": f"Appointment is already {status}. No status change was made."}), 409
         conn.execute(
             "UPDATE appointments SET status = ?, remarks = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
             (status, remarks, appt_id),
         )
         row = conn.execute(_APPT_QUERY + " WHERE a.id = ?", (appt_id,)).fetchone()
         conn.commit()
+        notify_civil_update("appointment", appt_id)
         out = dict(row)
         out["type"] = "appointment"
         return jsonify({"message": "Appointment updated.", "item": out})
@@ -393,17 +397,20 @@ def update_report(report_id):
         return jsonify({"error": "Invalid request status. Use Open, In Progress or Resolved."}), 400
     conn = get_connection()
     try:
-        current = conn.execute("SELECT id, department_id FROM community_reports WHERE id = ?", (report_id,)).fetchone()
+        current = conn.execute("SELECT id, department_id, status FROM community_reports WHERE id = ?", (report_id,)).fetchone()
         if current is None:
             return jsonify({"error": "Request not found."}), 404
         if session.get("staff_role") != "Administrator" and current["department_id"] != session.get("department_id"):
             return jsonify({"error": "This request belongs to another department."}), 403
+        if current["status"] == status:
+            return jsonify({"error": f"Request is already {status}. No status change was made."}), 409
         conn.execute(
             "UPDATE community_reports SET status = ?, remarks = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
             (status, remarks, report_id),
         )
         row = conn.execute(_REP_QUERY + " WHERE r.id = ?", (report_id,)).fetchone()
         conn.commit()
+        notify_civil_update("report", report_id)
         out = dict(row)
         out["type"] = "request"
         return jsonify({"message": "Request updated.", "item": out})

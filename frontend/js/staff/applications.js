@@ -250,6 +250,10 @@
   }
 
   async function confirmAndPatch(app, status, remarks, ask) {
+    if (app.status === status) {
+      ESH.showToast(`No change made. This application is already ${status}.`, "error");
+      return;
+    }
     if (ask) {
       const ok = await ESH.confirmModal(
         `Mark ${app.reference_number} as "${status}"? This updates the timeline shown to the applicant.`,
@@ -285,6 +289,10 @@
     );
     m.el("#modalSaveBtn").addEventListener("click", async () => {
       const btn = m.el("#modalSaveBtn");
+      if (m.el("#modalStatus").value === app.status) {
+        ESH.showToast(`No change made. This application is already ${app.status}.`, "error");
+        return;
+      }
       ESH.setLoading(btn, "Saving...");
       try {
         await patch(app, m.el("#modalStatus").value, m.el("#modalRemarks").value.trim());
